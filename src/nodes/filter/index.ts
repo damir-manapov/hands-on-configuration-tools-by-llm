@@ -8,7 +8,7 @@ const FilterNodeConditionSchema = z.object({
   leftValue: z
     .string()
     .describe(
-      'The field name from the input data to evaluate. The value of this field will be compared against rightValue.',
+      'The field name from the input data to evaluate. Supports nested fields using dot notation (e.g., "user.name" or "address.city"). The value of this field will be compared against rightValue.',
     ),
   rightValue: z
     .string()
@@ -38,6 +38,27 @@ function validateFilterNodeParameters(node: WorkflowNode): void {
   validateNodeParameters(node, FilterNodeParametersSchema);
 }
 
+function getNestedFieldValue(
+  obj: Record<string, unknown>,
+  path: string,
+): unknown {
+  const parts = path.split('.');
+  let current: unknown = obj;
+
+  for (const part of parts) {
+    if (
+      current === null ||
+      current === undefined ||
+      typeof current !== 'object'
+    ) {
+      return undefined;
+    }
+    current = (current as Record<string, unknown>)[part];
+  }
+
+  return current;
+}
+
 function evaluateCondition(
   item: Record<string, unknown>,
   condition: {
@@ -46,7 +67,7 @@ function evaluateCondition(
     operator: string;
   },
 ): boolean {
-  const leftValueRaw = item[condition.leftValue];
+  const leftValueRaw = getNestedFieldValue(item, condition.leftValue);
   let leftValue = '';
   if (
     leftValueRaw !== null &&
