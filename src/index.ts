@@ -7,3 +7,14 @@ export type {
   ExecutionData,
   ExecutionResult,
 } from './types.js';
+export {
+  WorkflowNotFoundError,
+  WorkflowAlreadyExistsError,
+  WorkflowNotActiveError,
+  WorkflowValidationError,
+  NodeNotFoundError,
+  NodeValidationError,
+  NodeTypeError,
+  DuplicateNodeIdError,
+  UnknownNodeTypeError,
+} from './errors.js';

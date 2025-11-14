@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { WorkflowNode } from '../types.js';
+import { NodeValidationError } from '../errors.js';
 
 export function validateNodeParameters(
   node: WorkflowNode,
@@ -15,9 +16,7 @@ export function validateNodeParameters(
           return `${path}: ${issue.message}`;
         })
         .join('; ');
-      throw new Error(
-        `Node ${node.id} (type: ${node.type}) has invalid parameters: ${issues}`,
-      );
+      throw new NodeValidationError(node.id, node.type, issues);
     }
     throw error;
   }

@@ -12,6 +12,16 @@ import {
   executeSetNode,
   executeIfNode,
 } from './nodes/index.js';
+import {
+  WorkflowNotFoundError,
+  WorkflowAlreadyExistsError,
+  WorkflowNotActiveError,
+  WorkflowValidationError,
+  NodeNotFoundError,
+  NodeTypeError,
+  DuplicateNodeIdError,
+  UnknownNodeTypeError,
+} from './errors.js';
 
 const VALID_NODE_TYPES = [
   'n8n-nodes-base.start',
@@ -26,7 +36,7 @@ export class WorkflowEngine {
 
   addWorkflow(workflow: Workflow): void {
     if (this.workflows.has(workflow.id)) {
-      throw new Error(`Workflow with id ${workflow.id} already exists`);
+      throw new WorkflowAlreadyExistsError(workflow.id);
     }
     this.validateWorkflow(workflow);
     this.workflows.set(workflow.id, workflow);
@@ -53,7 +63,7 @@ export class WorkflowEngine {
     const workflow = this.getWorkflow(id);
 
     if (!workflow.active) {
-      throw new Error(`Workflow ${id} is not active`);
+      throw new WorkflowNotActiveError(id);
     }
 
     const executionData: ExecutionData = inputData ?? {};
@@ -63,7 +73,7 @@ export class WorkflowEngine {
       for (const nodeId of executionOrder) {
         const node = workflow.nodes.find((n) => n.id === nodeId);
         if (!node) {
-          throw new Error(`Node with id ${nodeId} not found in workflow ${id}`);
+          throw new NodeNotFoundError(nodeId, id);
         }
 
         const input = this.getNodeInput(node, workflow, executionData);
@@ -86,33 +96,31 @@ export class WorkflowEngine {
 
   private ensureWorkflowExists(id: string): void {
     if (!this.workflows.has(id)) {
-      throw new Error(`Workflow with id ${id} not found`);
+      throw new WorkflowNotFoundError(id);
     }
   }
 
   private validateWorkflow(workflow: Workflow): void {
     if (!workflow.id || !workflow.name) {
-      throw new Error('Workflow must have id and name');
+      throw new WorkflowValidationError('Workflow must have id and name');
     }
 
     if (!Array.isArray(workflow.nodes)) {
-      throw new Error('Workflow must have nodes array');
+      throw new WorkflowValidationError('Workflow must have nodes array');
     }
 
     const nodeIds = new Set<string>();
     for (const node of workflow.nodes) {
       if (nodeIds.has(node.id)) {
-        throw new Error(`Duplicate node id: ${node.id}`);
+        throw new DuplicateNodeIdError(node.id);
       }
 
       if (!node.type) {
-        throw new Error(`Node ${node.id} must have a type`);
+        throw new WorkflowValidationError(`Node ${node.id} must have a type`);
       }
 
       if (!VALID_NODE_TYPES.includes(node.type as ValidNodeType)) {
-        throw new Error(
-          `Node ${node.id} has invalid type "${node.type}". Valid types are: ${VALID_NODE_TYPES.join(', ')}`,
-        );
+        throw new NodeTypeError(node.id, node.type, VALID_NODE_TYPES);
       }
 
       this.validateNodeParameters(node);
@@ -133,9 +141,7 @@ export class WorkflowEngine {
         validateIfNodeParameters(node);
         break;
       default:
-        throw new Error(
-          `Unknown node type "${node.type}" for validation. This should not happen.`,
-        );
+        throw new UnknownNodeTypeError(node.id, node.type, 'validation');
     }
   }
 
@@ -150,9 +156,7 @@ export class WorkflowEngine {
 
       const node = workflow.nodes.find((n) => n.id === nodeId);
       if (!node) {
-        throw new Error(
-          `Node with id ${nodeId} not found in workflow ${workflow.id}`,
-        );
+        throw new NodeNotFoundError(nodeId, workflow.id);
       }
 
       for (const outputConnections of Object.values(node.connections)) {
@@ -211,9 +215,7 @@ export class WorkflowEngine {
       case 'n8n-nodes-base.if':
         return Promise.resolve(executeIfNode(node, input));
       default:
-        throw new Error(
-          `Unknown node type "${node.type}" for node ${node.id}. Valid types are: ${VALID_NODE_TYPES.join(', ')}`,
-        );
+        throw new UnknownNodeTypeError(node.id, node.type, 'execution');
     }
   }
 }
