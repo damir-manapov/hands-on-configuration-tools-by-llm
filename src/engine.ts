@@ -10,6 +10,7 @@ import {
   setNodePlugin,
   ifNodePlugin,
   codeNodePlugin,
+  filterNodePlugin,
 } from './nodes/index.js';
 import {
   WorkflowNotFoundError,
@@ -29,6 +30,7 @@ const BUILT_IN_PLUGINS = [
   setNodePlugin,
   ifNodePlugin,
   codeNodePlugin,
+  filterNodePlugin,
 ] as const;
 
 const BUILT_IN_NODE_TYPES = BUILT_IN_PLUGINS.map(
