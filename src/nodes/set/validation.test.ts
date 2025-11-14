@@ -1,10 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { WorkflowEngine } from '../../../src/engine.js';
-import type { WorkflowNode } from '../../../src/types.js';
+import { validateSetNodeParameters } from './index.js';
+import type { WorkflowNode } from '../../types.js';
 
 describe('Set Node - Validation', () => {
-  const engine = new WorkflowEngine();
-
   it('should throw error when set node is missing values parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
@@ -16,7 +14,7 @@ describe('Set Node - Validation', () => {
     };
 
     expect(() => {
-      engine.validateNodeParameters(node);
+      validateSetNodeParameters(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -33,7 +31,7 @@ describe('Set Node - Validation', () => {
     };
 
     expect(() => {
-      engine.validateNodeParameters(node);
+      validateSetNodeParameters(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -50,7 +48,7 @@ describe('Set Node - Validation', () => {
     };
 
     expect(() => {
-      engine.validateNodeParameters(node);
+      validateSetNodeParameters(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -70,7 +68,7 @@ describe('Set Node - Validation', () => {
     };
 
     expect(() => {
-      engine.validateNodeParameters(node);
+      validateSetNodeParameters(node);
     }).not.toThrow();
   });
 });

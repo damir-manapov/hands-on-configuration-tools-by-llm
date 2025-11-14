@@ -1,10 +1,17 @@
-import { z } from 'zod';
 import type {
   Workflow,
   WorkflowNode,
   ExecutionData,
   ExecutionResult,
 } from './types.js';
+import {
+  validateStartNodeParameters,
+  validateSetNodeParameters,
+  validateIfNodeParameters,
+  executeStartNode,
+  executeSetNode,
+  executeIfNode,
+} from './nodes/index.js';
 
 const VALID_NODE_TYPES = [
   'n8n-nodes-base.start',
@@ -13,27 +20,6 @@ const VALID_NODE_TYPES = [
 ] as const;
 
 export type ValidNodeType = (typeof VALID_NODE_TYPES)[number];
-
-const SetNodeValueSchema = z.object({
-  name: z.string(),
-  value: z.string(),
-});
-
-const SetNodeParametersSchema = z.object({
-  values: z.array(SetNodeValueSchema),
-});
-
-const IfNodeConditionsSchema = z.object({
-  leftValue: z.string(),
-  rightValue: z.string(),
-  operator: z.enum(['equals', 'notEquals', 'contains']),
-});
-
-const IfNodeParametersSchema = z.object({
-  conditions: IfNodeConditionsSchema,
-});
-
-const StartNodeParametersSchema = z.object({});
 
 export class WorkflowEngine {
   private workflows = new Map<string, Workflow>();
@@ -135,39 +121,21 @@ export class WorkflowEngine {
     }
   }
 
-  validateNodeParameters(node: WorkflowNode): void {
-    let schema: z.ZodType<unknown>;
+  private validateNodeParameters(node: WorkflowNode): void {
     switch (node.type) {
       case 'n8n-nodes-base.start':
-        schema = StartNodeParametersSchema;
+        validateStartNodeParameters(node);
         break;
       case 'n8n-nodes-base.set':
-        schema = SetNodeParametersSchema;
+        validateSetNodeParameters(node);
         break;
       case 'n8n-nodes-base.if':
-        schema = IfNodeParametersSchema;
+        validateIfNodeParameters(node);
         break;
       default:
         throw new Error(
           `Unknown node type "${node.type}" for validation. This should not happen.`,
         );
-    }
-
-    try {
-      schema.parse(node.parameters);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const issues = error.issues
-          .map((issue) => {
-            const path = issue.path.length > 0 ? issue.path.join('.') : 'root';
-            return `${path}: ${issue.message}`;
-          })
-          .join('; ');
-        throw new Error(
-          `Node ${node.id} (type: ${node.type}) has invalid parameters: ${issues}`,
-        );
-      }
-      throw error;
     }
   }
 
@@ -231,84 +199,21 @@ export class WorkflowEngine {
     return input.length > 0 ? input : [[]];
   }
 
-  async executeNode(
+  private async executeNode(
     node: WorkflowNode,
     input: unknown[][],
   ): Promise<unknown[][]> {
     switch (node.type) {
       case 'n8n-nodes-base.start':
-        return Promise.resolve([[]]);
+        return Promise.resolve(executeStartNode(node, input));
       case 'n8n-nodes-base.set':
-        return Promise.resolve(this.executeSetNode(node, input));
+        return Promise.resolve(executeSetNode(node, input));
       case 'n8n-nodes-base.if':
-        return Promise.resolve(this.executeIfNode(node, input));
+        return Promise.resolve(executeIfNode(node, input));
       default:
         throw new Error(
           `Unknown node type "${node.type}" for node ${node.id}. Valid types are: ${VALID_NODE_TYPES.join(', ')}`,
         );
     }
-  }
-
-  private executeSetNode(node: WorkflowNode, input: unknown[][]): unknown[][] {
-    const values =
-      (node.parameters['values'] as { name: string; value: string }[]) ?? [];
-    const result: unknown[][] = [];
-
-    for (const inputItem of input) {
-      const outputItem: Record<string, unknown> = {
-        ...(inputItem[0] as Record<string, unknown>),
-      };
-      for (const value of values) {
-        outputItem[value.name] = value.value;
-      }
-      result.push([outputItem]);
-    }
-
-    return result;
-  }
-
-  private executeIfNode(node: WorkflowNode, input: unknown[][]): unknown[][] {
-    const conditions = (node.parameters['conditions'] as {
-      leftValue: string;
-      rightValue: string;
-      operator: string;
-    }) ?? { leftValue: '', rightValue: '', operator: 'equals' };
-
-    const result: unknown[][] = [];
-
-    for (const inputItem of input) {
-      const item = inputItem[0] as Record<string, unknown>;
-      const leftValueRaw = item[conditions.leftValue];
-      let leftValue = '';
-      if (
-        leftValueRaw !== null &&
-        leftValueRaw !== undefined &&
-        (typeof leftValueRaw === 'string' ||
-          typeof leftValueRaw === 'number' ||
-          typeof leftValueRaw === 'boolean')
-      ) {
-        leftValue = String(leftValueRaw);
-      }
-      const rightValue = conditions.rightValue;
-      let matches = false;
-
-      switch (conditions.operator) {
-        case 'equals':
-          matches = leftValue === rightValue;
-          break;
-        case 'notEquals':
-          matches = leftValue !== rightValue;
-          break;
-        case 'contains':
-          matches = leftValue.includes(rightValue);
-          break;
-        default:
-          matches = false;
-      }
-
-      result.push([{ ...item, _matched: matches }]);
-    }
-
-    return result;
   }
 }

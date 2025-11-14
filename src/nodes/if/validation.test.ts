@@ -1,10 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { WorkflowEngine } from '../../../src/engine.js';
-import type { WorkflowNode } from '../../../src/types.js';
+import { validateIfNodeParameters } from './index.js';
+import type { WorkflowNode } from '../../types.js';
 
 describe('If Node - Validation', () => {
-  const engine = new WorkflowEngine();
-
   it('should throw error when if node is missing conditions parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
@@ -16,7 +14,7 @@ describe('If Node - Validation', () => {
     };
 
     expect(() => {
-      engine.validateNodeParameters(node);
+      validateIfNodeParameters(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -33,7 +31,7 @@ describe('If Node - Validation', () => {
     };
 
     expect(() => {
-      engine.validateNodeParameters(node);
+      validateIfNodeParameters(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -53,7 +51,7 @@ describe('If Node - Validation', () => {
     };
 
     expect(() => {
-      engine.validateNodeParameters(node);
+      validateIfNodeParameters(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -74,7 +72,7 @@ describe('If Node - Validation', () => {
     };
 
     expect(() => {
-      engine.validateNodeParameters(node);
+      validateIfNodeParameters(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -95,7 +93,7 @@ describe('If Node - Validation', () => {
     };
 
     expect(() => {
-      engine.validateNodeParameters(node);
+      validateIfNodeParameters(node);
     }).not.toThrow();
   });
 });

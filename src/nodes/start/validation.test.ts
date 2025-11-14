@@ -1,10 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { WorkflowEngine } from '../../../src/engine.js';
-import type { WorkflowNode } from '../../../src/types.js';
+import { validateStartNodeParameters } from './index.js';
+import type { WorkflowNode } from '../../types.js';
 
 describe('Start Node - Validation', () => {
-  const engine = new WorkflowEngine();
-
   it('should accept start node with empty parameters', () => {
     const node: WorkflowNode = {
       id: 'node-1',
@@ -16,7 +14,7 @@ describe('Start Node - Validation', () => {
     };
 
     expect(() => {
-      engine.validateNodeParameters(node);
+      validateStartNodeParameters(node);
     }).not.toThrow();
   });
 });

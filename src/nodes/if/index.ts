@@ -1,0 +1,65 @@
+import { z } from 'zod';
+import type { WorkflowNode } from '../../types.js';
+import { validateNodeParameters } from '../validate.js';
+
+const IfNodeConditionsSchema = z.object({
+  leftValue: z.string(),
+  rightValue: z.string(),
+  operator: z.enum(['equals', 'notEquals', 'contains']),
+});
+
+const IfNodeParametersSchema = z.object({
+  conditions: IfNodeConditionsSchema,
+});
+
+export function validateIfNodeParameters(node: WorkflowNode): void {
+  validateNodeParameters(node, IfNodeParametersSchema);
+}
+
+export function executeIfNode(
+  node: WorkflowNode,
+  input: unknown[][],
+): unknown[][] {
+  const conditions = (node.parameters['conditions'] as {
+    leftValue: string;
+    rightValue: string;
+    operator: string;
+  }) ?? { leftValue: '', rightValue: '', operator: 'equals' };
+
+  const result: unknown[][] = [];
+
+  for (const inputItem of input) {
+    const item = inputItem[0] as Record<string, unknown>;
+    const leftValueRaw = item[conditions.leftValue];
+    let leftValue = '';
+    if (
+      leftValueRaw !== null &&
+      leftValueRaw !== undefined &&
+      (typeof leftValueRaw === 'string' ||
+        typeof leftValueRaw === 'number' ||
+        typeof leftValueRaw === 'boolean')
+    ) {
+      leftValue = String(leftValueRaw);
+    }
+    const rightValue = conditions.rightValue;
+    let matches = false;
+
+    switch (conditions.operator) {
+      case 'equals':
+        matches = leftValue === rightValue;
+        break;
+      case 'notEquals':
+        matches = leftValue !== rightValue;
+        break;
+      case 'contains':
+        matches = leftValue.includes(rightValue);
+        break;
+      default:
+        matches = false;
+    }
+
+    result.push([{ ...item, _matched: matches }]);
+  }
+
+  return result;
+}

@@ -1,11 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { WorkflowEngine } from '../../../src/engine.js';
-import type { WorkflowNode } from '../../../src/types.js';
+import { executeStartNode } from './index.js';
+import type { WorkflowNode } from '../../types.js';
 
 describe('Start Node - Execution', () => {
-  const engine = new WorkflowEngine();
-
-  it('should execute start node and return empty array', async () => {
+  it('should execute start node and return empty array', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Start',
@@ -15,12 +13,12 @@ describe('Start Node - Execution', () => {
       connections: {},
     };
 
-    const result = await engine.executeNode(node, [[{ test: 'data' }]]);
+    const result = executeStartNode(node, [[{ test: 'data' }]]);
 
     expect(result).toEqual([[]]);
   });
 
-  it('should execute start node with empty input', async () => {
+  it('should execute start node with empty input', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Start',
@@ -30,7 +28,7 @@ describe('Start Node - Execution', () => {
       connections: {},
     };
 
-    const result = await engine.executeNode(node, []);
+    const result = executeStartNode(node, []);
 
     expect(result).toEqual([[]]);
   });

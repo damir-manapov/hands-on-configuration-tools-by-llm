@@ -1,11 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { WorkflowEngine } from '../../../src/engine.js';
-import type { WorkflowNode } from '../../../src/types.js';
+import { executeSetNode } from './index.js';
+import type { WorkflowNode } from '../../types.js';
 
 describe('Set Node - Execution', () => {
-  const engine = new WorkflowEngine();
-
-  it('should execute set node and add values', async () => {
+  it('should execute set node and add values', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Set',
@@ -21,7 +19,7 @@ describe('Set Node - Execution', () => {
     };
 
     const input = [[{ existing: 'data' }]];
-    const result = await engine.executeNode(node, input);
+    const result = executeSetNode(node, input);
 
     expect(result).toHaveLength(1);
     expect(result[0]).toHaveLength(1);
@@ -32,7 +30,7 @@ describe('Set Node - Execution', () => {
     });
   });
 
-  it('should execute set node with empty values array', async () => {
+  it('should execute set node with empty values array', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Set',
@@ -45,14 +43,14 @@ describe('Set Node - Execution', () => {
     };
 
     const input = [[{ existing: 'data' }]];
-    const result = await engine.executeNode(node, input);
+    const result = executeSetNode(node, input);
 
     expect(result).toHaveLength(1);
     expect(result[0]).toHaveLength(1);
     expect(result[0]?.[0]).toEqual({ existing: 'data' });
   });
 
-  it('should execute set node with multiple input items', async () => {
+  it('should execute set node with multiple input items', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Set',
@@ -65,14 +63,14 @@ describe('Set Node - Execution', () => {
     };
 
     const input = [[{ item1: 'data1' }], [{ item2: 'data2' }]];
-    const result = await engine.executeNode(node, input);
+    const result = executeSetNode(node, input);
 
     expect(result).toHaveLength(2);
     expect(result[0]?.[0]).toEqual({ item1: 'data1', added: 'value' });
     expect(result[1]?.[0]).toEqual({ item2: 'data2', added: 'value' });
   });
 
-  it('should execute set node and overwrite existing fields', async () => {
+  it('should execute set node and overwrite existing fields', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Set',
@@ -85,7 +83,7 @@ describe('Set Node - Execution', () => {
     };
 
     const input = [[{ field1: 'old-value', field2: 'keep' }]];
-    const result = await engine.executeNode(node, input);
+    const result = executeSetNode(node, input);
 
     expect(result[0]?.[0]).toEqual({
       field1: 'new-value',
