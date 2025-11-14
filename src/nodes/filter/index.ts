@@ -3,6 +3,7 @@ import type { WorkflowNode } from '../../types.js';
 import type { NodePlugin } from '../../plugin.js';
 import { validateNodeParameters } from '../validate.js';
 import { serializeParameterSchema } from '../../schema-serializer.js';
+import { getNestedFieldValue } from '../utils/get-nested-field-value.js';
 
 const FilterNodeConditionSchema = z.object({
   leftValue: z
@@ -36,27 +37,6 @@ const FilterNodeParametersSchema = z.object({
 
 function validateFilterNodeParameters(node: WorkflowNode): void {
   validateNodeParameters(node, FilterNodeParametersSchema);
-}
-
-function getNestedFieldValue(
-  obj: Record<string, unknown>,
-  path: string,
-): unknown {
-  const parts = path.split('.');
-  let current: unknown = obj;
-
-  for (const part of parts) {
-    if (
-      current === null ||
-      current === undefined ||
-      typeof current !== 'object'
-    ) {
-      return undefined;
-    }
-    current = (current as Record<string, unknown>)[part];
-  }
-
-  return current;
 }
 
 function evaluateCondition(
