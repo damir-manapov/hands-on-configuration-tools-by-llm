@@ -80,3 +80,13 @@ export class CannotUnregisterBuiltInNodeError extends Error {
     this.name = 'CannotUnregisterBuiltInNodeError';
   }
 }
+
+export class NodeExecutionError extends Error {
+  public readonly nodeId: string;
+
+  constructor(nodeId: string, message: string) {
+    super(message);
+    this.name = 'NodeExecutionError';
+    this.nodeId = nodeId;
+  }
+}

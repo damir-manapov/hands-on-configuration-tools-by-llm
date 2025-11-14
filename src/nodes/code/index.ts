@@ -4,6 +4,11 @@ import type { WorkflowNode } from '../../types.js';
 import type { NodePlugin } from '../../plugin.js';
 import { validateNodeParameters } from '../validate.js';
 import { serializeParameterSchema } from '../../schema-serializer.js';
+import {
+  CodeExecutionTimeoutError,
+  CodeExecutionError,
+  CodeInvalidReturnFormatError,
+} from './errors.js';
 
 const CodeNodeParametersSchema = z.object({
   code: z
@@ -58,26 +63,32 @@ function executeCodeNode(
 
       // Validate result is an array of arrays
       if (!Array.isArray(result)) {
-        throw new Error(
-          'Code must return an array of arrays. Each inner array represents an output item.',
-        );
+        throw new CodeInvalidReturnFormatError(node.id);
       }
 
       for (const item of result) {
         if (!Array.isArray(item)) {
-          throw new Error(
-            'Code must return an array of arrays. Each inner array represents an output item.',
-          );
+          throw new CodeInvalidReturnFormatError(node.id);
         }
       }
 
       resolve(result as unknown[][]);
     } catch (error) {
-      reject(
-        error instanceof Error
-          ? error
-          : new Error(`Code execution error: ${String(error)}`),
-      );
+      if (error instanceof CodeInvalidReturnFormatError) {
+        reject(error);
+      } else {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        const isTimeoutError =
+          errorMessage.includes('Script execution timed out') ||
+          errorMessage.includes('timed out') ||
+          errorMessage.toLowerCase().includes('timeout');
+        if (isTimeoutError) {
+          reject(new CodeExecutionTimeoutError(node.id, timeout));
+        } else {
+          reject(new CodeExecutionError(node.id, errorMessage));
+        }
+      }
     }
   });
 }
@@ -97,3 +108,10 @@ export const codeNodePlugin: NodePlugin = {
   validate: validateCodeNodeParameters,
   execute: executeCodeNode,
 };
+
+// Export error classes for use by consumers
+export {
+  CodeExecutionTimeoutError,
+  CodeExecutionError,
+  CodeInvalidReturnFormatError,
+} from './errors.js';

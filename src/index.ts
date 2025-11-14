@@ -25,4 +25,5 @@ export {
   UnknownNodeTypeError,
   NodeTypeAlreadyRegisteredError,
   CannotUnregisterBuiltInNodeError,
+  NodeExecutionError,
 } from './errors.js';

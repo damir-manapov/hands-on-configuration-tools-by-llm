@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { codeNodePlugin } from './index.js';
 import type { WorkflowNode } from '../../types.js';
+import { NodeExecutionError } from '../../errors.js';
+import {
+  CodeExecutionTimeoutError,
+  CodeExecutionError,
+  CodeInvalidReturnFormatError,
+} from './errors.js';
 
 describe('Code Node - Execution', () => {
   it('should execute code and return transformed data', async () => {
@@ -90,7 +96,7 @@ describe('Code Node - Execution', () => {
     expect(result[0]?.[0]).toHaveProperty('json', '{"value":16}');
   });
 
-  it('should throw error when code returns invalid format', async () => {
+  it('should throw CodeInvalidReturnFormatError when code returns invalid format', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Code',
@@ -105,11 +111,14 @@ describe('Code Node - Execution', () => {
     const input = [[{ test: 'data' }]];
 
     await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
-      'Code must return an array of arrays',
+      CodeInvalidReturnFormatError,
+    );
+    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
+      'Code in node node-1 must return an array of arrays',
     );
   });
 
-  it('should enforce timeout', async () => {
+  it('should throw CodeExecutionTimeoutError when timeout is exceeded', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Code',
@@ -128,10 +137,15 @@ describe('Code Node - Execution', () => {
 
     const input = [[{ test: 'data' }]];
 
-    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow();
+    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
+      CodeExecutionTimeoutError,
+    );
+    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
+      'exceeded timeout of 100ms',
+    );
   }, 10000);
 
-  it('should not have access to require', async () => {
+  it('should throw CodeExecutionError when code has syntax or runtime errors', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Code',
@@ -145,6 +159,47 @@ describe('Code Node - Execution', () => {
 
     const input = [[{ test: 'data' }]];
 
-    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow();
+    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
+      CodeExecutionError,
+    );
+    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
+      'Code execution error in node node-1',
+    );
+  });
+
+  it('should throw CodeExecutionError for syntax errors', async () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      name: 'Code',
+      type: 'builtIn.code',
+      position: { x: 0, y: 0 },
+      parameters: {
+        code: 'return { invalid syntax }',
+      },
+      connections: {},
+    };
+
+    const input = [[{ test: 'data' }]];
+
+    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
+      CodeExecutionError,
+    );
+  });
+
+  it('should have all code errors extend NodeExecutionError', () => {
+    const nodeId = 'test-node';
+    const timeoutError = new CodeExecutionTimeoutError(nodeId, 1000);
+    const executionError = new CodeExecutionError(nodeId, 'test error');
+    const formatError = new CodeInvalidReturnFormatError(nodeId);
+
+    expect(timeoutError).toBeInstanceOf(NodeExecutionError);
+    expect(executionError).toBeInstanceOf(NodeExecutionError);
+    expect(formatError).toBeInstanceOf(NodeExecutionError);
+
+    expect(timeoutError.nodeId).toBe(nodeId);
+    expect(executionError.nodeId).toBe(nodeId);
+    expect(formatError.nodeId).toBe(nodeId);
+
+    expect(timeoutError.timeout).toBe(1000);
   });
 });
