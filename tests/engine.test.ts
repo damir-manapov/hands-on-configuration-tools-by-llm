@@ -26,8 +26,8 @@ describe('WorkflowEngine', () => {
     const retrieved = engine.getWorkflow('test-1');
 
     expect(retrieved).toBeDefined();
-    expect(retrieved?.id).toBe('test-1');
-    expect(retrieved?.name).toBe('Test Workflow');
+    expect(retrieved.id).toBe('test-1');
+    expect(retrieved.name).toBe('Test Workflow');
   });
 
   it('should throw error when adding duplicate workflow', () => {
@@ -76,10 +76,11 @@ describe('WorkflowEngine', () => {
     };
 
     engine.addWorkflow(workflow);
-    const removed = engine.removeWorkflow('test-1');
+    engine.removeWorkflow('test-1');
 
-    expect(removed).toBe(true);
-    expect(engine.getWorkflow('test-1')).toBeUndefined();
+    expect(() => {
+      engine.getWorkflow('test-1');
+    }).toThrow('not found');
   });
 
   it('should list all workflows', () => {
@@ -186,5 +187,284 @@ describe('WorkflowEngine', () => {
     await expect(engine.executeWorkflow('test-1')).rejects.toThrow(
       'not active',
     );
+  });
+
+  it('should throw error when getting non-existent workflow', () => {
+    const engine = new WorkflowEngine();
+
+    expect(() => {
+      engine.getWorkflow('non-existent');
+    }).toThrow('not found');
+  });
+
+  it('should throw error when removing non-existent workflow', () => {
+    const engine = new WorkflowEngine();
+
+    expect(() => {
+      engine.removeWorkflow('non-existent');
+    }).toThrow('not found');
+  });
+
+  it('should throw error when node is not found in workflow', async () => {
+    const engine = new WorkflowEngine();
+    const workflow: Workflow = {
+      id: 'test-1',
+      name: 'Test Workflow',
+      active: true,
+      nodes: [
+        {
+          id: 'node-1',
+          name: 'Start',
+          type: 'n8n-nodes-base.start',
+          position: { x: 0, y: 0 },
+          parameters: {},
+          connections: {
+            main: [[{ node: 'node-2', type: 'main', index: 0 }]],
+          },
+        },
+      ],
+      connections: {
+        'node-1': [{ node: 'node-2', type: 'main', index: 0 }],
+      },
+    };
+
+    engine.addWorkflow(workflow);
+
+    await expect(engine.executeWorkflow('test-1')).rejects.toThrow(
+      'not found in workflow',
+    );
+  });
+
+  it('should throw error when node has invalid type', () => {
+    const engine = new WorkflowEngine();
+    const workflow: Workflow = {
+      id: 'test-1',
+      name: 'Test Workflow',
+      active: true,
+      nodes: [
+        {
+          id: 'node-1',
+          name: 'Invalid Node',
+          type: 'invalid-node-type',
+          position: { x: 0, y: 0 },
+          parameters: {},
+          connections: {},
+        },
+      ],
+      connections: {},
+    };
+
+    expect(() => {
+      engine.addWorkflow(workflow);
+    }).toThrow('invalid type');
+  });
+
+  it('should throw error when node has no type', () => {
+    const engine = new WorkflowEngine();
+    const workflow: Workflow = {
+      id: 'test-1',
+      name: 'Test Workflow',
+      active: true,
+      nodes: [
+        {
+          id: 'node-1',
+          name: 'No Type Node',
+          type: '',
+          position: { x: 0, y: 0 },
+          parameters: {},
+          connections: {},
+        },
+      ],
+      connections: {},
+    };
+
+    expect(() => {
+      engine.addWorkflow(workflow);
+    }).toThrow('must have a type');
+  });
+
+  it('should throw error when set node is missing values parameter', () => {
+    const engine = new WorkflowEngine();
+    const workflow: Workflow = {
+      id: 'test-1',
+      name: 'Test Workflow',
+      active: true,
+      nodes: [
+        {
+          id: 'node-1',
+          name: 'Set Node',
+          type: 'n8n-nodes-base.set',
+          position: { x: 0, y: 0 },
+          parameters: {},
+          connections: {},
+        },
+      ],
+      connections: {},
+    };
+
+    expect(() => {
+      engine.addWorkflow(workflow);
+    }).toThrow('has invalid parameters');
+  });
+
+  it('should throw error when set node has invalid values parameter', () => {
+    const engine = new WorkflowEngine();
+    const workflow: Workflow = {
+      id: 'test-1',
+      name: 'Test Workflow',
+      active: true,
+      nodes: [
+        {
+          id: 'node-1',
+          name: 'Set Node',
+          type: 'n8n-nodes-base.set',
+          position: { x: 0, y: 0 },
+          parameters: {
+            values: 'not-an-array',
+          },
+          connections: {},
+        },
+      ],
+      connections: {},
+    };
+
+    expect(() => {
+      engine.addWorkflow(workflow);
+    }).toThrow('has invalid parameters');
+  });
+
+  it('should throw error when set node has invalid value item', () => {
+    const engine = new WorkflowEngine();
+    const workflow: Workflow = {
+      id: 'test-1',
+      name: 'Test Workflow',
+      active: true,
+      nodes: [
+        {
+          id: 'node-1',
+          name: 'Set Node',
+          type: 'n8n-nodes-base.set',
+          position: { x: 0, y: 0 },
+          parameters: {
+            values: [{ name: 123, value: 'test' }],
+          },
+          connections: {},
+        },
+      ],
+      connections: {},
+    };
+
+    expect(() => {
+      engine.addWorkflow(workflow);
+    }).toThrow('has invalid parameters');
+  });
+
+  it('should throw error when if node is missing conditions parameter', () => {
+    const engine = new WorkflowEngine();
+    const workflow: Workflow = {
+      id: 'test-1',
+      name: 'Test Workflow',
+      active: true,
+      nodes: [
+        {
+          id: 'node-1',
+          name: 'If Node',
+          type: 'n8n-nodes-base.if',
+          position: { x: 0, y: 0 },
+          parameters: {},
+          connections: {},
+        },
+      ],
+      connections: {},
+    };
+
+    expect(() => {
+      engine.addWorkflow(workflow);
+    }).toThrow('has invalid parameters');
+  });
+
+  it('should throw error when if node has invalid conditions parameter', () => {
+    const engine = new WorkflowEngine();
+    const workflow: Workflow = {
+      id: 'test-1',
+      name: 'Test Workflow',
+      active: true,
+      nodes: [
+        {
+          id: 'node-1',
+          name: 'If Node',
+          type: 'n8n-nodes-base.if',
+          position: { x: 0, y: 0 },
+          parameters: {
+            conditions: 'not-an-object',
+          },
+          connections: {},
+        },
+      ],
+      connections: {},
+    };
+
+    expect(() => {
+      engine.addWorkflow(workflow);
+    }).toThrow('has invalid parameters');
+  });
+
+  it('should throw error when if node has missing condition fields', () => {
+    const engine = new WorkflowEngine();
+    const workflow: Workflow = {
+      id: 'test-1',
+      name: 'Test Workflow',
+      active: true,
+      nodes: [
+        {
+          id: 'node-1',
+          name: 'If Node',
+          type: 'n8n-nodes-base.if',
+          position: { x: 0, y: 0 },
+          parameters: {
+            conditions: {
+              leftValue: 'field1',
+              rightValue: 'value1',
+            },
+          },
+          connections: {},
+        },
+      ],
+      connections: {},
+    };
+
+    expect(() => {
+      engine.addWorkflow(workflow);
+    }).toThrow('has invalid parameters');
+  });
+
+  it('should throw error when if node has invalid operator', () => {
+    const engine = new WorkflowEngine();
+    const workflow: Workflow = {
+      id: 'test-1',
+      name: 'Test Workflow',
+      active: true,
+      nodes: [
+        {
+          id: 'node-1',
+          name: 'If Node',
+          type: 'n8n-nodes-base.if',
+          position: { x: 0, y: 0 },
+          parameters: {
+            conditions: {
+              leftValue: 'field1',
+              rightValue: 'value1',
+              operator: 'invalid-operator',
+            },
+          },
+          connections: {},
+        },
+      ],
+      connections: {},
+    };
+
+    expect(() => {
+      engine.addWorkflow(workflow);
+    }).toThrow('has invalid parameters');
   });
 });
