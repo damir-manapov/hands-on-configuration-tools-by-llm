@@ -10,7 +10,9 @@ const SetNodeValueSchema = z.object({
     .describe('The name of the field to set or overwrite in the data item.'),
   value: z
     .string()
-    .describe('The static value to assign to the field. This will be set as a string.'),
+    .describe(
+      'The static value to assign to the field. This will be set as a string.',
+    ),
 });
 
 const SetNodeParametersSchema = z.object({

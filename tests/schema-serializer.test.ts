@@ -162,7 +162,9 @@ describe('Schema Serializer', () => {
     const schema = z.object({
       username: z.string().describe('The unique identifier for the user.'),
       age: z.number().describe('The age of the user in years.'),
-      isActive: z.boolean().describe('Indicates if the user account is active.'),
+      isActive: z
+        .boolean()
+        .describe('Indicates if the user account is active.'),
     });
     const serialized = serializeParameterSchema(schema);
 
@@ -191,12 +193,12 @@ describe('Schema Serializer', () => {
     const serialized = serializeParameterSchema(schema);
 
     expect(serialized.fields['items']?.description).toBe('Array of items');
-    expect(serialized.fields['items']?.itemType?.fields?.['name']?.description).toBe(
-      'Item name',
-    );
-    expect(serialized.fields['items']?.itemType?.fields?.['value']?.description).toBe(
-      'Item value',
-    );
+    expect(
+      serialized.fields['items']?.itemType?.fields?.['name']?.description,
+    ).toBe('Item name');
+    expect(
+      serialized.fields['items']?.itemType?.fields?.['value']?.description,
+    ).toBe('Item value');
   });
 
   it('should be fully JSON serializable for all node types', () => {

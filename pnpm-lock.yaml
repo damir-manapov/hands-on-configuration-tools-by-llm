@@ -7,6 +7,9 @@ settings:
 importers:
   .:
     dependencies:
+      vm2:
+        specifier: ^3.9.19
+        version: 3.10.0
       zod:
         specifier: ^4.1.12
         version: 4.1.12
@@ -822,6 +825,13 @@ packages:
       }
     peerDependencies:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
+
+  acorn-walk@8.3.4:
+    resolution:
+      {
+        integrity: sha512-ueEepnujpqee2o5aIYnvHU6C0A42MNdsIDeqy5BydrkuC5R1ZuUFnm27EeFJGoEHJQgn3uleRvmTXaJgfXbt4g==,
+      }
+    engines: { node: '>=0.4.0' }
 
   acorn@8.15.0:
     resolution:
@@ -1767,6 +1777,14 @@ packages:
       jsdom:
         optional: true
 
+  vm2@3.10.0:
+    resolution:
+      {
+        integrity: sha512-3ggF4Bs0cw4M7Rxn19/Cv3nJi04xrgHwt4uLto+zkcZocaKwP/nKP9wPx6ggN2X0DSXxOOIc63BV1jvES19wXQ==,
+      }
+    engines: { node: '>=6.0' }
+    hasBin: true
+
   which@2.0.2:
     resolution:
       {
@@ -2208,6 +2226,10 @@ snapshots:
       tinyrainbow: 3.0.3
 
   acorn-jsx@5.3.2(acorn@8.15.0):
+    dependencies:
+      acorn: 8.15.0
+
+  acorn-walk@8.3.4:
     dependencies:
       acorn: 8.15.0
 
@@ -2762,6 +2784,11 @@ snapshots:
       - terser
       - tsx
       - yaml
+
+  vm2@3.10.0:
+    dependencies:
+      acorn: 8.15.0
+      acorn-walk: 8.3.4
 
   which@2.0.2:
     dependencies:

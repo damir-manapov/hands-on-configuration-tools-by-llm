@@ -5,7 +5,12 @@ import type {
   ExecutionResult,
 } from './types.js';
 import type { NodePlugin } from './plugin.js';
-import { startNodePlugin, setNodePlugin, ifNodePlugin } from './nodes/index.js';
+import {
+  startNodePlugin,
+  setNodePlugin,
+  ifNodePlugin,
+  codeNodePlugin,
+} from './nodes/index.js';
 import {
   WorkflowNotFoundError,
   WorkflowAlreadyExistsError,
@@ -19,15 +24,26 @@ import {
   CannotUnregisterBuiltInNodeError,
 } from './errors.js';
 
+const BUILT_IN_PLUGINS = [
+  startNodePlugin,
+  setNodePlugin,
+  ifNodePlugin,
+  codeNodePlugin,
+] as const;
+
+const BUILT_IN_NODE_TYPES = BUILT_IN_PLUGINS.map(
+  (plugin) => plugin.nodeType,
+) as readonly string[];
+
 export class WorkflowEngine {
   private workflows = new Map<string, Workflow>();
   private nodePlugins = new Map<string, NodePlugin>();
 
   constructor() {
     // Register built-in nodes
-    this.registerNode(startNodePlugin);
-    this.registerNode(setNodePlugin);
-    this.registerNode(ifNodePlugin);
+    for (const plugin of BUILT_IN_PLUGINS) {
+      this.registerNode(plugin);
+    }
   }
 
   registerNode(plugin: NodePlugin): void {
@@ -39,8 +55,7 @@ export class WorkflowEngine {
 
   unregisterNode(nodeType: string): void {
     // Prevent unregistering built-in nodes
-    const builtInTypes = ['builtIn.start', 'builtIn.set', 'builtIn.if'];
-    if (builtInTypes.includes(nodeType)) {
+    if (BUILT_IN_NODE_TYPES.includes(nodeType)) {
       throw new CannotUnregisterBuiltInNodeError(nodeType);
     }
     this.nodePlugins.delete(nodeType);

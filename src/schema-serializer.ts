@@ -54,7 +54,11 @@ function serializeZodType(
     const inner = serializeZodType(
       (def as unknown as { innerType: z.ZodType<unknown> }).innerType,
     );
-    return { ...inner, required: false, description: description ?? inner.description };
+    return {
+      ...inner,
+      required: false,
+      description: description ?? inner.description,
+    };
   }
 
   // Handle string
