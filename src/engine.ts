@@ -135,7 +135,7 @@ export class WorkflowEngine {
     }
   }
 
-  private validateNodeParameters(node: WorkflowNode): void {
+  validateNodeParameters(node: WorkflowNode): void {
     let schema: z.ZodType<unknown>;
     switch (node.type) {
       case 'n8n-nodes-base.start':
@@ -231,7 +231,7 @@ export class WorkflowEngine {
     return input.length > 0 ? input : [[]];
   }
 
-  private async executeNode(
+  async executeNode(
     node: WorkflowNode,
     input: unknown[][],
   ): Promise<unknown[][]> {
