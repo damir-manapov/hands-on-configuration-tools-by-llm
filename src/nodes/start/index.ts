@@ -18,6 +18,13 @@ function executeStartNode(
 
 export const startNodePlugin: NodePlugin = {
   nodeType: 'builtIn.start',
+  name: 'Start',
+  purpose: 'Entry point for workflows. Initializes workflow execution with empty data.',
+  useCases: [
+    'Starting a workflow execution',
+    'Creating the initial data context for a workflow',
+    'Defining workflow entry points',
+  ],
   validate: validateStartNodeParameters,
   execute: executeStartNode,
 };

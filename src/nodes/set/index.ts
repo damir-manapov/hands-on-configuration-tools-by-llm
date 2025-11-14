@@ -39,6 +39,14 @@ function executeSetNode(
 
 export const setNodePlugin: NodePlugin = {
   nodeType: 'builtIn.set',
+  name: 'Set',
+  purpose: 'Add or overwrite fields in data items with static values.',
+  useCases: [
+    'Adding new fields to data items',
+    'Overwriting existing field values',
+    'Setting default values',
+    'Transforming data structure by adding fields',
+  ],
   validate: validateSetNodeParameters,
   execute: executeSetNode,
 };

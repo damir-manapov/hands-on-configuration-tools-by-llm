@@ -9,6 +9,9 @@ describe('WorkflowEngine - Plugin System', () => {
 
     const customPlugin: NodePlugin = {
       nodeType: 'custom-node',
+      name: 'Custom Node',
+      purpose: 'A custom node for testing plugin registration.',
+      useCases: ['Testing plugin system', 'Custom functionality'],
       validate: (node: WorkflowNode) => {
         if (!node.parameters['message']) {
           throw new Error('Missing message parameter');
@@ -32,6 +35,9 @@ describe('WorkflowEngine - Plugin System', () => {
 
     const plugin: NodePlugin = {
       nodeType: 'builtIn.start',
+      name: 'Test Start',
+      purpose: 'Test plugin',
+      useCases: ['Testing'],
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
       execute: () => [[]],
@@ -55,6 +61,9 @@ describe('WorkflowEngine - Plugin System', () => {
 
     const customPlugin: NodePlugin = {
       nodeType: 'custom-node',
+      name: 'Custom Node',
+      purpose: 'Test custom node',
+      useCases: ['Testing'],
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
       execute: () => [[]],
@@ -72,6 +81,9 @@ describe('WorkflowEngine - Plugin System', () => {
 
     const customPlugin: NodePlugin = {
       nodeType: 'custom-echo',
+      name: 'Echo',
+      purpose: 'Echoes text back in the output data.',
+      useCases: ['Adding echo text to data', 'Testing custom nodes'],
       validate: (node: WorkflowNode) => {
         if (!node.parameters['text']) {
           throw new Error('Missing text parameter');
@@ -129,6 +141,9 @@ describe('WorkflowEngine - Plugin System', () => {
 
     const customPlugin: NodePlugin = {
       nodeType: 'custom-required',
+      name: 'Required Field',
+      purpose: 'Validates that a required field is present.',
+      useCases: ['Parameter validation testing'],
       validate: (node: WorkflowNode) => {
         if (!node.parameters['requiredField']) {
           throw new Error('requiredField is required');

@@ -67,6 +67,14 @@ function executeIfNode(
 
 export const ifNodePlugin: NodePlugin = {
   nodeType: 'builtIn.if',
+  name: 'If',
+  purpose: 'Conditional routing based on a single condition. Evaluates a condition and adds a _matched field to indicate whether the condition was met.',
+  useCases: [
+    'Conditional workflow branching',
+    'Filtering data based on conditions',
+    'Implementing business logic with conditions',
+    'Data validation and routing',
+  ],
   validate: validateIfNodeParameters,
   execute: executeIfNode,
 };
