@@ -29,4 +29,3 @@ export class CodeInvalidReturnFormatError extends NodeExecutionError {
     this.name = 'CodeInvalidReturnFormatError';
   }
 }
-
