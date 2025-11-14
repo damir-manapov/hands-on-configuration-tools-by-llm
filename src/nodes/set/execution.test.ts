@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { executeSetNode } from './index.js';
+import { setNodePlugin } from './index.js';
 import type { WorkflowNode } from '../../types.js';
 
 describe('Set Node - Execution', () => {
@@ -7,7 +7,7 @@ describe('Set Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Set',
-      type: 'n8n-nodes-base.set',
+      type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
         values: [
@@ -19,7 +19,7 @@ describe('Set Node - Execution', () => {
     };
 
     const input = [[{ existing: 'data' }]];
-    const result = executeSetNode(node, input);
+    const result = setNodePlugin.execute(node, input) as unknown[][];
 
     expect(result).toHaveLength(1);
     expect(result[0]).toHaveLength(1);
@@ -34,7 +34,7 @@ describe('Set Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Set',
-      type: 'n8n-nodes-base.set',
+      type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
         values: [],
@@ -43,7 +43,7 @@ describe('Set Node - Execution', () => {
     };
 
     const input = [[{ existing: 'data' }]];
-    const result = executeSetNode(node, input);
+    const result = setNodePlugin.execute(node, input) as unknown[][];
 
     expect(result).toHaveLength(1);
     expect(result[0]).toHaveLength(1);
@@ -54,7 +54,7 @@ describe('Set Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Set',
-      type: 'n8n-nodes-base.set',
+      type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
         values: [{ name: 'added', value: 'value' }],
@@ -63,7 +63,7 @@ describe('Set Node - Execution', () => {
     };
 
     const input = [[{ item1: 'data1' }], [{ item2: 'data2' }]];
-    const result = executeSetNode(node, input);
+    const result = setNodePlugin.execute(node, input) as unknown[][];
 
     expect(result).toHaveLength(2);
     expect(result[0]?.[0]).toEqual({ item1: 'data1', added: 'value' });
@@ -74,7 +74,7 @@ describe('Set Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Set',
-      type: 'n8n-nodes-base.set',
+      type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
         values: [{ name: 'field1', value: 'new-value' }],
@@ -83,7 +83,7 @@ describe('Set Node - Execution', () => {
     };
 
     const input = [[{ field1: 'old-value', field2: 'keep' }]];
-    const result = executeSetNode(node, input);
+    const result = setNodePlugin.execute(node, input) as unknown[][];
 
     expect(result[0]?.[0]).toEqual({
       field1: 'new-value',

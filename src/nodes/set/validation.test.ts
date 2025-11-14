@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateSetNodeParameters } from './index.js';
+import { setNodePlugin } from './index.js';
 import type { WorkflowNode } from '../../types.js';
 
 describe('Set Node - Validation', () => {
@@ -7,14 +7,14 @@ describe('Set Node - Validation', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Set Node',
-      type: 'n8n-nodes-base.set',
+      type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {},
       connections: {},
     };
 
     expect(() => {
-      validateSetNodeParameters(node);
+      setNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -22,7 +22,7 @@ describe('Set Node - Validation', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Set Node',
-      type: 'n8n-nodes-base.set',
+      type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
         values: 'not-an-array',
@@ -31,7 +31,7 @@ describe('Set Node - Validation', () => {
     };
 
     expect(() => {
-      validateSetNodeParameters(node);
+      setNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -39,7 +39,7 @@ describe('Set Node - Validation', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Set Node',
-      type: 'n8n-nodes-base.set',
+      type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
         values: [{ name: 123, value: 'test' }],
@@ -48,7 +48,7 @@ describe('Set Node - Validation', () => {
     };
 
     expect(() => {
-      validateSetNodeParameters(node);
+      setNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -56,7 +56,7 @@ describe('Set Node - Validation', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Set Node',
-      type: 'n8n-nodes-base.set',
+      type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
         values: [
@@ -68,7 +68,7 @@ describe('Set Node - Validation', () => {
     };
 
     expect(() => {
-      validateSetNodeParameters(node);
+      setNodePlugin.validate(node);
     }).not.toThrow();
   });
 });

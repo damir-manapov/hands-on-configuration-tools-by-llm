@@ -31,7 +31,7 @@ describe('WorkflowEngine - Plugin System', () => {
     const engine = new WorkflowEngine();
 
     const plugin: NodePlugin = {
-      nodeType: 'n8n-nodes-base.start',
+      nodeType: 'builtIn.start',
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
       execute: () => [[]],
@@ -46,7 +46,7 @@ describe('WorkflowEngine - Plugin System', () => {
     const engine = new WorkflowEngine();
 
     expect(() => {
-      engine.unregisterNode('n8n-nodes-base.start');
+      engine.unregisterNode('builtIn.start');
     }).toThrow('Cannot unregister built-in node type');
   });
 
@@ -95,7 +95,7 @@ describe('WorkflowEngine - Plugin System', () => {
         {
           id: 'node-1',
           name: 'Start',
-          type: 'n8n-nodes-base.start',
+          type: 'builtIn.start',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {},

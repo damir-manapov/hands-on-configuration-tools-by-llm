@@ -1,16 +1,23 @@
 import { z } from 'zod';
 import type { WorkflowNode } from '../../types.js';
+import type { NodePlugin } from '../../plugin.js';
 import { validateNodeParameters } from '../validate.js';
 
 const StartNodeParametersSchema = z.object({});
 
-export function validateStartNodeParameters(node: WorkflowNode): void {
+function validateStartNodeParameters(node: WorkflowNode): void {
   validateNodeParameters(node, StartNodeParametersSchema);
 }
 
-export function executeStartNode(
+function executeStartNode(
   _node: WorkflowNode,
   _input: unknown[][],
 ): unknown[][] {
   return [[]];
 }
+
+export const startNodePlugin: NodePlugin = {
+  nodeType: 'builtIn.start',
+  validate: validateStartNodeParameters,
+  execute: executeStartNode,
+};

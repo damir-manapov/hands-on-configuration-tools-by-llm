@@ -1,3 +1,3 @@
-export * from './start/index.js';
-export * from './set/index.js';
-export * from './if/index.js';
+export { startNodePlugin } from './start/index.js';
+export { setNodePlugin } from './set/index.js';
+export { ifNodePlugin } from './if/index.js';

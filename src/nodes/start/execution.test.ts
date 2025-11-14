@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { executeStartNode } from './index.js';
+import { startNodePlugin } from './index.js';
 import type { WorkflowNode } from '../../types.js';
 
 describe('Start Node - Execution', () => {
@@ -7,13 +7,13 @@ describe('Start Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Start',
-      type: 'n8n-nodes-base.start',
+      type: 'builtIn.start',
       position: { x: 0, y: 0 },
       parameters: {},
       connections: {},
     };
 
-    const result = executeStartNode(node, [[{ test: 'data' }]]);
+    const result = startNodePlugin.execute(node, [[{ test: 'data' }]]) as unknown[][];
 
     expect(result).toEqual([[]]);
   });
@@ -22,13 +22,13 @@ describe('Start Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Start',
-      type: 'n8n-nodes-base.start',
+      type: 'builtIn.start',
       position: { x: 0, y: 0 },
       parameters: {},
       connections: {},
     };
 
-    const result = executeStartNode(node, []);
+    const result = startNodePlugin.execute(node, []) as unknown[][];
 
     expect(result).toEqual([[]]);
   });

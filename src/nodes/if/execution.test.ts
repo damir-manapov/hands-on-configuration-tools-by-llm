@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { executeIfNode } from './index.js';
+import { ifNodePlugin } from './index.js';
 import type { WorkflowNode } from '../../types.js';
 
 describe('If Node - Execution', () => {
@@ -7,7 +7,7 @@ describe('If Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
         conditions: {
@@ -20,7 +20,7 @@ describe('If Node - Execution', () => {
     };
 
     const input = [[{ status: 'active', name: 'test' }]];
-    const result = executeIfNode(node, input);
+    const result = ifNodePlugin.execute(node, input) as unknown[][];
 
     expect(result).toHaveLength(1);
     expect(result[0]?.[0]).toEqual({
@@ -34,7 +34,7 @@ describe('If Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
         conditions: {
@@ -47,7 +47,7 @@ describe('If Node - Execution', () => {
     };
 
     const input = [[{ status: 'inactive', name: 'test' }]];
-    const result = executeIfNode(node, input);
+    const result = ifNodePlugin.execute(node, input) as unknown[][];
 
     expect(result[0]?.[0]).toEqual({
       status: 'inactive',
@@ -60,7 +60,7 @@ describe('If Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
         conditions: {
@@ -73,7 +73,7 @@ describe('If Node - Execution', () => {
     };
 
     const input = [[{ status: 'inactive' }]];
-    const result = executeIfNode(node, input);
+    const result = ifNodePlugin.execute(node, input) as unknown[][];
 
     expect(result[0]?.[0]).toEqual({
       status: 'inactive',
@@ -85,7 +85,7 @@ describe('If Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
         conditions: {
@@ -98,7 +98,7 @@ describe('If Node - Execution', () => {
     };
 
     const input = [[{ message: 'This is an error message' }]];
-    const result = executeIfNode(node, input);
+    const result = ifNodePlugin.execute(node, input) as unknown[][];
 
     expect(result[0]?.[0]).toEqual({
       message: 'This is an error message',
@@ -110,7 +110,7 @@ describe('If Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
         conditions: {
@@ -123,7 +123,7 @@ describe('If Node - Execution', () => {
     };
 
     const input = [[{ message: 'This is a success message' }]];
-    const result = executeIfNode(node, input);
+    const result = ifNodePlugin.execute(node, input) as unknown[][];
 
     expect(result[0]?.[0]).toEqual({
       message: 'This is a success message',
@@ -135,7 +135,7 @@ describe('If Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
         conditions: {
@@ -148,7 +148,7 @@ describe('If Node - Execution', () => {
     };
 
     const input = [[{ other: 'field' }]];
-    const result = executeIfNode(node, input);
+    const result = ifNodePlugin.execute(node, input) as unknown[][];
 
     expect(result[0]?.[0]).toEqual({
       other: 'field',
@@ -160,7 +160,7 @@ describe('If Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
         conditions: {
@@ -173,7 +173,7 @@ describe('If Node - Execution', () => {
     };
 
     const input = [[{ count: 5 }]];
-    const result = executeIfNode(node, input);
+    const result = ifNodePlugin.execute(node, input) as unknown[][];
 
     expect(result[0]?.[0]).toEqual({
       count: 5,
@@ -185,7 +185,7 @@ describe('If Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
         conditions: {
@@ -198,7 +198,7 @@ describe('If Node - Execution', () => {
     };
 
     const input = [[{ enabled: true }]];
-    const result = executeIfNode(node, input);
+    const result = ifNodePlugin.execute(node, input) as unknown[][];
 
     expect(result[0]?.[0]).toEqual({
       enabled: true,
@@ -210,7 +210,7 @@ describe('If Node - Execution', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
         conditions: {
@@ -227,7 +227,7 @@ describe('If Node - Execution', () => {
       [{ status: 'inactive' }],
       [{ status: 'active' }],
     ];
-    const result = executeIfNode(node, input);
+    const result = ifNodePlugin.execute(node, input) as unknown[][];
 
     expect(result).toHaveLength(3);
     expect(result[0]?.[0]).toEqual({ status: 'active', _matched: true });

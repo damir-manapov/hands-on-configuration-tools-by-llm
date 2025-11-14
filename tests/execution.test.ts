@@ -13,7 +13,7 @@ describe('WorkflowEngine - Execution', () => {
         {
           id: 'node-1',
           name: 'Start',
-          type: 'n8n-nodes-base.start',
+          type: 'builtIn.start',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {},
@@ -47,7 +47,7 @@ describe('WorkflowEngine - Execution', () => {
         {
           id: 'node-1',
           name: 'Start',
-          type: 'n8n-nodes-base.start',
+          type: 'builtIn.start',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {},
@@ -73,7 +73,7 @@ describe('WorkflowEngine - Execution', () => {
         {
           id: 'node-1',
           name: 'Start',
-          type: 'n8n-nodes-base.start',
+          type: 'builtIn.start',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {

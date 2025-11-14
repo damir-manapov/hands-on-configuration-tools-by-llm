@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { WorkflowNode } from '../../types.js';
+import type { NodePlugin } from '../../plugin.js';
 import { validateNodeParameters } from '../validate.js';
 
 const IfNodeConditionsSchema = z.object({
@@ -12,11 +13,11 @@ const IfNodeParametersSchema = z.object({
   conditions: IfNodeConditionsSchema,
 });
 
-export function validateIfNodeParameters(node: WorkflowNode): void {
+function validateIfNodeParameters(node: WorkflowNode): void {
   validateNodeParameters(node, IfNodeParametersSchema);
 }
 
-export function executeIfNode(
+function executeIfNode(
   node: WorkflowNode,
   input: unknown[][],
 ): unknown[][] {
@@ -63,3 +64,9 @@ export function executeIfNode(
 
   return result;
 }
+
+export const ifNodePlugin: NodePlugin = {
+  nodeType: 'builtIn.if',
+  validate: validateIfNodeParameters,
+  execute: executeIfNode,
+};

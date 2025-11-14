@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { WorkflowNode } from '../../types.js';
+import type { NodePlugin } from '../../plugin.js';
 import { validateNodeParameters } from '../validate.js';
 
 const SetNodeValueSchema = z.object({
@@ -11,11 +12,11 @@ const SetNodeParametersSchema = z.object({
   values: z.array(SetNodeValueSchema),
 });
 
-export function validateSetNodeParameters(node: WorkflowNode): void {
+function validateSetNodeParameters(node: WorkflowNode): void {
   validateNodeParameters(node, SetNodeParametersSchema);
 }
 
-export function executeSetNode(
+function executeSetNode(
   node: WorkflowNode,
   input: unknown[][],
 ): unknown[][] {
@@ -35,3 +36,9 @@ export function executeSetNode(
 
   return result;
 }
+
+export const setNodePlugin: NodePlugin = {
+  nodeType: 'builtIn.set',
+  validate: validateSetNodeParameters,
+  execute: executeSetNode,
+};

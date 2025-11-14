@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateIfNodeParameters } from './index.js';
+import { ifNodePlugin } from './index.js';
 import type { WorkflowNode } from '../../types.js';
 
 describe('If Node - Validation', () => {
@@ -7,14 +7,14 @@ describe('If Node - Validation', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If Node',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {},
       connections: {},
     };
 
     expect(() => {
-      validateIfNodeParameters(node);
+      ifNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -22,7 +22,7 @@ describe('If Node - Validation', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If Node',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
         conditions: 'not-an-object',
@@ -31,7 +31,7 @@ describe('If Node - Validation', () => {
     };
 
     expect(() => {
-      validateIfNodeParameters(node);
+      ifNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -39,7 +39,7 @@ describe('If Node - Validation', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If Node',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
         conditions: {
@@ -51,7 +51,7 @@ describe('If Node - Validation', () => {
     };
 
     expect(() => {
-      validateIfNodeParameters(node);
+      ifNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -59,7 +59,7 @@ describe('If Node - Validation', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If Node',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
         conditions: {
@@ -72,7 +72,7 @@ describe('If Node - Validation', () => {
     };
 
     expect(() => {
-      validateIfNodeParameters(node);
+      ifNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
@@ -80,7 +80,7 @@ describe('If Node - Validation', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If Node',
-      type: 'n8n-nodes-base.if',
+      type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
         conditions: {
@@ -93,7 +93,7 @@ describe('If Node - Validation', () => {
     };
 
     expect(() => {
-      validateIfNodeParameters(node);
+      ifNodePlugin.validate(node);
     }).not.toThrow();
   });
 });

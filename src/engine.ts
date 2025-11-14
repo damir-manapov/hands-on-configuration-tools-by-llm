@@ -5,14 +5,7 @@ import type {
   ExecutionResult,
 } from './types.js';
 import type { NodePlugin } from './plugin.js';
-import {
-  validateStartNodeParameters,
-  validateSetNodeParameters,
-  validateIfNodeParameters,
-  executeStartNode,
-  executeSetNode,
-  executeIfNode,
-} from './nodes/index.js';
+import { startNodePlugin, setNodePlugin, ifNodePlugin } from './nodes/index.js';
 import {
   WorkflowNotFoundError,
   WorkflowAlreadyExistsError,
@@ -32,21 +25,9 @@ export class WorkflowEngine {
 
   constructor() {
     // Register built-in nodes
-    this.registerNode({
-      nodeType: 'n8n-nodes-base.start',
-      validate: validateStartNodeParameters,
-      execute: executeStartNode,
-    });
-    this.registerNode({
-      nodeType: 'n8n-nodes-base.set',
-      validate: validateSetNodeParameters,
-      execute: executeSetNode,
-    });
-    this.registerNode({
-      nodeType: 'n8n-nodes-base.if',
-      validate: validateIfNodeParameters,
-      execute: executeIfNode,
-    });
+    this.registerNode(startNodePlugin);
+    this.registerNode(setNodePlugin);
+    this.registerNode(ifNodePlugin);
   }
 
   registerNode(plugin: NodePlugin): void {
@@ -59,9 +40,9 @@ export class WorkflowEngine {
   unregisterNode(nodeType: string): void {
     // Prevent unregistering built-in nodes
     const builtInTypes = [
-      'n8n-nodes-base.start',
-      'n8n-nodes-base.set',
-      'n8n-nodes-base.if',
+      'builtIn.start',
+      'builtIn.set',
+      'builtIn.if',
     ];
     if (builtInTypes.includes(nodeType)) {
       throw new CannotUnregisterBuiltInNodeError(nodeType);
