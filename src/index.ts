@@ -8,6 +8,11 @@ export type {
   ExecutionResult,
 } from './types.js';
 export type { NodePlugin } from './plugin.js';
+export type {
+  SerializableParameterSchema,
+  SerializableFieldSchema,
+} from './schema-serializer.js';
+export { serializeParameterSchema } from './schema-serializer.js';
 export {
   WorkflowNotFoundError,
   WorkflowAlreadyExistsError,

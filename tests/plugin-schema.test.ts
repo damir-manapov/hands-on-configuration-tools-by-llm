@@ -1,58 +1,24 @@
 import { describe, it, expect } from 'vitest';
-import { startNodePlugin, setNodePlugin, ifNodePlugin } from '../src/nodes/index.js';
+import {
+  startNodePlugin,
+  setNodePlugin,
+  ifNodePlugin,
+} from '../src/nodes/index.js';
 
 describe('NodePlugin - Parameter Schema', () => {
-  it('should export parameter schema for start node', () => {
-    const schema = startNodePlugin.getParameterSchema();
-    const result = schema.safeParse({});
-    expect(result.success).toBe(true);
-  });
+  it('should export parameter schema for all built-in nodes', () => {
+    const plugins = [startNodePlugin, setNodePlugin, ifNodePlugin];
 
-  it('should export parameter schema for set node', () => {
-    const schema = setNodePlugin.getParameterSchema();
-    const validParams = {
-      values: [
-        { name: 'field1', value: 'value1' },
-        { name: 'field2', value: 'value2' },
-      ],
-    };
-    const result = schema.safeParse(validParams);
-    expect(result.success).toBe(true);
-  });
+    for (const plugin of plugins) {
+      const schema = plugin.getParameterSchema();
 
-  it('should export parameter schema for if node', () => {
-    const schema = ifNodePlugin.getParameterSchema();
-    const validParams = {
-      conditions: {
-        leftValue: 'status',
-        rightValue: 'active',
-        operator: 'equals',
-      },
-    };
-    const result = schema.safeParse(validParams);
-    expect(result.success).toBe(true);
-  });
+      expect(schema).toBeDefined();
+      expect(schema.type).toBe('object');
+      expect(schema.fields).toBeDefined();
+      expect(typeof schema.fields).toBe('object');
 
-  it('should reject invalid parameters for set node', () => {
-    const schema = setNodePlugin.getParameterSchema();
-    const invalidParams = {
-      values: 'not-an-array',
-    };
-    const result = schema.safeParse(invalidParams);
-    expect(result.success).toBe(false);
-  });
-
-  it('should reject invalid parameters for if node', () => {
-    const schema = ifNodePlugin.getParameterSchema();
-    const invalidParams = {
-      conditions: {
-        leftValue: 'status',
-        rightValue: 'active',
-        operator: 'invalid-operator',
-      },
-    };
-    const result = schema.safeParse(invalidParams);
-    expect(result.success).toBe(false);
+      // Verify JSON serializable
+      expect(() => JSON.stringify(schema)).not.toThrow();
+    }
   });
 });
-

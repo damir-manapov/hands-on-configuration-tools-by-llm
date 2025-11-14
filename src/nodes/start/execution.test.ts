@@ -13,7 +13,9 @@ describe('Start Node - Execution', () => {
       connections: {},
     };
 
-    const result = startNodePlugin.execute(node, [[{ test: 'data' }]]) as unknown[][];
+    const result = startNodePlugin.execute(node, [
+      [{ test: 'data' }],
+    ]) as unknown[][];
 
     expect(result).toEqual([[]]);
   });

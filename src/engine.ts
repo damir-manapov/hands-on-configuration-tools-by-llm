@@ -39,11 +39,7 @@ export class WorkflowEngine {
 
   unregisterNode(nodeType: string): void {
     // Prevent unregistering built-in nodes
-    const builtInTypes = [
-      'builtIn.start',
-      'builtIn.set',
-      'builtIn.if',
-    ];
+    const builtInTypes = ['builtIn.start', 'builtIn.set', 'builtIn.if'];
     if (builtInTypes.includes(nodeType)) {
       throw new CannotUnregisterBuiltInNodeError(nodeType);
     }

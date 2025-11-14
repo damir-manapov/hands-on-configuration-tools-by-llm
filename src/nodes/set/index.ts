@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { WorkflowNode } from '../../types.js';
 import type { NodePlugin } from '../../plugin.js';
 import { validateNodeParameters } from '../validate.js';
+import { serializeParameterSchema } from '../../schema-serializer.js';
 
 const SetNodeValueSchema = z.object({
   name: z.string(),
@@ -16,10 +17,7 @@ function validateSetNodeParameters(node: WorkflowNode): void {
   validateNodeParameters(node, SetNodeParametersSchema);
 }
 
-function executeSetNode(
-  node: WorkflowNode,
-  input: unknown[][],
-): unknown[][] {
+function executeSetNode(node: WorkflowNode, input: unknown[][]): unknown[][] {
   const values =
     (node.parameters['values'] as { name: string; value: string }[]) ?? [];
   const result: unknown[][] = [];
@@ -47,7 +45,8 @@ export const setNodePlugin: NodePlugin = {
     'Setting default values',
     'Transforming data structure by adding fields',
   ],
-  getParameterSchema: () => SetNodeParametersSchema,
+  getParameterSchema: () =>
+    serializeParameterSchema(SetNodeParametersSchema),
   validate: validateSetNodeParameters,
   execute: executeSetNode,
 };

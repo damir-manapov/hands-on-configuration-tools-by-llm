@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { WorkflowNode } from '../../types.js';
 import type { NodePlugin } from '../../plugin.js';
 import { validateNodeParameters } from '../validate.js';
+import { serializeParameterSchema } from '../../schema-serializer.js';
 
 const IfNodeConditionsSchema = z.object({
   leftValue: z.string(),
@@ -17,10 +18,7 @@ function validateIfNodeParameters(node: WorkflowNode): void {
   validateNodeParameters(node, IfNodeParametersSchema);
 }
 
-function executeIfNode(
-  node: WorkflowNode,
-  input: unknown[][],
-): unknown[][] {
+function executeIfNode(node: WorkflowNode, input: unknown[][]): unknown[][] {
   const conditions = (node.parameters['conditions'] as {
     leftValue: string;
     rightValue: string;
@@ -68,14 +66,16 @@ function executeIfNode(
 export const ifNodePlugin: NodePlugin = {
   nodeType: 'builtIn.if',
   name: 'If',
-  purpose: 'Conditional routing based on a single condition. Evaluates a condition and adds a _matched field to indicate whether the condition was met.',
+  purpose:
+    'Conditional routing based on a single condition. Evaluates a condition and adds a _matched field to indicate whether the condition was met.',
   useCases: [
     'Conditional workflow branching',
     'Filtering data based on conditions',
     'Implementing business logic with conditions',
     'Data validation and routing',
   ],
-  getParameterSchema: () => IfNodeParametersSchema,
+  getParameterSchema: () =>
+    serializeParameterSchema(IfNodeParametersSchema),
   validate: validateIfNodeParameters,
   execute: executeIfNode,
 };

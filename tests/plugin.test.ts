@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { WorkflowEngine } from '../src/engine.js';
 import type { NodePlugin, Workflow } from '../src/index.js';
 import type { WorkflowNode } from '../src/types.js';
+import { serializeParameterSchema } from '../src/schema-serializer.js';
 
 describe('WorkflowEngine - Plugin System', () => {
   it('should register a custom node plugin', () => {
@@ -14,9 +15,11 @@ describe('WorkflowEngine - Plugin System', () => {
       purpose: 'A custom node for testing plugin registration.',
       useCases: ['Testing plugin system', 'Custom functionality'],
       getParameterSchema: () =>
-        z.object({
-          message: z.string(),
-        }),
+        serializeParameterSchema(
+          z.object({
+            message: z.string(),
+          }),
+        ),
       validate: (node: WorkflowNode) => {
         if (!node.parameters['message']) {
           throw new Error('Missing message parameter');
@@ -43,7 +46,8 @@ describe('WorkflowEngine - Plugin System', () => {
       name: 'Test Start',
       purpose: 'Test plugin',
       useCases: ['Testing'],
-      getParameterSchema: () => z.object({}),
+      getParameterSchema: () =>
+        serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
       execute: () => [[]],
@@ -70,7 +74,8 @@ describe('WorkflowEngine - Plugin System', () => {
       name: 'Custom Node',
       purpose: 'Test custom node',
       useCases: ['Testing'],
-      getParameterSchema: () => z.object({}),
+      getParameterSchema: () =>
+        serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
       execute: () => [[]],
@@ -92,9 +97,11 @@ describe('WorkflowEngine - Plugin System', () => {
       purpose: 'Echoes text back in the output data.',
       useCases: ['Adding echo text to data', 'Testing custom nodes'],
       getParameterSchema: () =>
-        z.object({
-          text: z.string(),
-        }),
+        serializeParameterSchema(
+          z.object({
+            text: z.string(),
+          }),
+        ),
       validate: (node: WorkflowNode) => {
         if (!node.parameters['text']) {
           throw new Error('Missing text parameter');
@@ -156,9 +163,11 @@ describe('WorkflowEngine - Plugin System', () => {
       purpose: 'Validates that a required field is present.',
       useCases: ['Parameter validation testing'],
       getParameterSchema: () =>
-        z.object({
-          requiredField: z.string(),
-        }),
+        serializeParameterSchema(
+          z.object({
+            requiredField: z.string(),
+          }),
+        ),
       validate: (node: WorkflowNode) => {
         if (!node.parameters['requiredField']) {
           throw new Error('requiredField is required');
@@ -216,4 +225,3 @@ describe('WorkflowEngine - Plugin System', () => {
     }).toThrow('invalid type');
   });
 });
-
