@@ -71,7 +71,10 @@ function evaluateCondition(
   }
 }
 
-function executeFilterNode(node: WorkflowNode, input: unknown[][]): unknown[][] {
+function executeFilterNode(
+  node: WorkflowNode,
+  input: unknown[][],
+): unknown[][] {
   const condition = (node.parameters['condition'] as {
     leftValue: string;
     rightValue: string;
@@ -85,8 +88,7 @@ function executeFilterNode(node: WorkflowNode, input: unknown[][]): unknown[][] 
     const item = inputItem[0] as Record<string, unknown>;
     const matches = evaluateCondition(item, condition);
 
-    const shouldInclude =
-      mode === 'pass' ? matches : !matches;
+    const shouldInclude = mode === 'pass' ? matches : !matches;
 
     if (shouldInclude) {
       result.push(inputItem);
@@ -107,8 +109,8 @@ export const filterNodePlugin: NodePlugin = {
     'Data cleaning and preprocessing',
     'Filtering data before further processing',
   ],
-  getParameterSchema: () => serializeParameterSchema(FilterNodeParametersSchema),
+  getParameterSchema: () =>
+    serializeParameterSchema(FilterNodeParametersSchema),
   validate: validateFilterNodeParameters,
   execute: executeFilterNode,
 };
-

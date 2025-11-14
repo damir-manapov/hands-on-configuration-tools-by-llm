@@ -144,7 +144,10 @@ describe('Filter Node - Execution', () => {
       message: 'This is an error message',
       id: 1,
     });
-    expect(result[1]?.[0]).toEqual({ message: 'Another error occurred', id: 3 });
+    expect(result[1]?.[0]).toEqual({
+      message: 'Another error occurred',
+      id: 3,
+    });
   });
 
   it('should handle empty input', () => {
@@ -236,7 +239,11 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [[{ enabled: true }], [{ enabled: false }], [{ enabled: true }]];
+    const input = [
+      [{ enabled: true }],
+      [{ enabled: false }],
+      [{ enabled: true }],
+    ];
     const result = filterNodePlugin.execute(node, input) as unknown[][];
 
     expect(result).toHaveLength(2);
@@ -298,4 +305,3 @@ describe('Filter Node - Execution', () => {
     expect(result[1]?.[0]).toEqual({ status: 'pending', name: 'item2' });
   });
 });
-

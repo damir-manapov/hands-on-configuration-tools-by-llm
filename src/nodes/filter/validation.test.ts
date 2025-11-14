@@ -141,4 +141,3 @@ describe('Filter Node - Validation', () => {
     }).not.toThrow();
   });
 });
-
