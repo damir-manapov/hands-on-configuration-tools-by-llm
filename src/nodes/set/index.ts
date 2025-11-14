@@ -47,6 +47,7 @@ export const setNodePlugin: NodePlugin = {
     'Setting default values',
     'Transforming data structure by adding fields',
   ],
+  getParameterSchema: () => SetNodeParametersSchema,
   validate: validateSetNodeParameters,
   execute: executeSetNode,
 };

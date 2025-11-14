@@ -75,6 +75,7 @@ export const ifNodePlugin: NodePlugin = {
     'Implementing business logic with conditions',
     'Data validation and routing',
   ],
+  getParameterSchema: () => IfNodeParametersSchema,
   validate: validateIfNodeParameters,
   execute: executeIfNode,
 };
