@@ -7,6 +7,7 @@ export type {
   ExecutionData,
   ExecutionResult,
 } from './types.js';
+export type { NodePlugin } from './plugin.js';
 export {
   WorkflowNotFoundError,
   WorkflowAlreadyExistsError,
@@ -17,4 +18,6 @@ export {
   NodeTypeError,
   DuplicateNodeIdError,
   UnknownNodeTypeError,
+  NodeTypeAlreadyRegisteredError,
+  CannotUnregisterBuiltInNodeError,
 } from './errors.js';

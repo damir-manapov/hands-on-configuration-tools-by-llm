@@ -67,3 +67,17 @@ export class UnknownNodeTypeError extends Error {
   }
 }
 
+export class NodeTypeAlreadyRegisteredError extends Error {
+  constructor(nodeType: string) {
+    super(`Node type "${nodeType}" is already registered`);
+    this.name = 'NodeTypeAlreadyRegisteredError';
+  }
+}
+
+export class CannotUnregisterBuiltInNodeError extends Error {
+  constructor(nodeType: string) {
+    super(`Cannot unregister built-in node type "${nodeType}"`);
+    this.name = 'CannotUnregisterBuiltInNodeError';
+  }
+}
+

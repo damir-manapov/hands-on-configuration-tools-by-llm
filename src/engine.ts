@@ -4,6 +4,7 @@ import type {
   ExecutionData,
   ExecutionResult,
 } from './types.js';
+import type { NodePlugin } from './plugin.js';
 import {
   validateStartNodeParameters,
   validateSetNodeParameters,
@@ -21,18 +22,56 @@ import {
   NodeTypeError,
   DuplicateNodeIdError,
   UnknownNodeTypeError,
+  NodeTypeAlreadyRegisteredError,
+  CannotUnregisterBuiltInNodeError,
 } from './errors.js';
-
-const VALID_NODE_TYPES = [
-  'n8n-nodes-base.start',
-  'n8n-nodes-base.set',
-  'n8n-nodes-base.if',
-] as const;
-
-export type ValidNodeType = (typeof VALID_NODE_TYPES)[number];
 
 export class WorkflowEngine {
   private workflows = new Map<string, Workflow>();
+  private nodePlugins = new Map<string, NodePlugin>();
+
+  constructor() {
+    // Register built-in nodes
+    this.registerNode({
+      nodeType: 'n8n-nodes-base.start',
+      validate: validateStartNodeParameters,
+      execute: executeStartNode,
+    });
+    this.registerNode({
+      nodeType: 'n8n-nodes-base.set',
+      validate: validateSetNodeParameters,
+      execute: executeSetNode,
+    });
+    this.registerNode({
+      nodeType: 'n8n-nodes-base.if',
+      validate: validateIfNodeParameters,
+      execute: executeIfNode,
+    });
+  }
+
+  registerNode(plugin: NodePlugin): void {
+    if (this.nodePlugins.has(plugin.nodeType)) {
+      throw new NodeTypeAlreadyRegisteredError(plugin.nodeType);
+    }
+    this.nodePlugins.set(plugin.nodeType, plugin);
+  }
+
+  unregisterNode(nodeType: string): void {
+    // Prevent unregistering built-in nodes
+    const builtInTypes = [
+      'n8n-nodes-base.start',
+      'n8n-nodes-base.set',
+      'n8n-nodes-base.if',
+    ];
+    if (builtInTypes.includes(nodeType)) {
+      throw new CannotUnregisterBuiltInNodeError(nodeType);
+    }
+    this.nodePlugins.delete(nodeType);
+  }
+
+  getRegisteredNodeTypes(): string[] {
+    return Array.from(this.nodePlugins.keys());
+  }
 
   addWorkflow(workflow: Workflow): void {
     if (this.workflows.has(workflow.id)) {
@@ -119,8 +158,9 @@ export class WorkflowEngine {
         throw new WorkflowValidationError(`Node ${node.id} must have a type`);
       }
 
-      if (!VALID_NODE_TYPES.includes(node.type as ValidNodeType)) {
-        throw new NodeTypeError(node.id, node.type, VALID_NODE_TYPES);
+      if (!this.nodePlugins.has(node.type)) {
+        const validTypes = this.getRegisteredNodeTypes();
+        throw new NodeTypeError(node.id, node.type, validTypes);
       }
 
       this.validateNodeParameters(node);
@@ -130,19 +170,11 @@ export class WorkflowEngine {
   }
 
   private validateNodeParameters(node: WorkflowNode): void {
-    switch (node.type) {
-      case 'n8n-nodes-base.start':
-        validateStartNodeParameters(node);
-        break;
-      case 'n8n-nodes-base.set':
-        validateSetNodeParameters(node);
-        break;
-      case 'n8n-nodes-base.if':
-        validateIfNodeParameters(node);
-        break;
-      default:
-        throw new UnknownNodeTypeError(node.id, node.type, 'validation');
+    const plugin = this.nodePlugins.get(node.type);
+    if (!plugin) {
+      throw new UnknownNodeTypeError(node.id, node.type, 'validation');
     }
+    plugin.validate(node);
   }
 
   private getExecutionOrder(workflow: Workflow): string[] {
@@ -207,15 +239,11 @@ export class WorkflowEngine {
     node: WorkflowNode,
     input: unknown[][],
   ): Promise<unknown[][]> {
-    switch (node.type) {
-      case 'n8n-nodes-base.start':
-        return Promise.resolve(executeStartNode(node, input));
-      case 'n8n-nodes-base.set':
-        return Promise.resolve(executeSetNode(node, input));
-      case 'n8n-nodes-base.if':
-        return Promise.resolve(executeIfNode(node, input));
-      default:
-        throw new UnknownNodeTypeError(node.id, node.type, 'execution');
+    const plugin = this.nodePlugins.get(node.type);
+    if (!plugin) {
+      throw new UnknownNodeTypeError(node.id, node.type, 'execution');
     }
+    const result = plugin.execute(node, input);
+    return Promise.resolve(result);
   }
 }
