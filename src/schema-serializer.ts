@@ -3,6 +3,7 @@ import { z } from 'zod';
 export interface SerializableFieldType {
   type: 'string' | 'number' | 'boolean' | 'enum' | 'array' | 'object';
   required: boolean;
+  description?: string;
   default?: unknown;
   values?: readonly string[];
   itemType?: SerializableFieldSchema;
@@ -20,13 +21,17 @@ function serializeZodType(
   zodType: z.ZodType<unknown>,
 ): SerializableFieldSchema {
   const def = zodType.def;
+  const description =
+    'description' in zodType && typeof zodType.description === 'string'
+      ? zodType.description
+      : undefined;
 
   // Handle optional
   if (zodType instanceof z.ZodOptional) {
     const inner = serializeZodType(
       (def as unknown as { innerType: z.ZodType<unknown> }).innerType,
     );
-    return { ...inner, required: false };
+    return { ...inner, required: false, description };
   }
 
   // Handle default
@@ -36,7 +41,12 @@ function serializeZodType(
       defaultValue: unknown;
     };
     const inner = serializeZodType(defaultDef.innerType);
-    return { ...inner, required: false, default: defaultDef.defaultValue };
+    return {
+      ...inner,
+      required: false,
+      default: defaultDef.defaultValue,
+      description: description ?? inner.description,
+    };
   }
 
   // Handle nullable
@@ -44,22 +54,22 @@ function serializeZodType(
     const inner = serializeZodType(
       (def as unknown as { innerType: z.ZodType<unknown> }).innerType,
     );
-    return { ...inner, required: false };
+    return { ...inner, required: false, description: description ?? inner.description };
   }
 
   // Handle string
   if (zodType instanceof z.ZodString) {
-    return { type: 'string', required: true };
+    return { type: 'string', required: true, description };
   }
 
   // Handle number
   if (zodType instanceof z.ZodNumber) {
-    return { type: 'number', required: true };
+    return { type: 'number', required: true, description };
   }
 
   // Handle boolean
   if (zodType instanceof z.ZodBoolean) {
-    return { type: 'boolean', required: true };
+    return { type: 'boolean', required: true, description };
   }
 
   // Handle enum
@@ -70,6 +80,7 @@ function serializeZodType(
       type: 'enum',
       values,
       required: true,
+      description,
     };
   }
 
@@ -81,6 +92,7 @@ function serializeZodType(
       type: 'array',
       itemType,
       required: true,
+      description,
     };
   }
 
@@ -100,11 +112,12 @@ function serializeZodType(
       type: 'object',
       fields,
       required: true,
+      description,
     };
   }
 
   // Fallback for unknown types
-  return { type: 'string', required: true };
+  return { type: 'string', required: true, description };
 }
 
 export function serializeParameterSchema(
@@ -129,4 +142,3 @@ export function serializeParameterSchema(
     fields,
   };
 }
-

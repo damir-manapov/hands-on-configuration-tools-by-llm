@@ -4,7 +4,11 @@ import {
   serializeParameterSchema,
   type SerializableParameterSchema,
 } from '../src/schema-serializer.js';
-import { startNodePlugin, setNodePlugin, ifNodePlugin } from '../src/nodes/index.js';
+import {
+  startNodePlugin,
+  setNodePlugin,
+  ifNodePlugin,
+} from '../src/nodes/index.js';
 
 describe('Schema Serializer', () => {
   it('should serialize empty object schema', () => {
@@ -134,8 +138,8 @@ describe('Schema Serializer', () => {
     const schema = ifNodePlugin.getParameterSchema();
 
     expect(schema.type).toBe('object');
-    expect(schema.fields['conditions']).toBeDefined();
-    expect(schema.fields['conditions']?.type).toBe('object');
+    expect(schema.fields['condition']).toBeDefined();
+    expect(schema.fields['condition']?.type).toBe('object');
 
     // Verify JSON serializable
     expect(() => JSON.stringify(schema)).not.toThrow();
@@ -152,6 +156,47 @@ describe('Schema Serializer', () => {
       required: false,
       default: 'default-name',
     });
+  });
+
+  it('should extract descriptions from schema fields', () => {
+    const schema = z.object({
+      username: z.string().describe('The unique identifier for the user.'),
+      age: z.number().describe('The age of the user in years.'),
+      isActive: z.boolean().describe('Indicates if the user account is active.'),
+    });
+    const serialized = serializeParameterSchema(schema);
+
+    expect(serialized.fields['username']?.description).toBe(
+      'The unique identifier for the user.',
+    );
+    expect(serialized.fields['age']?.description).toBe(
+      'The age of the user in years.',
+    );
+    expect(serialized.fields['isActive']?.description).toBe(
+      'Indicates if the user account is active.',
+    );
+  });
+
+  it('should extract descriptions from nested objects and arrays', () => {
+    const schema = z.object({
+      items: z
+        .array(
+          z.object({
+            name: z.string().describe('Item name'),
+            value: z.number().describe('Item value'),
+          }),
+        )
+        .describe('Array of items'),
+    });
+    const serialized = serializeParameterSchema(schema);
+
+    expect(serialized.fields['items']?.description).toBe('Array of items');
+    expect(serialized.fields['items']?.itemType?.fields?.['name']?.description).toBe(
+      'Item name',
+    );
+    expect(serialized.fields['items']?.itemType?.fields?.['value']?.description).toBe(
+      'Item value',
+    );
   });
 
   it('should be fully JSON serializable for all node types', () => {
@@ -172,4 +217,3 @@ describe('Schema Serializer', () => {
     }
   });
 });
-

@@ -4,14 +4,28 @@ import type { NodePlugin } from '../../plugin.js';
 import { validateNodeParameters } from '../validate.js';
 import { serializeParameterSchema } from '../../schema-serializer.js';
 
-const IfNodeConditionsSchema = z.object({
-  leftValue: z.string(),
-  rightValue: z.string(),
-  operator: z.enum(['equals', 'notEquals', 'contains']),
+const IfNodeConditionSchema = z.object({
+  leftValue: z
+    .string()
+    .describe(
+      'The field name from the input data to evaluate. The value of this field will be compared against rightValue.',
+    ),
+  rightValue: z
+    .string()
+    .describe(
+      'The value to compare against. This is a static string value that will be compared with the field specified in leftValue.',
+    ),
+  operator: z
+    .enum(['equals', 'notEquals', 'contains'])
+    .describe(
+      'The comparison operator: "equals" for exact match, "notEquals" for non-match, "contains" to check if leftValue contains rightValue as a substring.',
+    ),
 });
 
 const IfNodeParametersSchema = z.object({
-  conditions: IfNodeConditionsSchema,
+  condition: IfNodeConditionSchema.describe(
+    'The condition to evaluate. If the condition matches, the item will have a _matched field set to true, otherwise false.',
+  ),
 });
 
 function validateIfNodeParameters(node: WorkflowNode): void {
@@ -19,7 +33,7 @@ function validateIfNodeParameters(node: WorkflowNode): void {
 }
 
 function executeIfNode(node: WorkflowNode, input: unknown[][]): unknown[][] {
-  const conditions = (node.parameters['conditions'] as {
+  const condition = (node.parameters['condition'] as {
     leftValue: string;
     rightValue: string;
     operator: string;
@@ -29,7 +43,7 @@ function executeIfNode(node: WorkflowNode, input: unknown[][]): unknown[][] {
 
   for (const inputItem of input) {
     const item = inputItem[0] as Record<string, unknown>;
-    const leftValueRaw = item[conditions.leftValue];
+    const leftValueRaw = item[condition.leftValue];
     let leftValue = '';
     if (
       leftValueRaw !== null &&
@@ -40,10 +54,10 @@ function executeIfNode(node: WorkflowNode, input: unknown[][]): unknown[][] {
     ) {
       leftValue = String(leftValueRaw);
     }
-    const rightValue = conditions.rightValue;
+    const rightValue = condition.rightValue;
     let matches = false;
 
-    switch (conditions.operator) {
+    switch (condition.operator) {
       case 'equals':
         matches = leftValue === rightValue;
         break;
@@ -74,8 +88,7 @@ export const ifNodePlugin: NodePlugin = {
     'Implementing business logic with conditions',
     'Data validation and routing',
   ],
-  getParameterSchema: () =>
-    serializeParameterSchema(IfNodeParametersSchema),
+  getParameterSchema: () => serializeParameterSchema(IfNodeParametersSchema),
   validate: validateIfNodeParameters,
   execute: executeIfNode,
 };

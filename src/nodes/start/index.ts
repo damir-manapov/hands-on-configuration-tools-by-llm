@@ -27,8 +27,7 @@ export const startNodePlugin: NodePlugin = {
     'Creating the initial data context for a workflow',
     'Defining workflow entry points',
   ],
-  getParameterSchema: () =>
-    serializeParameterSchema(StartNodeParametersSchema),
+  getParameterSchema: () => serializeParameterSchema(StartNodeParametersSchema),
   validate: validateStartNodeParameters,
   execute: executeStartNode,
 };

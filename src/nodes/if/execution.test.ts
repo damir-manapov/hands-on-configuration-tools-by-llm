@@ -10,7 +10,7 @@ describe('If Node - Execution', () => {
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
-        conditions: {
+        condition: {
           leftValue: 'status',
           rightValue: 'active',
           operator: 'equals',
@@ -37,7 +37,7 @@ describe('If Node - Execution', () => {
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
-        conditions: {
+        condition: {
           leftValue: 'status',
           rightValue: 'active',
           operator: 'equals',
@@ -63,7 +63,7 @@ describe('If Node - Execution', () => {
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
-        conditions: {
+        condition: {
           leftValue: 'status',
           rightValue: 'active',
           operator: 'notEquals',
@@ -88,7 +88,7 @@ describe('If Node - Execution', () => {
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
-        conditions: {
+        condition: {
           leftValue: 'message',
           rightValue: 'error',
           operator: 'contains',
@@ -113,7 +113,7 @@ describe('If Node - Execution', () => {
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
-        conditions: {
+        condition: {
           leftValue: 'message',
           rightValue: 'error',
           operator: 'contains',
@@ -138,7 +138,7 @@ describe('If Node - Execution', () => {
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
-        conditions: {
+        condition: {
           leftValue: 'missing',
           rightValue: 'value',
           operator: 'equals',
@@ -163,7 +163,7 @@ describe('If Node - Execution', () => {
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
-        conditions: {
+        condition: {
           leftValue: 'count',
           rightValue: '5',
           operator: 'equals',
@@ -188,7 +188,7 @@ describe('If Node - Execution', () => {
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
-        conditions: {
+        condition: {
           leftValue: 'enabled',
           rightValue: 'true',
           operator: 'equals',
@@ -213,7 +213,7 @@ describe('If Node - Execution', () => {
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
-        conditions: {
+        condition: {
           leftValue: 'status',
           rightValue: 'active',
           operator: 'equals',

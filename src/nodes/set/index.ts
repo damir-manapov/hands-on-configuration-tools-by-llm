@@ -5,12 +5,20 @@ import { validateNodeParameters } from '../validate.js';
 import { serializeParameterSchema } from '../../schema-serializer.js';
 
 const SetNodeValueSchema = z.object({
-  name: z.string(),
-  value: z.string(),
+  name: z
+    .string()
+    .describe('The name of the field to set or overwrite in the data item.'),
+  value: z
+    .string()
+    .describe('The static value to assign to the field. This will be set as a string.'),
 });
 
 const SetNodeParametersSchema = z.object({
-  values: z.array(SetNodeValueSchema),
+  values: z
+    .array(SetNodeValueSchema)
+    .describe(
+      'Array of field-value pairs to set. Each item will add or overwrite a field in the data items passing through this node.',
+    ),
 });
 
 function validateSetNodeParameters(node: WorkflowNode): void {
@@ -45,8 +53,7 @@ export const setNodePlugin: NodePlugin = {
     'Setting default values',
     'Transforming data structure by adding fields',
   ],
-  getParameterSchema: () =>
-    serializeParameterSchema(SetNodeParametersSchema),
+  getParameterSchema: () => serializeParameterSchema(SetNodeParametersSchema),
   validate: validateSetNodeParameters,
   execute: executeSetNode,
 };

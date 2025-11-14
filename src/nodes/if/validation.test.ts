@@ -3,7 +3,7 @@ import { ifNodePlugin } from './index.js';
 import type { WorkflowNode } from '../../types.js';
 
 describe('If Node - Validation', () => {
-  it('should throw error when if node is missing conditions parameter', () => {
+  it('should throw error when if node is missing condition parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If Node',
@@ -18,14 +18,14 @@ describe('If Node - Validation', () => {
     }).toThrow('has invalid parameters');
   });
 
-  it('should throw error when if node has invalid conditions parameter', () => {
+  it('should throw error when if node has invalid condition parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'If Node',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
-        conditions: 'not-an-object',
+        condition: 'not-an-object',
       },
       connections: {},
     };
@@ -42,7 +42,7 @@ describe('If Node - Validation', () => {
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
-        conditions: {
+        condition: {
           leftValue: 'field1',
           rightValue: 'value1',
         },
@@ -62,7 +62,7 @@ describe('If Node - Validation', () => {
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
-        conditions: {
+        condition: {
           leftValue: 'field1',
           rightValue: 'value1',
           operator: 'invalid-operator',
@@ -83,7 +83,7 @@ describe('If Node - Validation', () => {
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
-        conditions: {
+        condition: {
           leftValue: 'field1',
           rightValue: 'value1',
           operator: 'equals',

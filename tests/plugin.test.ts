@@ -46,8 +46,7 @@ describe('WorkflowEngine - Plugin System', () => {
       name: 'Test Start',
       purpose: 'Test plugin',
       useCases: ['Testing'],
-      getParameterSchema: () =>
-        serializeParameterSchema(z.object({})),
+      getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
       execute: () => [[]],
@@ -74,8 +73,7 @@ describe('WorkflowEngine - Plugin System', () => {
       name: 'Custom Node',
       purpose: 'Test custom node',
       useCases: ['Testing'],
-      getParameterSchema: () =>
-        serializeParameterSchema(z.object({})),
+      getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
       execute: () => [[]],
