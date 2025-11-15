@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { WorkflowNode } from '../../types.js';
 import type { NodePlugin } from '../../plugin.js';
+import type { TypedField } from '../../types.js';
 import { validateNodeParameters } from '../validate.js';
 import { serializeParameterSchema } from '../../schema-serializer.js';
 
@@ -12,8 +13,8 @@ function validateStartNodeParameters(node: WorkflowNode): void {
 
 function executeStartNode(
   _node: WorkflowNode,
-  _input: unknown[][],
-): unknown[][] {
+  _input: TypedField[][],
+): TypedField[][] {
   return [[]];
 }
 

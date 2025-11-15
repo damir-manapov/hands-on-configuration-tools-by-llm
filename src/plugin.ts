@@ -1,4 +1,4 @@
-import type { WorkflowNode } from './types.js';
+import type { WorkflowNode, TypedField, FieldResolver } from './types.js';
 import type { SerializableParameterSchema } from './schema-serializer.js';
 
 export interface NodePlugin {
@@ -10,6 +10,7 @@ export interface NodePlugin {
   validate: (node: WorkflowNode) => void;
   execute: (
     node: WorkflowNode,
-    input: unknown[][],
-  ) => Promise<unknown[][]> | unknown[][];
+    input: TypedField[][],
+    resolver?: FieldResolver,
+  ) => Promise<TypedField[][]> | TypedField[][];
 }

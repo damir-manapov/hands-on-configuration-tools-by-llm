@@ -1,29 +1,17 @@
 import { z } from 'zod';
-import type { WorkflowNode } from '../../types.js';
+import type { WorkflowNode, TypedField } from '../../types.js';
 import type { NodePlugin } from '../../plugin.js';
+import { NodeExecutionError } from '../../errors/index.js';
 import { validateNodeParameters } from '../validate.js';
 import { serializeParameterSchema } from '../../schema-serializer.js';
-
-const IfNodeConditionSchema = z.object({
-  leftValue: z
-    .string()
-    .describe(
-      'The field name from the input data to evaluate. The value of this field will be compared against rightValue.',
-    ),
-  rightValue: z
-    .string()
-    .describe(
-      'The value to compare against. This is a static string value that will be compared with the field specified in leftValue.',
-    ),
-  operator: z
-    .enum(['equals', 'notEquals', 'contains'])
-    .describe(
-      'The comparison operator: "equals" for exact match, "notEquals" for non-match, "contains" to check if leftValue contains rightValue as a substring.',
-    ),
-});
+import {
+  ConditionSchema,
+  type Condition,
+  evaluateCondition,
+} from '../utils/evaluate-condition.js';
 
 const IfNodeParametersSchema = z.object({
-  condition: IfNodeConditionSchema.describe(
+  condition: ConditionSchema.describe(
     'The condition to evaluate. If the condition matches, the item will have a _matched field set to true, otherwise false.',
   ),
 });
@@ -32,46 +20,48 @@ function validateIfNodeParameters(node: WorkflowNode): void {
   validateNodeParameters(node, IfNodeParametersSchema);
 }
 
-function executeIfNode(node: WorkflowNode, input: unknown[][]): unknown[][] {
-  const condition = (node.parameters['condition'] as {
-    leftValue: string;
-    rightValue: string;
-    operator: string;
-  }) ?? { leftValue: '', rightValue: '', operator: 'equals' };
+async function executeIfNode(
+  node: WorkflowNode,
+  input: TypedField[][],
+): Promise<TypedField[][]> {
+  const condition = node.parameters['condition'] as Condition;
 
-  const result: unknown[][] = [];
+  if (!condition || typeof condition !== 'object') {
+    throw new NodeExecutionError(
+      node.id,
+      'If node requires a condition parameter, but it is missing or invalid',
+    );
+  }
+
+  const result: TypedField[][] = [];
 
   for (const inputItem of input) {
-    const item = inputItem[0] as Record<string, unknown>;
-    const leftValueRaw = item[condition.leftValue];
-    let leftValue = '';
-    if (
-      leftValueRaw !== null &&
-      leftValueRaw !== undefined &&
-      (typeof leftValueRaw === 'string' ||
-        typeof leftValueRaw === 'number' ||
-        typeof leftValueRaw === 'boolean')
-    ) {
-      leftValue = String(leftValueRaw);
-    }
-    const rightValue = condition.rightValue;
-    let matches = false;
+    const outputItem: TypedField[] = [];
 
-    switch (condition.operator) {
-      case 'equals':
-        matches = leftValue === rightValue;
-        break;
-      case 'notEquals':
-        matches = leftValue !== rightValue;
-        break;
-      case 'contains':
-        matches = leftValue.includes(rightValue);
-        break;
-      default:
-        matches = false;
+    for (const inputField of inputItem) {
+      if (!inputField) {
+        throw new NodeExecutionError(
+          node.id,
+          'If node received undefined or null input field',
+        );
+      }
+
+      const matches = await evaluateCondition(inputField, condition);
+
+      const outputObj: Record<string, TypedField> = {
+        ...(inputField.value as Record<string, TypedField>),
+      };
+      outputObj['_matched'] = {
+        value: matches,
+        kind: 'primitive',
+      };
+      outputItem.push({
+        value: outputObj,
+        kind: 'primitive',
+      });
     }
 
-    result.push([{ ...item, _matched: matches }]);
+    result.push(outputItem);
   }
 
   return result;

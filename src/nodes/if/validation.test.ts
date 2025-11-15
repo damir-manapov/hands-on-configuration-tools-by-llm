@@ -43,8 +43,8 @@ describe('If Node - Validation', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'field1',
-          rightValue: 'value1',
+          path: 'field1',
+          value: 'value1',
         },
       },
       connections: {},
@@ -63,8 +63,8 @@ describe('If Node - Validation', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'field1',
-          rightValue: 'value1',
+          path: 'field1',
+          value: 'value1',
           operator: 'invalid-operator',
         },
       },
@@ -84,8 +84,8 @@ describe('If Node - Validation', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'field1',
-          rightValue: 'value1',
+          path: 'field1',
+          value: 'value1',
           operator: 'equals',
         },
       },

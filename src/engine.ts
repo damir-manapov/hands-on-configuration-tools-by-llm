@@ -4,6 +4,7 @@ import type {
   ExecutionData,
   ExecutionResult,
 } from './types.js';
+import type { TypedField } from './types.js';
 import type { NodePlugin } from './plugin.js';
 import {
   startNodePlugin,
@@ -23,7 +24,7 @@ import {
   UnknownNodeTypeError,
   NodeTypeAlreadyRegisteredError,
   CannotUnregisterBuiltInNodeError,
-} from './errors.js';
+} from './errors/index.js';
 
 const BUILT_IN_PLUGINS = [
   startNodePlugin,
@@ -208,8 +209,8 @@ export class WorkflowEngine {
     node: WorkflowNode,
     workflow: Workflow,
     executionData: ExecutionData,
-  ): unknown[][] {
-    const input: unknown[][] = [];
+  ): TypedField[][] {
+    const input: TypedField[][] = [];
 
     const connections = workflow.connections[node.id];
     if (!connections || connections.length === 0) {
@@ -231,13 +232,13 @@ export class WorkflowEngine {
 
   private async executeNode(
     node: WorkflowNode,
-    input: unknown[][],
-  ): Promise<unknown[][]> {
+    input: TypedField[][],
+  ): Promise<TypedField[][]> {
     const plugin = this.nodePlugins.get(node.type);
     if (!plugin) {
       throw new UnknownNodeTypeError(node.id, node.type, 'execution');
     }
-    const result = plugin.execute(node, input);
-    return Promise.resolve(result);
+    const result = await plugin.execute(node, input);
+    return result;
   }
 }

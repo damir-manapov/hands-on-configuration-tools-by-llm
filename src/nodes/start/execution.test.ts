@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { startNodePlugin } from './index.js';
 import type { WorkflowNode } from '../../types.js';
+import type { TypedField } from '../../types.js';
 
 describe('Start Node - Execution', () => {
   it('should execute start node and return empty array', () => {
@@ -13,9 +14,15 @@ describe('Start Node - Execution', () => {
       connections: {},
     };
 
-    const result = startNodePlugin.execute(node, [
-      [{ test: 'data' }],
-    ]) as unknown[][];
+    const input: TypedField[][] = [
+      [
+        {
+          value: { test: { value: 'data', kind: 'primitive' } },
+          kind: 'primitive',
+        },
+      ],
+    ];
+    const result = startNodePlugin.execute(node, input);
 
     expect(result).toEqual([[]]);
   });
@@ -30,7 +37,8 @@ describe('Start Node - Execution', () => {
       connections: {},
     };
 
-    const result = startNodePlugin.execute(node, []) as unknown[][];
+    const input: TypedField[][] = [];
+    const result = startNodePlugin.execute(node, input);
 
     expect(result).toEqual([[]]);
   });

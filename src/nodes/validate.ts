@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { WorkflowNode } from '../types.js';
-import { NodeValidationError } from '../errors.js';
+import { NodeValidationError } from '../errors/index.js';
 
 export function validateNodeParameters(
   node: WorkflowNode,

@@ -1,4 +1,4 @@
-import { NodeExecutionError } from '../../errors.js';
+import { NodeExecutionError } from '../../errors/index.js';
 
 export class CodeExecutionTimeoutError extends NodeExecutionError {
   public readonly timeout: number;
@@ -21,11 +21,21 @@ export class CodeExecutionError extends NodeExecutionError {
 }
 
 export class CodeInvalidReturnFormatError extends NodeExecutionError {
+  constructor(nodeId: string, message?: string) {
+    super(
+      nodeId,
+      message ?? `Code in node ${nodeId} must return a TypedField object.`,
+    );
+    this.name = 'CodeInvalidReturnFormatError';
+  }
+}
+
+export class CodeResolverNotAvailableError extends NodeExecutionError {
   constructor(nodeId: string) {
     super(
       nodeId,
-      `Code in node ${nodeId} must return an array of arrays. Each inner array represents an output item.`,
+      `Resolver is not available in node ${nodeId}. Provide a resolver function to resolve link fields.`,
     );
-    this.name = 'CodeInvalidReturnFormatError';
+    this.name = 'CodeResolverNotAvailableError';
   }
 }

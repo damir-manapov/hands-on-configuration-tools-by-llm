@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { filterNodePlugin } from './index.js';
-import type { WorkflowNode } from '../../types.js';
+import type { WorkflowNode, TypedField } from '../../types.js';
+import { toTypedFieldInput } from '../utils/to-typed-field-input.js';
+import { extractTypedFieldResult } from '../utils/extract-typed-field-result.js';
 
 describe('Filter Node - Execution', () => {
-  it('should filter items in pass mode - keep matching items', () => {
+  it('should filter items in pass mode - keep matching items', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -11,8 +13,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'status',
-          rightValue: 'active',
+          path: 'status',
+          value: 'active',
           operator: 'equals',
         },
         mode: 'pass',
@@ -20,19 +22,21 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [
+    const input = toTypedFieldInput([
       [{ status: 'active', name: 'item1' }],
       [{ status: 'inactive', name: 'item2' }],
       [{ status: 'active', name: 'item3' }],
-    ];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
+    ]);
+    const result = await filterNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(2);
-    expect(result[0]?.[0]).toEqual({ status: 'active', name: 'item1' });
-    expect(result[1]?.[0]).toEqual({ status: 'active', name: 'item3' });
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ status: 'active', name: 'item1' }],
+      [],
+      [{ status: 'active', name: 'item3' }],
+    ]);
   });
 
-  it('should filter items in drop mode - remove matching items', () => {
+  it('should filter items in drop mode - remove matching items', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -40,8 +44,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'status',
-          rightValue: 'active',
+          path: 'status',
+          value: 'active',
           operator: 'equals',
         },
         mode: 'drop',
@@ -49,18 +53,21 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [
+    const input = toTypedFieldInput([
       [{ status: 'active', name: 'item1' }],
       [{ status: 'inactive', name: 'item2' }],
       [{ status: 'active', name: 'item3' }],
-    ];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
+    ]);
+    const result = await filterNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(1);
-    expect(result[0]?.[0]).toEqual({ status: 'inactive', name: 'item2' });
+    expect(extractTypedFieldResult(result)).toEqual([
+      [],
+      [{ status: 'inactive', name: 'item2' }],
+      [],
+    ]);
   });
 
-  it('should use pass mode as default when mode is not specified', () => {
+  it('should use pass mode as default when mode is not specified', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -68,25 +75,27 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'status',
-          rightValue: 'active',
+          path: 'status',
+          value: 'active',
           operator: 'equals',
         },
       },
       connections: {},
     };
 
-    const input = [
+    const input = toTypedFieldInput([
       [{ status: 'active', name: 'item1' }],
       [{ status: 'inactive', name: 'item2' }],
-    ];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
+    ]);
+    const result = await filterNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(1);
-    expect(result[0]?.[0]).toEqual({ status: 'active', name: 'item1' });
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ status: 'active', name: 'item1' }],
+      [],
+    ]);
   });
 
-  it('should filter with notEquals operator', () => {
+  it('should filter with notEquals operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -94,8 +103,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'status',
-          rightValue: 'inactive',
+          path: 'status',
+          value: 'inactive',
           operator: 'notEquals',
         },
         mode: 'pass',
@@ -103,19 +112,21 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [
+    const input = toTypedFieldInput([
       [{ status: 'active', name: 'item1' }],
       [{ status: 'inactive', name: 'item2' }],
       [{ status: 'pending', name: 'item3' }],
-    ];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
+    ]);
+    const result = await filterNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(2);
-    expect(result[0]?.[0]).toEqual({ status: 'active', name: 'item1' });
-    expect(result[1]?.[0]).toEqual({ status: 'pending', name: 'item3' });
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ status: 'active', name: 'item1' }],
+      [],
+      [{ status: 'pending', name: 'item3' }],
+    ]);
   });
 
-  it('should filter with contains operator', () => {
+  it('should filter with contains operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -123,8 +134,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'message',
-          rightValue: 'error',
+          path: 'message',
+          value: 'error',
           operator: 'contains',
         },
         mode: 'pass',
@@ -132,25 +143,21 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [
+    const input = toTypedFieldInput([
       [{ message: 'This is an error message', id: 1 }],
       [{ message: 'This is a success message', id: 2 }],
       [{ message: 'Another error occurred', id: 3 }],
-    ];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
+    ]);
+    const result = await filterNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(2);
-    expect(result[0]?.[0]).toEqual({
-      message: 'This is an error message',
-      id: 1,
-    });
-    expect(result[1]?.[0]).toEqual({
-      message: 'Another error occurred',
-      id: 3,
-    });
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ message: 'This is an error message', id: 1 }],
+      [],
+      [{ message: 'Another error occurred', id: 3 }],
+    ]);
   });
 
-  it('should handle empty input', () => {
+  it('should handle empty input', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -158,8 +165,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'status',
-          rightValue: 'active',
+          path: 'status',
+          value: 'active',
           operator: 'equals',
         },
         mode: 'pass',
@@ -167,13 +174,13 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input: unknown[][] = [];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
+    const input: TypedField[][] = [];
+    const result = await filterNodePlugin.execute(node, input);
 
     expect(result).toHaveLength(0);
   });
 
-  it('should handle missing field in pass mode', () => {
+  it('should throw error when field is missing', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -181,8 +188,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'missing',
-          rightValue: 'value',
+          path: 'missing',
+          value: 'value',
           operator: 'equals',
         },
         mode: 'pass',
@@ -190,14 +197,16 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [[{ other: 'field' }], [{ missing: 'value' }]];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
-
-    expect(result).toHaveLength(1);
-    expect(result[0]?.[0]).toEqual({ missing: 'value' });
+    const input = toTypedFieldInput([
+      [{ other: 'field' }],
+      [{ missing: 'value' }],
+    ]);
+    await expect(filterNodePlugin.execute(node, input)).rejects.toThrow(
+      'Field "missing" not found',
+    );
   });
 
-  it('should handle number field values', () => {
+  it('should handle number field values', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -205,8 +214,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'count',
-          rightValue: '5',
+          path: 'count',
+          value: '5',
           operator: 'equals',
         },
         mode: 'pass',
@@ -214,15 +223,21 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [[{ count: 5 }], [{ count: 10 }], [{ count: 5 }]];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
+    const input = toTypedFieldInput([
+      [{ count: 5 }],
+      [{ count: 10 }],
+      [{ count: 5 }],
+    ]);
+    const result = await filterNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(2);
-    expect(result[0]?.[0]).toEqual({ count: 5 });
-    expect(result[1]?.[0]).toEqual({ count: 5 });
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ count: 5 }],
+      [],
+      [{ count: 5 }],
+    ]);
   });
 
-  it('should handle boolean field values', () => {
+  it('should handle boolean field values', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -230,8 +245,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'enabled',
-          rightValue: 'true',
+          path: 'enabled',
+          value: 'true',
           operator: 'equals',
         },
         mode: 'pass',
@@ -239,19 +254,21 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [
+    const input = toTypedFieldInput([
       [{ enabled: true }],
       [{ enabled: false }],
       [{ enabled: true }],
-    ];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
+    ]);
+    const result = await filterNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(2);
-    expect(result[0]?.[0]).toEqual({ enabled: true });
-    expect(result[1]?.[0]).toEqual({ enabled: true });
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ enabled: true }],
+      [],
+      [{ enabled: true }],
+    ]);
   });
 
-  it('should filter all items out when none match in pass mode', () => {
+  it('should preserve empty batches when all items are filtered out', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -259,8 +276,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'status',
-          rightValue: 'active',
+          path: 'status',
+          value: 'active',
           operator: 'equals',
         },
         mode: 'pass',
@@ -268,16 +285,16 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [
+    const input = toTypedFieldInput([
       [{ status: 'inactive', name: 'item1' }],
       [{ status: 'pending', name: 'item2' }],
-    ];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
+    ]);
+    const result = await filterNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(0);
+    expect(extractTypedFieldResult(result)).toEqual([[], []]);
   });
 
-  it('should keep all items when all match in drop mode', () => {
+  it('should keep all items when all match in drop mode', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -285,8 +302,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'status',
-          rightValue: 'inactive',
+          path: 'status',
+          value: 'inactive',
           operator: 'equals',
         },
         mode: 'drop',
@@ -294,18 +311,19 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [
+    const input = toTypedFieldInput([
       [{ status: 'active', name: 'item1' }],
       [{ status: 'pending', name: 'item2' }],
-    ];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
+    ]);
+    const result = await filterNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(2);
-    expect(result[0]?.[0]).toEqual({ status: 'active', name: 'item1' });
-    expect(result[1]?.[0]).toEqual({ status: 'pending', name: 'item2' });
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ status: 'active', name: 'item1' }],
+      [{ status: 'pending', name: 'item2' }],
+    ]);
   });
 
-  it('should filter on nested fields using dot notation', () => {
+  it('should filter on nested fields using dot notation', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -313,8 +331,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'user.name',
-          rightValue: 'John',
+          path: 'user.name',
+          value: 'John',
           operator: 'equals',
         },
         mode: 'pass',
@@ -322,25 +340,21 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [
+    const input = toTypedFieldInput([
       [{ user: { name: 'John', age: 30 }, id: 1 }],
       [{ user: { name: 'Jane', age: 25 }, id: 2 }],
       [{ user: { name: 'John', age: 35 }, id: 3 }],
-    ];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
+    ]);
+    const result = await filterNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(2);
-    expect(result[0]?.[0]).toEqual({
-      user: { name: 'John', age: 30 },
-      id: 1,
-    });
-    expect(result[1]?.[0]).toEqual({
-      user: { name: 'John', age: 35 },
-      id: 3,
-    });
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ user: { name: 'John', age: 30 }, id: 1 }],
+      [],
+      [{ user: { name: 'John', age: 35 }, id: 3 }],
+    ]);
   });
 
-  it('should filter on deeply nested fields', () => {
+  it('should filter on deeply nested fields', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -348,8 +362,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'user.address.location.city',
-          rightValue: 'New York',
+          path: 'user.address.location.city',
+          value: 'New York',
           operator: 'equals',
         },
         mode: 'pass',
@@ -357,7 +371,7 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [
+    const input = toTypedFieldInput([
       [
         {
           name: 'Item 1',
@@ -398,29 +412,36 @@ describe('Filter Node - Execution', () => {
           },
         },
       ],
-    ];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
+    ]);
+    const result = await filterNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(2);
-    expect(result[0]?.[0]).toEqual({
-      name: 'Item 1',
-      user: {
-        address: {
-          location: { city: 'New York', country: 'USA' },
+    expect(extractTypedFieldResult(result)).toEqual([
+      [
+        {
+          name: 'Item 1',
+          user: {
+            address: {
+              location: { city: 'New York', country: 'USA' },
+            },
+          },
         },
-      },
-    });
-    expect(result[1]?.[0]).toEqual({
-      name: 'Item 3',
-      user: {
-        address: {
-          location: { city: 'New York', country: 'USA' },
+      ],
+      [],
+      [
+        {
+          name: 'Item 3',
+          user: {
+            address: {
+              location: { city: 'New York', country: 'USA' },
+            },
+          },
         },
-      },
-    });
+      ],
+      [],
+    ]);
   });
 
-  it('should handle missing nested fields', () => {
+  it('should throw error when nested field is missing', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -428,8 +449,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'user.email',
-          rightValue: 'test@example.com',
+          path: 'user.email',
+          value: 'test@example.com',
           operator: 'equals',
         },
         mode: 'pass',
@@ -437,21 +458,15 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [
+    const input = toTypedFieldInput([
       [{ user: { name: 'John' }, id: 1 }],
       [{ user: { name: 'Jane', email: 'test@example.com' }, id: 2 }],
       [{ id: 3 }],
-    ];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
-
-    expect(result).toHaveLength(1);
-    expect(result[0]?.[0]).toEqual({
-      user: { name: 'Jane', email: 'test@example.com' },
-      id: 2,
-    });
+    ]);
+    await expect(filterNodePlugin.execute(node, input)).rejects.toThrow();
   });
 
-  it('should handle null/undefined in nested path', () => {
+  it('should throw error when null/undefined encountered in nested path', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -459,8 +474,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'user.profile.name',
-          rightValue: 'John',
+          path: 'user.profile.name',
+          value: 'John',
           operator: 'equals',
         },
         mode: 'pass',
@@ -468,22 +483,16 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [
+    const input = toTypedFieldInput([
       [{ user: { profile: { name: 'John' } }, id: 1 }],
       [{ user: { profile: null }, id: 2 }],
       [{ user: null, id: 3 }],
       [{ id: 4 }],
-    ];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
-
-    expect(result).toHaveLength(1);
-    expect(result[0]?.[0]).toEqual({
-      user: { profile: { name: 'John' } },
-      id: 1,
-    });
+    ]);
+    await expect(filterNodePlugin.execute(node, input)).rejects.toThrow();
   });
 
-  it('should filter on nested fields with contains operator', () => {
+  it('should filter on nested fields with contains operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
       name: 'Filter',
@@ -491,8 +500,8 @@ describe('Filter Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
-          leftValue: 'metadata.tags',
-          rightValue: 'important',
+          path: 'metadata.tags',
+          value: 'important',
           operator: 'contains',
         },
         mode: 'pass',
@@ -500,21 +509,52 @@ describe('Filter Node - Execution', () => {
       connections: {},
     };
 
-    const input = [
+    const input = toTypedFieldInput([
       [{ metadata: { tags: 'important urgent' }, id: 1 }],
       [{ metadata: { tags: 'normal' }, id: 2 }],
       [{ metadata: { tags: 'important' }, id: 3 }],
-    ];
-    const result = filterNodePlugin.execute(node, input) as unknown[][];
+    ]);
+    const result = await filterNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(2);
-    expect(result[0]?.[0]).toEqual({
-      metadata: { tags: 'important urgent' },
-      id: 1,
-    });
-    expect(result[1]?.[0]).toEqual({
-      metadata: { tags: 'important' },
-      id: 3,
-    });
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ metadata: { tags: 'important urgent' }, id: 1 }],
+      [],
+      [{ metadata: { tags: 'important' }, id: 3 }],
+    ]);
+  });
+
+  it('should filter all items in inner array, not just the first one', async () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      name: 'Filter',
+      type: 'builtIn.filter',
+      position: { x: 0, y: 0 },
+      parameters: {
+        condition: {
+          path: 'status',
+          value: 'active',
+          operator: 'equals',
+        },
+        mode: 'pass',
+      },
+      connections: {},
+    };
+
+    const input = toTypedFieldInput([
+      [
+        { status: 'active', name: 'item1' },
+        { status: 'inactive', name: 'item2' },
+        { status: 'active', name: 'item3' },
+        { status: 'pending', name: 'item4' },
+      ],
+    ]);
+    const result = await filterNodePlugin.execute(node, input);
+
+    expect(extractTypedFieldResult(result)).toEqual([
+      [
+        { status: 'active', name: 'item1' },
+        { status: 'active', name: 'item3' },
+      ],
+    ]);
   });
 });

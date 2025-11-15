@@ -3,7 +3,10 @@ import { describe, it, expect } from 'vitest';
 import { WorkflowEngine } from '../src/engine.js';
 import type { NodePlugin, Workflow } from '../src/index.js';
 import type { WorkflowNode } from '../src/types.js';
+import type { TypedField } from '../src/types.js';
 import { serializeParameterSchema } from '../src/schema-serializer.js';
+import { extractTypedFieldValue } from '../src/nodes/utils/extract-typed-field-value.js';
+import { convertValueToTypedField } from '../src/nodes/utils/convert-value-to-typed-field.js';
 
 describe('WorkflowEngine - Plugin System', () => {
   it('should register a custom node plugin', () => {
@@ -14,23 +17,10 @@ describe('WorkflowEngine - Plugin System', () => {
       name: 'Custom Node',
       purpose: 'A custom node for testing plugin registration.',
       useCases: ['Testing plugin system', 'Custom functionality'],
-      getParameterSchema: () =>
-        serializeParameterSchema(
-          z.object({
-            message: z.string(),
-          }),
-        ),
-      validate: (node: WorkflowNode) => {
-        if (!node.parameters['message']) {
-          throw new Error('Missing message parameter');
-        }
-      },
-      execute: (node: WorkflowNode, input: unknown[][]) => {
-        const message = node.parameters['message'] as string;
-        return input.map((item) => [
-          { ...(item[0] as Record<string, unknown>), customMessage: message },
-        ]) as unknown[][];
-      },
+      getParameterSchema: () => serializeParameterSchema(z.object({})),
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      validate: () => {},
+      execute: (): TypedField[][] => [[]],
     };
 
     engine.registerNode(customPlugin);
@@ -49,7 +39,7 @@ describe('WorkflowEngine - Plugin System', () => {
       getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
-      execute: () => [[]],
+      execute: (): TypedField[][] => [[]],
     };
 
     expect(() => {
@@ -76,7 +66,7 @@ describe('WorkflowEngine - Plugin System', () => {
       getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
-      execute: () => [[]],
+      execute: (): TypedField[][] => [[]],
     };
 
     engine.registerNode(customPlugin);
@@ -105,11 +95,20 @@ describe('WorkflowEngine - Plugin System', () => {
           throw new Error('Missing text parameter');
         }
       },
-      execute: (node: WorkflowNode, input: unknown[][]) => {
+      execute: (node: WorkflowNode, input: TypedField[][]) => {
         const text = node.parameters['text'] as string;
-        return input.map((item) => [
-          { ...(item[0] as Record<string, unknown>), echo: text },
-        ]) as unknown[][];
+        return input.map((item) => {
+          const inputField = item[0];
+          const inputObj =
+            inputField &&
+            typeof inputField.value === 'object' &&
+            !Array.isArray(inputField.value)
+              ? (inputField.value as Record<string, TypedField>)
+              : {};
+          const outputObj: Record<string, TypedField> = { ...inputObj };
+          outputObj['echo'] = convertValueToTypedField(text);
+          return [{ value: outputObj, kind: 'primitive' as const }];
+        });
       },
     };
 
@@ -148,8 +147,11 @@ describe('WorkflowEngine - Plugin System', () => {
     const result = await engine.executeWorkflow('test-1');
 
     expect(result.finished).toBe(true);
-    expect(result.data['node-2']).toBeDefined();
-    expect(result.data['node-2']?.[0]?.[0]).toEqual({ echo: 'Hello World' });
+    const field = result.data['node-2']?.[0]?.[0];
+    expect(field).toBeDefined();
+    expect(extractTypedFieldValue(field!)).toEqual({
+      echo: 'Hello World',
+    });
   });
 
   it('should validate custom node parameters', () => {
@@ -171,7 +173,7 @@ describe('WorkflowEngine - Plugin System', () => {
           throw new Error('requiredField is required');
         }
       },
-      execute: () => [[]],
+      execute: (): TypedField[][] => [[]],
     };
 
     engine.registerNode(customPlugin);

@@ -1,11 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import { codeNodePlugin } from './index.js';
-import type { WorkflowNode } from '../../types.js';
-import { NodeExecutionError } from '../../errors.js';
+import type { WorkflowNode, TypedField } from '../../types.js';
+import { toTypedFieldInput } from '../utils/to-typed-field-input.js';
+import { extractTypedFieldResult } from '../utils/extract-typed-field-result.js';
+import { NodeExecutionError } from '../../errors/index.js';
 import {
   CodeExecutionTimeoutError,
   CodeExecutionError,
   CodeInvalidReturnFormatError,
+  CodeResolverNotAvailableError,
 } from './errors.js';
 
 describe('Code Node - Execution', () => {
@@ -16,38 +19,20 @@ describe('Code Node - Execution', () => {
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
-        code: 'return input.map(item => [Object.assign({}, item[0], { processed: true })]);',
+        code: `
+          const plain = extractValue(item);
+          return toTypedField({ ...plain, processed: true });
+        `,
       },
       connections: {},
     };
 
-    const input = [[{ name: 'test', value: 123 }]];
+    const input = toTypedFieldInput([[{ name: 'test', value: 123 }]]);
     const result = await codeNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(1);
-    expect(result[0]?.[0]).toEqual({
-      name: 'test',
-      value: 123,
-      processed: true,
-    });
-  });
-
-  it('should pass through input when code is empty', async () => {
-    const node: WorkflowNode = {
-      id: 'node-1',
-      name: 'Code',
-      type: 'builtIn.code',
-      position: { x: 0, y: 0 },
-      parameters: {
-        code: '',
-      },
-      connections: {},
-    };
-
-    const input = [[{ test: 'data' }]];
-    const result = await codeNodePlugin.execute(node, input);
-
-    expect(result).toEqual(input);
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ name: 'test', value: 123, processed: true }],
+    ]);
   });
 
   it('should handle multiple input items', async () => {
@@ -57,18 +42,26 @@ describe('Code Node - Execution', () => {
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
-        code: 'return input.map(item => [Object.assign({}, item[0], { doubled: item[0].value * 2 })]);',
+        code: `
+          const plain = extractValue(item);
+          return toTypedField({ ...plain, doubled: plain.value * 2 });
+        `,
       },
       connections: {},
     };
 
-    const input = [[{ value: 5 }], [{ value: 10 }], [{ value: 15 }]];
+    const input = toTypedFieldInput([
+      [{ value: 5 }],
+      [{ value: 10 }],
+      [{ value: 15 }],
+    ]);
     const result = await codeNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(3);
-    expect(result[0]?.[0]).toEqual({ value: 5, doubled: 10 });
-    expect(result[1]?.[0]).toEqual({ value: 10, doubled: 20 });
-    expect(result[2]?.[0]).toEqual({ value: 15, doubled: 30 });
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ value: 5, doubled: 10 }],
+      [{ value: 10, doubled: 20 }],
+      [{ value: 15, doubled: 30 }],
+    ]);
   });
 
   it('should have access to Math and JSON utilities', async () => {
@@ -79,21 +72,23 @@ describe('Code Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         code: `
-          return input.map(item => [{
-            ...item[0],
-            sqrt: Math.sqrt(item[0].value),
-            json: JSON.stringify(item[0])
-          }]);
+          const plain = extractValue(item);
+          return toTypedField({
+            ...plain,
+            sqrt: Math.sqrt(plain.value),
+            json: JSON.stringify(plain)
+          });
         `,
       },
       connections: {},
     };
 
-    const input = [[{ value: 16 }]];
+    const input = toTypedFieldInput([[{ value: 16 }]]);
     const result = await codeNodePlugin.execute(node, input);
 
-    expect(result[0]?.[0]).toHaveProperty('sqrt', 4);
-    expect(result[0]?.[0]).toHaveProperty('json', '{"value":16}');
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ value: 16, sqrt: 4, json: '{"value":16}' }],
+    ]);
   });
 
   it('should throw CodeInvalidReturnFormatError when code returns invalid format', async () => {
@@ -108,13 +103,12 @@ describe('Code Node - Execution', () => {
       connections: {},
     };
 
-    const input = [[{ test: 'data' }]];
+    const input = toTypedFieldInput([[{ test: 'data' }]]);
+    const promise = codeNodePlugin.execute(node, input);
 
-    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
-      CodeInvalidReturnFormatError,
-    );
-    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
-      'Code in node node-1 must return an array of arrays',
+    await expect(promise).rejects.toThrow(CodeInvalidReturnFormatError);
+    await expect(promise).rejects.toThrow(
+      'Code must return a TypedField object',
     );
   });
 
@@ -135,14 +129,11 @@ describe('Code Node - Execution', () => {
       connections: {},
     };
 
-    const input = [[{ test: 'data' }]];
+    const input = toTypedFieldInput([[{ test: 'data' }]]);
+    const promise = codeNodePlugin.execute(node, input);
 
-    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
-      CodeExecutionTimeoutError,
-    );
-    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
-      'exceeded timeout of 100ms',
-    );
+    await expect(promise).rejects.toThrow(CodeExecutionTimeoutError);
+    await expect(promise).rejects.toThrow('exceeded timeout of 100ms');
   }, 10000);
 
   it('should throw CodeExecutionError when code has syntax or runtime errors', async () => {
@@ -157,12 +148,11 @@ describe('Code Node - Execution', () => {
       connections: {},
     };
 
-    const input = [[{ test: 'data' }]];
+    const input = toTypedFieldInput([[{ test: 'data' }]]);
+    const promise = codeNodePlugin.execute(node, input);
 
-    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
-      CodeExecutionError,
-    );
-    await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
+    await expect(promise).rejects.toThrow(CodeExecutionError);
+    await expect(promise).rejects.toThrow(
       'Code execution error in node node-1',
     );
   });
@@ -179,7 +169,7 @@ describe('Code Node - Execution', () => {
       connections: {},
     };
 
-    const input = [[{ test: 'data' }]];
+    const input = toTypedFieldInput([[{ test: 'data' }]]);
 
     await expect(codeNodePlugin.execute(node, input)).rejects.toThrow(
       CodeExecutionError,
@@ -201,5 +191,145 @@ describe('Code Node - Execution', () => {
     expect(formatError.nodeId).toBe(nodeId);
 
     expect(timeoutError.timeout).toBe(1000);
+  });
+
+  it('should work with extractValue utility function', async () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      name: 'Code',
+      type: 'builtIn.code',
+      position: { x: 0, y: 0 },
+      parameters: {
+        code: `
+          const plain = extractValue(item);
+          return toTypedField({ extracted: plain.name });
+        `,
+      },
+      connections: {},
+    };
+
+    const input = toTypedFieldInput([[{ name: 'John', age: 30 }]]);
+    const result = await codeNodePlugin.execute(node, input);
+
+    expect(extractTypedFieldResult(result)).toEqual([[{ extracted: 'John' }]]);
+  });
+
+  it('should work with toTypedField utility function', async () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      name: 'Code',
+      type: 'builtIn.code',
+      position: { x: 0, y: 0 },
+      parameters: {
+        code: `
+          const plain = extractValue(item);
+          return toTypedField({ ...plain, newField: 'added' });
+        `,
+      },
+      connections: {},
+    };
+
+    const input = toTypedFieldInput([[{ name: 'test' }]]);
+    const result = await codeNodePlugin.execute(node, input);
+
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ name: 'test', newField: 'added' }],
+    ]);
+  });
+
+  it('should work with resolve utility function when resolver is provided', async () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      name: 'Code',
+      type: 'builtIn.code',
+      position: { x: 0, y: 0 },
+      parameters: {
+        code: `
+          return resolve(item).then(resolved => {
+            const resolvedValue = extractValue({ value: resolved, kind: 'primitive' });
+            return toTypedField({ resolved: resolvedValue.name });
+          });
+        `,
+      },
+      connections: {},
+    };
+
+    const input: TypedField[][] = [
+      [
+        {
+          value: 'user-123',
+          kind: 'link',
+          entity: 'user',
+        },
+      ],
+    ];
+
+    const resolver = (value: unknown, entityName: string) => {
+      if (entityName === 'user' && value === 'user-123') {
+        return {
+          id: { value: 'user-123', kind: 'primitive' as const },
+          name: { value: 'John', kind: 'primitive' as const },
+        };
+      }
+      throw new Error(
+        `Unexpected resolver call: ${entityName}, ${String(value)}`,
+      );
+    };
+
+    const result = await codeNodePlugin.execute(node, input, resolver);
+
+    expect(extractTypedFieldResult(result)).toEqual([[{ resolved: 'John' }]]);
+  });
+
+  it('should throw error when resolve is called without resolver', async () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      name: 'Code',
+      type: 'builtIn.code',
+      position: { x: 0, y: 0 },
+      parameters: {
+        code: `
+          return resolve(item).then(resolved => {
+            return item;
+          });
+        `,
+      },
+      connections: {},
+    };
+
+    const input: TypedField[][] = [
+      [
+        {
+          value: 'user-123',
+          kind: 'link',
+          entity: 'user',
+        },
+      ],
+    ];
+
+    const promise = codeNodePlugin.execute(node, input);
+    await expect(promise).rejects.toThrow(CodeResolverNotAvailableError);
+    await expect(promise).rejects.toThrow('Resolver is not available');
+  });
+
+  it('should validate that returned values are TypedField objects', async () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      name: 'Code',
+      type: 'builtIn.code',
+      position: { x: 0, y: 0 },
+      parameters: {
+        code: 'return { not: "a TypedField" };',
+      },
+      connections: {},
+    };
+
+    const input = toTypedFieldInput([[{ test: 'data' }]]);
+    const promise = codeNodePlugin.execute(node, input);
+
+    await expect(promise).rejects.toThrow(CodeInvalidReturnFormatError);
+    await expect(promise).rejects.toThrow(
+      'Code must return a TypedField object',
+    );
   });
 });

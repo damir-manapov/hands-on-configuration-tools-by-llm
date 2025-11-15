@@ -1,20 +1,31 @@
 import { z } from 'zod';
 import { VM } from 'vm2';
-import type { WorkflowNode } from '../../types.js';
+import { parse } from 'acorn';
+import type { WorkflowNode, FieldResolver, TypedField } from '../../types.js';
 import type { NodePlugin } from '../../plugin.js';
 import { validateNodeParameters } from '../validate.js';
 import { serializeParameterSchema } from '../../schema-serializer.js';
+import { NodeExecutionError } from '../../errors/index.js';
 import {
   CodeExecutionTimeoutError,
   CodeExecutionError,
   CodeInvalidReturnFormatError,
+  CodeResolverNotAvailableError,
 } from './errors.js';
+import { extractTypedFieldValue } from '../utils/extract-typed-field-value.js';
+import { convertValueToTypedField } from '../utils/convert-value-to-typed-field.js';
+import { resolveLinkField } from '../utils/resolve-link-field.js';
+import { validateTypedField } from '../utils/validate-typed-field.js';
 
 const CodeNodeParametersSchema = z.object({
   code: z
     .string()
+    .min(1, 'Code parameter is required and cannot be empty')
+    .refine((val) => val.trim().length > 0, {
+      message: 'Code parameter cannot be only whitespace',
+    })
     .describe(
-      'JavaScript code to execute. The code should return an array of arrays, where each inner array represents an output item. The input data is available as the "input" variable (array of arrays).',
+      'JavaScript code to execute. The code receives a single TypedField as the "item" variable and should return a single TypedField. Utility functions: extractValue(field) to get plain value, toTypedField(value) to convert to TypedField, resolve(field) to resolve link fields.',
     ),
   timeout: z
     .number()
@@ -27,70 +38,190 @@ const CodeNodeParametersSchema = z.object({
 
 function validateCodeNodeParameters(node: WorkflowNode): void {
   validateNodeParameters(node, CodeNodeParametersSchema);
+
+  const code = node.parameters['code'] as string;
+  try {
+    // Validate JavaScript syntax using acorn
+    // Wrap code the same way as in execution: (function() { ${code} })()
+    const wrappedCode = `
+      (function() {
+        ${code}
+      })()
+    `;
+    parse(wrappedCode, { ecmaVersion: 'latest', sourceType: 'script' });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new NodeExecutionError(node.id, `Code syntax error: ${errorMessage}`);
+  }
 }
 
-function executeCodeNode(
+/**
+ * Checks if an error is a timeout error based on its message
+ */
+function isTimeoutError(error: unknown): boolean {
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  return (
+    errorMessage.includes('Script execution timed out') ||
+    errorMessage.includes('timed out') ||
+    errorMessage.toLowerCase().includes('timeout')
+  );
+}
+
+async function executeCodeNode(
   node: WorkflowNode,
-  input: unknown[][],
-): Promise<unknown[][]> {
-  const code = (node.parameters['code'] as string) ?? '';
+  input: TypedField[][],
+  resolver?: FieldResolver,
+): Promise<TypedField[][]> {
+  const code = node.parameters['code'] as string;
   const timeout = (node.parameters['timeout'] as number) ?? 5000;
 
-  if (!code.trim()) {
-    // If no code provided, pass through input unchanged
-    return Promise.resolve(input);
-  }
-
-  return new Promise((resolve, reject) => {
+  // Create utility functions once (they don't depend on the item)
+  const extractValueFn = (field: unknown): unknown => {
     try {
-      const vm = new VM({
-        timeout,
-        sandbox: {
-          input,
-          // Provide safe utilities
-          Math,
-          JSON,
-          Date,
-          // Block dangerous APIs - no require, no process, no fs, etc.
-        },
-      });
-
-      const result = vm.run(`
-        (function() {
-          ${code}
-        })()
-      `) as unknown;
-
-      // Validate result is an array of arrays
-      if (!Array.isArray(result)) {
-        throw new CodeInvalidReturnFormatError(node.id);
-      }
-
-      for (const item of result) {
-        if (!Array.isArray(item)) {
-          throw new CodeInvalidReturnFormatError(node.id);
-        }
-      }
-
-      resolve(result as unknown[][]);
+      validateTypedField(field);
     } catch (error) {
-      if (error instanceof CodeInvalidReturnFormatError) {
-        reject(error);
-      } else {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
-        const isTimeoutError =
-          errorMessage.includes('Script execution timed out') ||
-          errorMessage.includes('timed out') ||
-          errorMessage.toLowerCase().includes('timeout');
-        if (isTimeoutError) {
-          reject(new CodeExecutionTimeoutError(node.id, timeout));
-        } else {
-          reject(new CodeExecutionError(node.id, errorMessage));
+      throw new CodeExecutionError(
+        node.id,
+        `extractValue expects a TypedField object: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+    }
+    return extractTypedFieldValue(field as TypedField);
+  };
+
+  const toTypedFieldFn = (value: unknown): TypedField => {
+    return convertValueToTypedField(value);
+  };
+
+  const resolveFn = async (
+    field: unknown,
+  ): Promise<Record<string, TypedField>> => {
+    try {
+      validateTypedField(field);
+    } catch (error) {
+      throw new CodeExecutionError(
+        node.id,
+        `resolve expects a TypedField object: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+    }
+    const typedField = field as TypedField;
+    if (!resolver) {
+      throw new CodeResolverNotAvailableError(node.id);
+    }
+    return await resolveLinkField(typedField, resolver);
+  };
+
+  // Serialize all input items into the code string
+  // We'll construct a single code that processes all items in one vm.run() call
+  const inputItemsCode = input
+    .map((batch) => `[${batch.map((item) => JSON.stringify(item)).join(', ')}]`)
+    .join(', ');
+
+  // Construct the complete code that processes all items
+  // This code will be compiled and executed once
+  // Note: User code might return a Promise, so we need to handle async execution
+  const completeCode = `
+    (async function() {
+      const inputBatches = [${inputItemsCode}];
+      const results = [];
+      
+      for (let batchIndex = 0; batchIndex < inputBatches.length; batchIndex++) {
+        const batch = inputBatches[batchIndex];
+        const batchResults = [];
+        
+        for (let itemIndex = 0; itemIndex < batch.length; itemIndex++) {
+          const item = batch[itemIndex];
+          
+          // User's code - it has access to 'item' variable and should return a TypedField
+          // It might return a Promise, so we await it
+          const result = await (async function() {
+            ${code}
+          })();
+          
+          batchResults.push(result);
+        }
+        
+        results.push(batchResults);
+      }
+      
+      return results;
+    })()
+  `;
+
+  // Create VM once with utility functions
+  const sandbox = {
+    // Utility functions
+    extractValue: extractValueFn,
+    toTypedField: toTypedFieldFn,
+    resolve: resolveFn,
+    // Provide safe utilities
+    Math,
+    JSON,
+    Date,
+  };
+
+  const vm = new VM({
+    timeout,
+    sandbox,
+  });
+
+  // Execute all items in a single vm.run() call - code is compiled only once!
+  try {
+    const result = vm.run(completeCode) as unknown;
+
+    // Handle Promise result (user code might return a Promise)
+    const resolvedResult = await Promise.resolve(result);
+
+    // Validate result structure
+    if (!Array.isArray(resolvedResult)) {
+      throw new CodeInvalidReturnFormatError(
+        node.id,
+        'Code must return an array of arrays (batches)',
+      );
+    }
+
+    // Validate that all items are TypedField objects
+    const typedResult = resolvedResult as unknown[][];
+    for (const [i, batch] of typedResult.entries()) {
+      if (!Array.isArray(batch)) {
+        throw new CodeInvalidReturnFormatError(
+          node.id,
+          `Result at batch index ${i} is not an array`,
+        );
+      }
+      for (const [j, item] of batch.entries()) {
+        try {
+          validateTypedField(item);
+        } catch (validationError) {
+          const errorDetails =
+            validationError instanceof Error
+              ? validationError.message
+              : String(validationError);
+          throw new CodeInvalidReturnFormatError(
+            node.id,
+            `Code must return a TypedField object. Invalid result at batch [${i}], item [${j}]: ${errorDetails}`,
+          );
         }
       }
     }
-  });
+
+    return typedResult as TypedField[][];
+  } catch (error) {
+    // Handle errors from code execution, converting them to appropriate error types
+    // Re-throw our custom errors as-is (they already have the correct type and context)
+    if (error instanceof NodeExecutionError && error.nodeId === node.id) {
+      throw error;
+    }
+    // Handle generic errors - convert timeout errors and other errors appropriately
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (isTimeoutError(error)) {
+      throw new CodeExecutionTimeoutError(node.id, timeout);
+    }
+    throw new CodeExecutionError(node.id, errorMessage);
+  }
 }
 
 export const codeNodePlugin: NodePlugin = {
@@ -106,7 +237,11 @@ export const codeNodePlugin: NodePlugin = {
   ],
   getParameterSchema: () => serializeParameterSchema(CodeNodeParametersSchema),
   validate: validateCodeNodeParameters,
-  execute: executeCodeNode,
+  execute: (
+    node: WorkflowNode,
+    input: TypedField[][],
+    resolver?: FieldResolver,
+  ) => executeCodeNode(node, input, resolver),
 };
 
 // Export error classes for use by consumers
@@ -114,4 +249,5 @@ export {
   CodeExecutionTimeoutError,
   CodeExecutionError,
   CodeInvalidReturnFormatError,
+  CodeResolverNotAvailableError,
 } from './errors.js';
