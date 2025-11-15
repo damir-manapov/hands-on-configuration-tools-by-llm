@@ -3,6 +3,7 @@ import type {
   WorkflowNode,
   ExecutionData,
   ExecutionResult,
+  FieldResolver,
 } from './types.js';
 import type { TypedField } from './types.js';
 import type { NodePlugin } from './plugin.js';
@@ -93,6 +94,7 @@ export class WorkflowEngine {
   async executeWorkflow(
     id: string,
     inputData?: ExecutionData,
+    resolver?: FieldResolver,
   ): Promise<ExecutionResult> {
     const workflow = this.getWorkflow(id);
 
@@ -111,7 +113,7 @@ export class WorkflowEngine {
         }
 
         const input = this.getNodeInput(node, workflow, executionData);
-        const output = await this.executeNode(node, input);
+        const output = await this.executeNode(node, input, resolver);
         executionData[nodeId] = output;
       }
 
@@ -214,6 +216,11 @@ export class WorkflowEngine {
 
     const connections = workflow.connections[node.id];
     if (!connections || connections.length === 0) {
+      // If no connections, check if there's input data provided for this node
+      const nodeData = executionData[node.id];
+      if (nodeData && nodeData.length > 0) {
+        return nodeData;
+      }
       return [[]];
     }
 
@@ -233,12 +240,13 @@ export class WorkflowEngine {
   private async executeNode(
     node: WorkflowNode,
     input: TypedField[][],
+    resolver?: FieldResolver,
   ): Promise<TypedField[][]> {
     const plugin = this.nodePlugins.get(node.type);
     if (!plugin) {
       throw new UnknownNodeTypeError(node.id, node.type, 'execution');
     }
-    const result = await plugin.execute(node, input);
+    const result = await plugin.execute(node, input, resolver);
     return result;
   }
 }

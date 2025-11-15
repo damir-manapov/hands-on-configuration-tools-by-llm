@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { describe, it, expect } from 'vitest';
 import { WorkflowEngine } from '../src/engine.js';
 import type { NodePlugin, Workflow } from '../src/index.js';
-import type { WorkflowNode } from '../src/types.js';
+import type { WorkflowNode, FieldResolver } from '../src/types.js';
 import type { TypedField } from '../src/types.js';
 import { serializeParameterSchema } from '../src/schema-serializer.js';
 import { extractTypedFieldValue } from '../src/nodes/utils/extract-typed-field-value.js';
@@ -223,5 +223,76 @@ describe('WorkflowEngine - Plugin System', () => {
     expect(() => {
       engine.addWorkflow(workflow);
     }).toThrow('invalid type');
+  });
+
+  it('should pass resolver to plugin execute function', async () => {
+    const engine = new WorkflowEngine();
+    let capturedResolver: FieldResolver | undefined;
+
+    const customPlugin: NodePlugin = {
+      nodeType: 'custom-resolver-test',
+      name: 'Resolver Test',
+      purpose: 'Tests that resolver is passed to plugins.',
+      useCases: ['Testing resolver passing'],
+      getParameterSchema: () => serializeParameterSchema(z.object({})),
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      validate: () => {},
+      execute: (
+        _node: WorkflowNode,
+        _input: TypedField[][],
+        resolver?: FieldResolver,
+      ): TypedField[][] => {
+        capturedResolver = resolver;
+        return [[]];
+      },
+    };
+
+    engine.registerNode(customPlugin);
+
+    const workflow: Workflow = {
+      id: 'test-1',
+      name: 'Test Workflow',
+      active: true,
+      nodes: [
+        {
+          id: 'node-1',
+          name: 'Start',
+          type: 'builtIn.start',
+          position: { x: 0, y: 0 },
+          parameters: {},
+          connections: {},
+        },
+        {
+          id: 'node-2',
+          name: 'Resolver Test',
+          type: 'custom-resolver-test',
+          position: { x: 0, y: 0 },
+          parameters: {},
+          connections: {},
+        },
+      ],
+      connections: {
+        'node-1': [{ node: 'node-2', type: 'main', index: 0 }],
+      },
+    };
+
+    engine.addWorkflow(workflow);
+
+    const testResolver: FieldResolver = (value, entityName) => {
+      return Promise.resolve({
+        id: convertValueToTypedField(value),
+        name: convertValueToTypedField(`resolved-${entityName}`),
+      });
+    };
+
+    const result = await engine.executeWorkflow(
+      'test-1',
+      undefined,
+      testResolver,
+    );
+
+    expect(result.finished).toBe(true);
+    expect(capturedResolver).toBeDefined();
+    expect(capturedResolver).toBe(testResolver);
   });
 });
