@@ -156,7 +156,7 @@ describe('WorkflowEngine - Plugin System', () => {
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {
-            main: [[{ node: 'node-2', type: 'main', index: 0 }]],
+            main: [{ node: 'node-2', type: 'main', index: 0 }],
           },
         },
         {
@@ -304,7 +304,7 @@ describe('WorkflowEngine - Plugin System', () => {
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {
-            main: [[{ node: 'node-2', type: 'main', index: 0 }]],
+            main: [{ node: 'node-2', type: 'main', index: 0 }],
           },
         },
         {

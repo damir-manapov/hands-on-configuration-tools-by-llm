@@ -227,10 +227,8 @@ export class WorkflowEngine {
       }
 
       for (const outputConnections of Object.values(node.connections)) {
-        for (const connectionGroup of outputConnections) {
-          for (const connection of connectionGroup) {
-            visit(connection.node);
-          }
+        for (const connection of outputConnections) {
+          visit(connection.node);
         }
       }
 
@@ -252,19 +250,17 @@ export class WorkflowEngine {
 
     for (const sourceNode of workflow.nodes) {
       for (const outputConnections of Object.values(sourceNode.connections)) {
-        for (const connectionGroup of outputConnections) {
-          for (const connection of connectionGroup) {
-            const targetNodeId = connection.node;
-            if (!targetNodeId) {
-              continue;
-            }
-            incoming[targetNodeId] ??= [];
-            incoming[targetNodeId].push({
-              node: sourceNode.id,
-              type: connection.type,
-              index: connection.index,
-            });
+        for (const connection of outputConnections) {
+          const targetNodeId = connection.node;
+          if (!targetNodeId) {
+            continue;
           }
+          incoming[targetNodeId] ??= [];
+          incoming[targetNodeId].push({
+            node: sourceNode.id,
+            type: connection.type,
+            index: connection.index,
+          });
         }
       }
     }
