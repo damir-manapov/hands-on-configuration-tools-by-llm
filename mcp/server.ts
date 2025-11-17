@@ -109,7 +109,7 @@ server.registerResource(
       'Returns complete information about a workflow node including its schema, examples, and use cases.',
     mimeType: 'application/json',
   },
-  async (uri, { nodeType }) => {
+  (uri, { nodeType }) => {
     if (!nodeType || typeof nodeType !== 'string') {
       throw new Error(`Invalid node resource URI: ${uri.toString()}`);
     }

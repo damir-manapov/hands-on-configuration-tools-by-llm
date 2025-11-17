@@ -39,7 +39,7 @@ export function setNestedField(
       throw new CannotTraverseError(path, part, currentPath);
     }
 
-    if (!field || field.value === null || field.value === undefined) {
+    if (field?.value == null) {
       // Create a new object if it doesn't exist
       const newField: TypedField = {
         value: {},

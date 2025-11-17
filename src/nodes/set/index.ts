@@ -69,9 +69,10 @@ function executeSetNode(
       const inputObj = inputField.value as Record<string, TypedField>;
 
       // Deep clone the input object to avoid mutating the original
-      const outputObj: Record<string, TypedField> = JSON.parse(
-        JSON.stringify(inputObj),
-      );
+      const outputObj = JSON.parse(JSON.stringify(inputObj)) as Record<
+        string,
+        TypedField
+      >;
 
       for (const valueConfig of values) {
         const typedFieldValue: TypedField = {
