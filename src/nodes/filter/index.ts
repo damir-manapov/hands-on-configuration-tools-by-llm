@@ -32,14 +32,6 @@ async function executeFilterNode(
   input: TypedField[][],
 ): Promise<Record<string, TypedField[][]>> {
   const condition = node.parameters['condition'] as Condition;
-
-  if (!condition || typeof condition !== 'object') {
-    throw new NodeExecutionError(
-      node.id,
-      'Filter node requires a condition parameter, but it is missing or invalid',
-    );
-  }
-
   const mode = (node.parameters['mode'] as 'pass' | 'drop') ?? 'pass';
 
   const result: TypedField[][] = [];

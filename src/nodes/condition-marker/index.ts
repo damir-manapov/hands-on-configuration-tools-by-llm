@@ -26,13 +26,6 @@ async function executeConditionMarkerNode(
 ): Promise<Record<string, TypedField[][]>> {
   const condition = node.parameters['condition'] as Condition;
 
-  if (!condition || typeof condition !== 'object') {
-    throw new NodeExecutionError(
-      node.id,
-      'Condition Marker node requires a condition parameter, but it is missing or invalid',
-    );
-  }
-
   const result: TypedField[][] = [];
 
   for (const inputItem of input) {

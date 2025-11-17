@@ -26,13 +26,6 @@ async function executeIfNode(
 ): Promise<Record<string, TypedField[][]>> {
   const condition = node.parameters['condition'] as Condition;
 
-  if (!condition || typeof condition !== 'object') {
-    throw new NodeExecutionError(
-      node.id,
-      'If node requires a condition parameter, but it is missing or invalid',
-    );
-  }
-
   const trueBatches: TypedField[][] = [];
   const falseBatches: TypedField[][] = [];
 
