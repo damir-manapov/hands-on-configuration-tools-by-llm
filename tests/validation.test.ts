@@ -73,7 +73,7 @@ describe('WorkflowEngine - General Validation', () => {
 
       expect(() => {
         engine.addWorkflow(workflow);
-      }).toThrow('node field is required');
+      }).toThrow('expected string');
     });
 
     it('should throw error when connection.node is empty string', () => {
@@ -207,7 +207,7 @@ describe('WorkflowEngine - General Validation', () => {
 
       expect(() => {
         engine.addWorkflow(workflow);
-      }).toThrow('type field is required');
+      }).toThrow('expected string');
     });
 
     it('should throw error when connection.type is empty string', () => {
@@ -240,7 +240,7 @@ describe('WorkflowEngine - General Validation', () => {
 
       expect(() => {
         engine.addWorkflow(workflow);
-      }).toThrow('type field is required');
+      }).toThrow('type field is required and must be a non-empty string');
     });
 
     it('should throw error when connection.index is missing', () => {
@@ -274,7 +274,7 @@ describe('WorkflowEngine - General Validation', () => {
 
       expect(() => {
         engine.addWorkflow(workflow);
-      }).toThrow('index must be a non-negative integer');
+      }).toThrow('expected number');
     });
 
     it('should throw error when connection.index is negative', () => {
@@ -340,7 +340,7 @@ describe('WorkflowEngine - General Validation', () => {
 
       expect(() => {
         engine.addWorkflow(workflow);
-      }).toThrow('index must be a non-negative integer');
+      }).toThrow('index must be an integer');
     });
 
     it('should throw error when connections is not an array', () => {
@@ -366,7 +366,7 @@ describe('WorkflowEngine - General Validation', () => {
 
       expect(() => {
         engine.addWorkflow(workflow);
-      }).toThrow('must be an array');
+      }).toThrow('expected array');
     });
 
     it('should accept valid connections', () => {
