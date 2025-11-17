@@ -57,6 +57,7 @@ pnpm install
 - `./check.sh` - Runs formatting (fixing issues), lint check, build check (without emitting), gitleaks check (including git), and tests
 - `./health.sh` - Checks for outdated dependencies and vulnerabilities. Fails if any are found
 - `./all-checks.sh` - Runs both check.sh and health.sh
+- `pnpm mcp:server` - Starts the local Model Context Protocol (MCP) server
 
 ## Development
 
@@ -76,6 +77,30 @@ pnpm format
 # Type check
 pnpm typecheck
 ```
+
+## MCP Server
+
+The repository ships with an MCP server (`mcp/server.ts`) that exposes the currently registered workflow nodes (via `WorkflowEngine`) to compatible MCP clients. This allows you to introspect the available node plugins without touching the workflow-engine internals.
+
+### Running the MCP Server
+
+```bash
+# From the project root
+pnpm mcp:server
+```
+
+The server uses the stdio transport, so it is meant to be launched as a child process by MCP-aware tools.
+
+### Testing with MCP Inspector
+
+1. Install (or run via `npx`) the [MCP Inspector](https://github.com/modelcontextprotocol/inspector).
+2. Start the inspector and point it to the server command, for example:
+
+   ```bash
+   npx @modelcontextprotocol/inspector -- pnpm --silent mcp:server
+   ```
+
+3. Once connected, call the `list-available-nodes` tool inside the inspector to view every node plugin that the engine currently exposes.
 
 ## Project Structure
 

@@ -9,6 +9,7 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.22.0",
     "acorn": "^8.15.0",
     "vm2": "^3.9.19",
     "zod": "^4.1.12"
@@ -35,6 +36,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "mcp:server": "tsx mcp/server.ts"
   }
 }

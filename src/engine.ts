@@ -69,6 +69,10 @@ export class WorkflowEngine {
     return Array.from(this.nodePlugins.keys());
   }
 
+  getRegisteredNodePlugins(): NodePlugin[] {
+    return Array.from(this.nodePlugins.values());
+  }
+
   addWorkflow(workflow: Workflow): void {
     if (this.workflows.has(workflow.id)) {
       throw new WorkflowAlreadyExistsError(workflow.id);
