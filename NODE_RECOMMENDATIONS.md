@@ -6,9 +6,11 @@ This document outlines recommended node types to add to the workflow engine, pri
 
 The engine currently supports:
 
-- **Start** (`builtIn.start`) - Entry point for workflows
+- **Noop** (`builtIn.noop`) - Entry point/pass-through node for workflows
 - **Set** (`builtIn.set`) - Add/overwrite fields with static values
-- **If** (`builtIn.if`) - Conditional routing based on single condition
+- **Condition Marker** (`builtIn.conditionMarker`) - Marks data items with \_matched field based on condition (does not route)
+- **Code** (`builtIn.code`) - Execute custom JavaScript code
+- **Filter** (`builtIn.filter`) - Filter items based on conditions
 
 ## High Priority (Core Workflow Patterns)
 
@@ -46,12 +48,12 @@ The engine currently supports:
 
 **Priority: ⭐⭐⭐⭐⭐**
 
-**Purpose:** Multi-branch conditional routing (extends If node functionality).
+**Purpose:** Multi-branch conditional routing (extends Condition Marker/If node functionality).
 
 **Parameters:**
 
 - `rules`: Array of rules, each with:
-  - `condition`: Similar to If node conditions
+  - `condition`: Similar to Condition Marker node conditions
   - `output`: Output index for this rule
 - `fallbackOutput`: Output index for items that don't match any rule
 
@@ -63,7 +65,7 @@ The engine currently supports:
 
 **Implementation Complexity:** Low-Medium
 
-- Similar to If node but with multiple outputs
+- Similar to Condition Marker node but with multiple outputs and actual routing
 - Need to handle routing to different output connections
 
 ---
@@ -103,7 +105,7 @@ The engine currently supports:
 
 **Parameters:**
 
-- `conditions`: Similar to If node (leftValue, rightValue, operator)
+- `conditions`: Similar to Condition Marker node (leftValue, rightValue, operator)
 - `mode`: Filter mode
   - `pass`: Pass items that match
   - `drop`: Drop items that match
@@ -116,7 +118,7 @@ The engine currently supports:
 
 **Implementation Complexity:** Low
 
-- Very similar to If node
+- Very similar to Condition Marker node (but actually filters/routes data)
 - Just need to filter the output array
 
 ---

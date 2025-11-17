@@ -1,28 +1,28 @@
 import { describe, it, expect } from 'vitest';
-import { ifNodePlugin } from './index.js';
+import { conditionMarkerNodePlugin } from './index.js';
 import type { WorkflowNode } from '../../types.js';
 
-describe('If Node - Validation', () => {
-  it('should throw error when if node is missing condition parameter', () => {
+describe('Condition Marker Node - Validation', () => {
+  it('should throw error when condition marker node is missing condition parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {},
       connections: [],
     };
 
     expect(() => {
-      ifNodePlugin.validate(node);
+      conditionMarkerNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
-  it('should throw error when if node has invalid condition parameter', () => {
+  it('should throw error when condition marker node has invalid condition parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: 'not-an-object',
@@ -31,15 +31,15 @@ describe('If Node - Validation', () => {
     };
 
     expect(() => {
-      ifNodePlugin.validate(node);
+      conditionMarkerNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
-  it('should throw error when if node has missing condition fields', () => {
+  it('should throw error when condition marker node has missing condition fields', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -51,15 +51,15 @@ describe('If Node - Validation', () => {
     };
 
     expect(() => {
-      ifNodePlugin.validate(node);
+      conditionMarkerNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
-  it('should throw error when if node has invalid operator', () => {
+  it('should throw error when condition marker node has invalid operator', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -72,15 +72,15 @@ describe('If Node - Validation', () => {
     };
 
     expect(() => {
-      ifNodePlugin.validate(node);
+      conditionMarkerNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
-  it('should validate if node with valid parameters', () => {
+  it('should validate condition marker node with valid parameters', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -93,7 +93,7 @@ describe('If Node - Validation', () => {
     };
 
     expect(() => {
-      ifNodePlugin.validate(node);
+      conditionMarkerNodePlugin.validate(node);
     }).not.toThrow();
   });
 });

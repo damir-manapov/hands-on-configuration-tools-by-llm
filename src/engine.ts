@@ -12,7 +12,7 @@ import type { NodePlugin } from './plugin.js';
 import {
   noopNodePlugin,
   setNodePlugin,
-  ifNodePlugin,
+  conditionMarkerNodePlugin,
   codeNodePlugin,
   filterNodePlugin,
 } from './nodes/index.js';
@@ -33,7 +33,7 @@ import {
 const BUILT_IN_PLUGINS = [
   noopNodePlugin,
   setNodePlugin,
-  ifNodePlugin,
+  conditionMarkerNodePlugin,
   codeNodePlugin,
   filterNodePlugin,
 ] as const;
@@ -161,6 +161,7 @@ export class WorkflowEngine {
         const output = await this.executeNode(node, input, resolver);
         // Store output under "main" port (default output port for nodes)
         // Future: nodes could output to multiple ports (e.g., If node -> "true" and "false")
+        // Note: Condition Marker node marks items but doesn't route - all items go to "main"
         executionData[nodeId] = {
           main: output,
         };

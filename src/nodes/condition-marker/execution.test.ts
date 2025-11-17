@@ -1,15 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import type { WorkflowNode } from '../../types.js';
-import { ifNodePlugin } from './index.js';
+import { conditionMarkerNodePlugin } from './index.js';
 import { toTypedFieldInput } from '../utils/to-typed-field-input.js';
 import { extractTypedFieldResult } from '../utils/extract-typed-field-result.js';
 
-describe('If Node - Execution', () => {
-  it('should execute if node with equals operator - match', async () => {
+describe('Condition Marker Node - Execution', () => {
+  it('should execute condition marker node with equals operator - match', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -22,7 +22,7 @@ describe('If Node - Execution', () => {
     };
 
     const input = toTypedFieldInput([[{ status: 'active', name: 'test' }]]);
-    const result = await ifNodePlugin.execute(node, input);
+    const result = await conditionMarkerNodePlugin.execute(node, input);
 
     expect(extractTypedFieldResult(result)).toEqual([
       [{ status: 'active', name: 'test', _matched: true }],
@@ -32,8 +32,8 @@ describe('If Node - Execution', () => {
   it('should execute if node with equals operator - no match', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -46,7 +46,7 @@ describe('If Node - Execution', () => {
     };
 
     const input = toTypedFieldInput([[{ status: 'inactive', name: 'test' }]]);
-    const result = await ifNodePlugin.execute(node, input);
+    const result = await conditionMarkerNodePlugin.execute(node, input);
 
     expect(extractTypedFieldResult(result)).toEqual([
       [{ status: 'inactive', name: 'test', _matched: false }],
@@ -56,8 +56,8 @@ describe('If Node - Execution', () => {
   it('should execute if node with notEquals operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -70,7 +70,7 @@ describe('If Node - Execution', () => {
     };
 
     const input = toTypedFieldInput([[{ status: 'inactive' }]]);
-    const result = await ifNodePlugin.execute(node, input);
+    const result = await conditionMarkerNodePlugin.execute(node, input);
 
     expect(extractTypedFieldResult(result)).toEqual([
       [{ status: 'inactive', _matched: true }],
@@ -80,8 +80,8 @@ describe('If Node - Execution', () => {
   it('should execute if node with contains operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -96,7 +96,7 @@ describe('If Node - Execution', () => {
     const input = toTypedFieldInput([
       [{ message: 'This is an error message' }],
     ]);
-    const result = await ifNodePlugin.execute(node, input);
+    const result = await conditionMarkerNodePlugin.execute(node, input);
 
     expect(extractTypedFieldResult(result)).toEqual([
       [{ message: 'This is an error message', _matched: true }],
@@ -106,8 +106,8 @@ describe('If Node - Execution', () => {
   it('should execute if node with contains operator - no match', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -122,7 +122,7 @@ describe('If Node - Execution', () => {
     const input = toTypedFieldInput([
       [{ message: 'This is a success message' }],
     ]);
-    const result = await ifNodePlugin.execute(node, input);
+    const result = await conditionMarkerNodePlugin.execute(node, input);
 
     expect(extractTypedFieldResult(result)).toEqual([
       [{ message: 'This is a success message', _matched: false }],
@@ -132,8 +132,8 @@ describe('If Node - Execution', () => {
   it('should throw error when field is missing', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -146,16 +146,16 @@ describe('If Node - Execution', () => {
     };
 
     const input = toTypedFieldInput([[{ other: 'field' }]]);
-    await expect(ifNodePlugin.execute(node, input)).rejects.toThrow(
-      'Field "missing" not found',
-    );
+    await expect(
+      conditionMarkerNodePlugin.execute(node, input),
+    ).rejects.toThrow('Field "missing" not found');
   });
 
   it('should execute if node with number field value', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -168,7 +168,7 @@ describe('If Node - Execution', () => {
     };
 
     const input = toTypedFieldInput([[{ count: 5 }]]);
-    const result = await ifNodePlugin.execute(node, input);
+    const result = await conditionMarkerNodePlugin.execute(node, input);
 
     expect(extractTypedFieldResult(result)).toEqual([
       [{ count: 5, _matched: true }],
@@ -178,8 +178,8 @@ describe('If Node - Execution', () => {
   it('should execute if node with boolean field value', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -192,7 +192,7 @@ describe('If Node - Execution', () => {
     };
 
     const input = toTypedFieldInput([[{ enabled: true }]]);
-    const result = await ifNodePlugin.execute(node, input);
+    const result = await conditionMarkerNodePlugin.execute(node, input);
 
     expect(extractTypedFieldResult(result)).toEqual([
       [{ enabled: true, _matched: true }],
@@ -202,8 +202,8 @@ describe('If Node - Execution', () => {
   it('should execute if node with multiple input items', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -220,7 +220,7 @@ describe('If Node - Execution', () => {
       [{ status: 'inactive' }],
       [{ status: 'active' }],
     ]);
-    const result = await ifNodePlugin.execute(node, input);
+    const result = await conditionMarkerNodePlugin.execute(node, input);
 
     expect(extractTypedFieldResult(result)).toEqual([
       [{ status: 'active', _matched: true }],
@@ -232,8 +232,8 @@ describe('If Node - Execution', () => {
   it('should process all items in inner array, not just the first one', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -252,7 +252,7 @@ describe('If Node - Execution', () => {
         { status: 'active', name: 'item3' },
       ],
     ]);
-    const result = await ifNodePlugin.execute(node, input);
+    const result = await conditionMarkerNodePlugin.execute(node, input);
 
     expect(extractTypedFieldResult(result)).toEqual([
       [
@@ -266,8 +266,8 @@ describe('If Node - Execution', () => {
   it('should execute if node with nested fields using dot notation', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -284,7 +284,7 @@ describe('If Node - Execution', () => {
       [{ user: { name: 'Jane', age: 25 }, id: 2 }],
       [{ user: { name: 'John', age: 35 }, id: 3 }],
     ]);
-    const result = await ifNodePlugin.execute(node, input);
+    const result = await conditionMarkerNodePlugin.execute(node, input);
 
     expect(extractTypedFieldResult(result)).toEqual([
       [{ user: { name: 'John', age: 30 }, id: 1, _matched: true }],
@@ -296,8 +296,8 @@ describe('If Node - Execution', () => {
   it('should execute if node with deeply nested fields', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -341,7 +341,7 @@ describe('If Node - Execution', () => {
         },
       ],
     ]);
-    const result = await ifNodePlugin.execute(node, input);
+    const result = await conditionMarkerNodePlugin.execute(node, input);
 
     expect(extractTypedFieldResult(result)).toEqual([
       [
@@ -383,8 +383,8 @@ describe('If Node - Execution', () => {
   it('should throw error when nested field is missing', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -401,14 +401,16 @@ describe('If Node - Execution', () => {
       [{ user: { name: 'Jane', email: 'test@example.com' }, id: 2 }],
       [{ id: 3 }],
     ]);
-    await expect(ifNodePlugin.execute(node, input)).rejects.toThrow();
+    await expect(
+      conditionMarkerNodePlugin.execute(node, input),
+    ).rejects.toThrow();
   });
 
   it('should throw error when null/undefined encountered in nested path', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -426,14 +428,16 @@ describe('If Node - Execution', () => {
       [{ user: null, id: 3 }],
       [{ id: 4 }],
     ]);
-    await expect(ifNodePlugin.execute(node, input)).rejects.toThrow();
+    await expect(
+      conditionMarkerNodePlugin.execute(node, input),
+    ).rejects.toThrow();
   });
 
   it('should execute if node with nested fields using contains operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -450,7 +454,7 @@ describe('If Node - Execution', () => {
       [{ metadata: { tags: 'normal' }, id: 2 }],
       [{ metadata: { tags: 'important' }, id: 3 }],
     ]);
-    const result = await ifNodePlugin.execute(node, input);
+    const result = await conditionMarkerNodePlugin.execute(node, input);
 
     expect(extractTypedFieldResult(result)).toEqual([
       [{ metadata: { tags: 'important urgent' }, id: 1, _matched: true }],
@@ -462,8 +466,8 @@ describe('If Node - Execution', () => {
   it('should execute if node with nested fields using notEquals operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'If',
-      type: 'builtIn.if',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -480,7 +484,7 @@ describe('If Node - Execution', () => {
       [{ user: { role: 'admin', name: 'Jane' }, id: 2 }],
       [{ user: { role: 'moderator', name: 'Bob' }, id: 3 }],
     ]);
-    const result = await ifNodePlugin.execute(node, input);
+    const result = await conditionMarkerNodePlugin.execute(node, input);
 
     expect(extractTypedFieldResult(result)).toEqual([
       [{ user: { role: 'user', name: 'John' }, id: 1, _matched: true }],

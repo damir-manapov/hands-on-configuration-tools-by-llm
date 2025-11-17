@@ -10,17 +10,17 @@ import {
   evaluateCondition,
 } from '../utils/evaluate-condition.js';
 
-const IfNodeParametersSchema = z.object({
+const ConditionMarkerNodeParametersSchema = z.object({
   condition: ConditionSchema.describe(
     'The condition to evaluate. If the condition matches, the item will have a _matched field set to true, otherwise false.',
   ),
 });
 
-function validateIfNodeParameters(node: WorkflowNode): void {
-  validateNodeParameters(node, IfNodeParametersSchema);
+function validateConditionMarkerNodeParameters(node: WorkflowNode): void {
+  validateNodeParameters(node, ConditionMarkerNodeParametersSchema);
 }
 
-async function executeIfNode(
+async function executeConditionMarkerNode(
   node: WorkflowNode,
   input: TypedField[][],
 ): Promise<TypedField[][]> {
@@ -29,7 +29,7 @@ async function executeIfNode(
   if (!condition || typeof condition !== 'object') {
     throw new NodeExecutionError(
       node.id,
-      'If node requires a condition parameter, but it is missing or invalid',
+      'Condition Marker node requires a condition parameter, but it is missing or invalid',
     );
   }
 
@@ -42,7 +42,7 @@ async function executeIfNode(
       if (!inputField) {
         throw new NodeExecutionError(
           node.id,
-          'If node received undefined or null input field',
+          'Condition Marker node received undefined or null input field',
         );
       }
 
@@ -106,20 +106,21 @@ const parametersExamples: ParametersExample[] = [
   },
 ];
 
-export const ifNodePlugin: NodePlugin = {
-  nodeType: 'builtIn.if',
-  name: 'If',
+export const conditionMarkerNodePlugin: NodePlugin = {
+  nodeType: 'builtIn.conditionMarker',
+  name: 'Condition Marker',
   purpose:
-    'Conditional routing based on a single condition. Evaluates a condition and adds a _matched field to indicate whether the condition was met.',
+    'Marks data items with a _matched field based on a condition evaluation. Does not route data - all items pass through with the _matched field indicating whether the condition was met.',
   useCases: [
-    'Conditional workflow branching',
-    'Filtering data based on conditions',
-    'Implementing business logic with conditions',
-    'Data validation and routing',
+    'Marking data items with condition results',
+    'Adding metadata for downstream filtering',
+    'Condition evaluation without routing',
+    'Data validation and marking',
   ],
   outputPorts: ['main'],
-  getParameterSchema: () => serializeParameterSchema(IfNodeParametersSchema),
-  validate: validateIfNodeParameters,
-  execute: executeIfNode,
+  getParameterSchema: () =>
+    serializeParameterSchema(ConditionMarkerNodeParametersSchema),
+  validate: validateConditionMarkerNodeParameters,
+  execute: executeConditionMarkerNode,
   parametersExamples,
 };
