@@ -43,6 +43,12 @@ const BUILT_IN_NODE_TYPES = BUILT_IN_PLUGINS.map(
 ) as readonly string[];
 
 export class WorkflowEngine {
+  private static readonly MAX_WORKFLOW_NODES = 1000;
+  private static readonly MAX_WORKFLOW_CONNECTIONS = 10000;
+  private static readonly MAX_ID_LENGTH = 100;
+  private static readonly MAX_NAME_LENGTH = 200;
+  private static readonly ID_REGEX = /^[a-zA-Z0-9_-]+$/;
+
   private workflows = new Map<string, Workflow>();
   private nodePlugins = new Map<string, NodePlugin>();
 
@@ -176,10 +182,26 @@ export class WorkflowEngine {
   }
 
   private validateWorkflow(workflow: Workflow): void {
-    // Validate workflow structure with Zod
+    // Validate workflow structure with Zod (including ID format and name length)
     const WorkflowStructureSchema = z.object({
-      id: z.string().min(1, 'Workflow must have id'),
-      name: z.string().min(1, 'Workflow must have name'),
+      id: z
+        .string()
+        .min(1, 'Workflow must have id')
+        .max(
+          WorkflowEngine.MAX_ID_LENGTH,
+          `Workflow ID must be ${WorkflowEngine.MAX_ID_LENGTH} characters or less`,
+        )
+        .regex(
+          WorkflowEngine.ID_REGEX,
+          'Workflow ID must contain only alphanumeric characters, dashes, and underscores',
+        ),
+      name: z
+        .string()
+        .min(1, 'Workflow must have name')
+        .max(
+          WorkflowEngine.MAX_NAME_LENGTH,
+          `Workflow name must be ${WorkflowEngine.MAX_NAME_LENGTH} characters or less`,
+        ),
       nodes: z.array(z.any()),
       active: z.boolean(),
     });
@@ -196,10 +218,29 @@ export class WorkflowEngine {
       throw error;
     }
 
-    // Validate node structure with Zod (connections validated separately)
+    // Validate maximum limits
+    this.validateMaximumLimits(workflow);
+
+    // Validate node structure with Zod (including ID format and name length)
     const NodeStructureSchema = z.object({
-      id: z.string().min(1),
-      name: z.string().min(1),
+      id: z
+        .string()
+        .min(1)
+        .max(
+          WorkflowEngine.MAX_ID_LENGTH,
+          `Node ID must be ${WorkflowEngine.MAX_ID_LENGTH} characters or less`,
+        )
+        .regex(
+          WorkflowEngine.ID_REGEX,
+          'Node ID must contain only alphanumeric characters, dashes, and underscores',
+        ),
+      name: z
+        .string()
+        .min(1)
+        .max(
+          WorkflowEngine.MAX_NAME_LENGTH,
+          `Node name must be ${WorkflowEngine.MAX_NAME_LENGTH} characters or less`,
+        ),
       type: z.string().min(1),
       position: z.object({
         x: z.number(),
@@ -243,6 +284,31 @@ export class WorkflowEngine {
 
     // Validate connections after all nodes are validated and IDs are collected
     this.validateConnections(workflow, nodeIds);
+
+    // Validate unreachable nodes
+    this.validateUnreachableNodes(workflow, nodeIds);
+  }
+
+  private validateMaximumLimits(workflow: Workflow): void {
+    // Validate maximum number of nodes
+    if (workflow.nodes.length > WorkflowEngine.MAX_WORKFLOW_NODES) {
+      throw new WorkflowValidationError(
+        `Workflow cannot have more than ${WorkflowEngine.MAX_WORKFLOW_NODES} nodes`,
+      );
+    }
+
+    // Validate maximum number of connections
+    let totalConnections = 0;
+    for (const node of workflow.nodes) {
+      for (const connections of Object.values(node.connections)) {
+        totalConnections += connections.length;
+      }
+    }
+    if (totalConnections > WorkflowEngine.MAX_WORKFLOW_CONNECTIONS) {
+      throw new WorkflowValidationError(
+        `Workflow cannot have more than ${WorkflowEngine.MAX_WORKFLOW_CONNECTIONS} connections`,
+      );
+    }
   }
 
   private validateConnections(workflow: Workflow, nodeIds: Set<string>): void {
@@ -269,6 +335,8 @@ export class WorkflowEngine {
     // Connections array schema
     const ConnectionsArraySchema = z.array(ConnectionSchema);
 
+    const connectionSet = new Set<string>();
+
     for (const node of workflow.nodes) {
       for (const [outputPort, connections] of Object.entries(
         node.connections,
@@ -289,7 +357,7 @@ export class WorkflowEngine {
           );
         }
 
-        // Validate workflow-specific rules (node exists, no self-reference)
+        // Validate workflow-specific rules (node exists, no self-reference, no duplicates)
         for (const [index, connection] of connections.entries()) {
           // Validate target node exists
           if (!nodeIds.has(connection.node)) {
@@ -304,8 +372,67 @@ export class WorkflowEngine {
               `Node ${node.id} cannot connect to itself at output port "${outputPort}"[${index}]`,
             );
           }
+
+          // Validate no duplicate connections
+          const connectionKey = `${node.id}:${outputPort}->${connection.node}:${connection.type}:${connection.index}`;
+          if (connectionSet.has(connectionKey)) {
+            throw new WorkflowValidationError(
+              `Duplicate connection from node "${node.id}" port "${outputPort}" to node "${connection.node}" at index ${connection.index}`,
+            );
+          }
+          connectionSet.add(connectionKey);
         }
       }
+    }
+  }
+
+  private validateUnreachableNodes(
+    workflow: Workflow,
+    nodeIds: Set<string>,
+  ): void {
+    const reachable = new Set<string>();
+
+    // Find entry points (nodes with no incoming connections)
+    const incomingConnections = this.buildIncomingConnections(workflow);
+    const entryPoints = workflow.nodes.filter((node) => {
+      const connections = incomingConnections[node.id];
+      return !connections || connections.length === 0;
+    });
+
+    // If no entry points, all nodes are unreachable (except if workflow has no nodes)
+    if (entryPoints.length === 0 && workflow.nodes.length > 0) {
+      throw new WorkflowValidationError(
+        'Workflow has no entry points (all nodes have incoming connections)',
+      );
+    }
+
+    // BFS from entry points to find all reachable nodes
+    const queue = [...entryPoints.map((n) => n.id)];
+    while (queue.length > 0) {
+      const nodeId = queue.shift();
+      if (!nodeId || reachable.has(nodeId)) {
+        continue;
+      }
+
+      reachable.add(nodeId);
+      const node = workflow.nodes.find((n) => n.id === nodeId);
+      if (node) {
+        for (const connections of Object.values(node.connections)) {
+          for (const connection of connections) {
+            if (!reachable.has(connection.node)) {
+              queue.push(connection.node);
+            }
+          }
+        }
+      }
+    }
+
+    // Check for unreachable nodes
+    const unreachable = Array.from(nodeIds).filter((id) => !reachable.has(id));
+    if (unreachable.length > 0) {
+      throw new WorkflowValidationError(
+        `Unreachable nodes detected: ${unreachable.join(', ')}`,
+      );
     }
   }
 
