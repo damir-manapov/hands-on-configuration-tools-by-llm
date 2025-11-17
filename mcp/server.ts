@@ -102,7 +102,19 @@ server.registerTool(
 
 server.registerResource(
   'workflow-node',
-  new ResourceTemplate('workflow-mng://nodes/{nodeType}', { list: undefined }),
+  new ResourceTemplate('workflow-mng://nodes/{nodeType}', {
+    list: () => {
+      const nodes = engine.getRegisteredNodePlugins();
+      return {
+        resources: nodes.map((plugin) => ({
+          uri: `workflow-mng://nodes/${plugin.nodeType}`,
+          name: plugin.nodeType,
+          description: plugin.purpose,
+          mimeType: 'application/json',
+        })),
+      };
+    },
+  }),
   {
     title: 'Workflow Node Resource',
     description:
