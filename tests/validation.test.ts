@@ -7,7 +7,7 @@ describe('WorkflowEngine - General Validation', () => {
     const engine = new WorkflowEngine();
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {
@@ -30,7 +30,7 @@ describe('WorkflowEngine - General Validation', () => {
     const engine = new WorkflowEngine();
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {
@@ -54,7 +54,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -80,7 +80,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -103,7 +103,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -126,7 +126,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -149,7 +149,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -172,7 +172,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -206,7 +206,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -240,7 +240,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -271,7 +271,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -302,7 +302,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -327,7 +327,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -360,7 +360,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'invalid@id',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -383,7 +383,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'a'.repeat(101),
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -406,7 +406,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -429,7 +429,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -452,7 +452,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-workflow_123',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -473,11 +473,11 @@ describe('WorkflowEngine - General Validation', () => {
   });
 
   describe('Name Length Validation', () => {
-    it('should throw error when workflow name is too long', () => {
+    it('should throw error when workflow title is too long', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'a'.repeat(201),
+        title: 'a'.repeat(201),
         active: true,
         nodes: [
           {
@@ -493,14 +493,14 @@ describe('WorkflowEngine - General Validation', () => {
 
       expect(() => {
         engine.addWorkflow(workflow);
-      }).toThrow('Workflow name must be 200 characters or less');
+      }).toThrow('Workflow title must be 200 characters or less');
     });
 
     it('should throw error when node title is too long', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -519,11 +519,11 @@ describe('WorkflowEngine - General Validation', () => {
       }).toThrow('Node title must be 200 characters or less');
     });
 
-    it('should accept names at maximum length', () => {
+    it('should accept titles at maximum length', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'a'.repeat(200),
+        title: 'a'.repeat(200),
         active: true,
         nodes: [
           {
@@ -557,7 +557,7 @@ describe('WorkflowEngine - General Validation', () => {
 
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes,
       };
@@ -611,7 +611,7 @@ describe('WorkflowEngine - General Validation', () => {
 
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes,
       };
@@ -634,7 +634,7 @@ describe('WorkflowEngine - General Validation', () => {
 
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes,
       };
@@ -650,7 +650,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -684,7 +684,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -726,7 +726,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -761,7 +761,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -808,7 +808,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -841,7 +841,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {
@@ -872,7 +872,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
-        name: 'Test Workflow',
+        title: 'Test Workflow',
         active: true,
         nodes: [
           {

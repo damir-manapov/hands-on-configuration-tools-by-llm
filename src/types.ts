@@ -20,7 +20,7 @@ export interface WorkflowNode extends NodeConfig {
 
 export interface Workflow {
   id: string;
-  name: string;
+  title: string;
   nodes: WorkflowNode[];
   active: boolean;
 }

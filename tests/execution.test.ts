@@ -9,7 +9,7 @@ describe('WorkflowEngine - Execution', () => {
     const engine = new WorkflowEngine();
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {
@@ -42,7 +42,7 @@ describe('WorkflowEngine - Execution', () => {
     const engine = new WorkflowEngine();
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: false,
       nodes: [
         {
@@ -67,7 +67,7 @@ describe('WorkflowEngine - Execution', () => {
     const engine = new WorkflowEngine();
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {
@@ -93,7 +93,7 @@ describe('WorkflowEngine - Execution', () => {
 
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {
@@ -172,7 +172,7 @@ describe('WorkflowEngine - Execution', () => {
     const engine = new WorkflowEngine();
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {
@@ -230,7 +230,7 @@ describe('WorkflowEngine - Execution', () => {
     const engine = new WorkflowEngine();
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {

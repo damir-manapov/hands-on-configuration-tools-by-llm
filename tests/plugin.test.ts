@@ -150,7 +150,7 @@ describe('WorkflowEngine - Plugin System', () => {
 
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {
@@ -221,7 +221,7 @@ describe('WorkflowEngine - Plugin System', () => {
 
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {
@@ -245,7 +245,7 @@ describe('WorkflowEngine - Plugin System', () => {
 
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {
@@ -298,7 +298,7 @@ describe('WorkflowEngine - Plugin System', () => {
 
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {

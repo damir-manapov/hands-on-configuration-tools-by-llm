@@ -186,7 +186,7 @@ export class WorkflowEngine {
   }
 
   private validateWorkflow(workflow: Workflow): void {
-    // Validate workflow structure with Zod (including ID format and name length)
+    // Validate workflow structure with Zod (including ID format and title length)
     const WorkflowStructureSchema = z.object({
       id: z
         .string()
@@ -199,12 +199,12 @@ export class WorkflowEngine {
           WorkflowEngine.ID_REGEX,
           'Workflow ID must contain only alphanumeric characters, dashes, and underscores',
         ),
-      name: z
+      title: z
         .string()
-        .min(1, 'Workflow must have name')
+        .min(1, 'Workflow must have title')
         .max(
           WorkflowEngine.MAX_NAME_LENGTH,
-          `Workflow name must be ${WorkflowEngine.MAX_NAME_LENGTH} characters or less`,
+          `Workflow title must be ${WorkflowEngine.MAX_NAME_LENGTH} characters or less`,
         ),
       nodes: z.array(z.any()),
       active: z.boolean(),

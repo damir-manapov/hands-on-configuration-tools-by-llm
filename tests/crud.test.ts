@@ -7,7 +7,7 @@ describe('WorkflowEngine - CRUD Operations', () => {
     const engine = new WorkflowEngine();
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {
@@ -26,14 +26,14 @@ describe('WorkflowEngine - CRUD Operations', () => {
 
     expect(retrieved).toBeDefined();
     expect(retrieved.id).toBe('test-1');
-    expect(retrieved.name).toBe('Test Workflow');
+    expect(retrieved.title).toBe('Test Workflow');
   });
 
   it('should throw error when adding duplicate workflow', () => {
     const engine = new WorkflowEngine();
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {
@@ -58,7 +58,7 @@ describe('WorkflowEngine - CRUD Operations', () => {
     const engine = new WorkflowEngine();
     const workflow: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow',
+      title: 'Test Workflow',
       active: true,
       nodes: [
         {
@@ -84,7 +84,7 @@ describe('WorkflowEngine - CRUD Operations', () => {
     const engine = new WorkflowEngine();
     const workflow1: Workflow = {
       id: 'test-1',
-      name: 'Test Workflow 1',
+      title: 'Test Workflow 1',
       active: true,
       nodes: [
         {
@@ -100,7 +100,7 @@ describe('WorkflowEngine - CRUD Operations', () => {
 
     const workflow2: Workflow = {
       id: 'test-2',
-      name: 'Test Workflow 2',
+      title: 'Test Workflow 2',
       active: true,
       nodes: [
         {
