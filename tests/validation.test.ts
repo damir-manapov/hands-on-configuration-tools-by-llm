@@ -46,7 +46,7 @@ describe('WorkflowEngine - General Validation', () => {
 
     expect(() => {
       engine.addWorkflow(workflow);
-    }).toThrow('must have a type');
+    }).toThrow('invalid type');
   });
 
   describe('Connection Validation', () => {

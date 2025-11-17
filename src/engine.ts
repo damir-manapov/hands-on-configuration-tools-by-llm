@@ -176,22 +176,59 @@ export class WorkflowEngine {
   }
 
   private validateWorkflow(workflow: Workflow): void {
-    if (!workflow.id || !workflow.name) {
-      throw new WorkflowValidationError('Workflow must have id and name');
+    // Validate workflow structure with Zod
+    const WorkflowStructureSchema = z.object({
+      id: z.string().min(1, 'Workflow must have id'),
+      name: z.string().min(1, 'Workflow must have name'),
+      nodes: z.array(z.any()),
+      active: z.boolean(),
+    });
+
+    try {
+      WorkflowStructureSchema.parse(workflow);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const firstIssue = error.issues[0];
+        throw new WorkflowValidationError(
+          firstIssue?.message ?? 'Workflow structure validation failed',
+        );
+      }
+      throw error;
     }
 
-    if (!Array.isArray(workflow.nodes)) {
-      throw new WorkflowValidationError('Workflow must have nodes array');
-    }
+    // Validate node structure with Zod (connections validated separately)
+    const NodeStructureSchema = z.object({
+      id: z.string().min(1),
+      name: z.string().min(1),
+      type: z.string().min(1),
+      position: z.object({
+        x: z.number(),
+        y: z.number(),
+      }),
+      parameters: z.record(z.string(), z.unknown()),
+      // connections validated separately in validateConnections()
+      // Note: Zod allows extra fields by default, so connections field will pass through
+    });
 
     const nodeIds = new Set<string>();
     for (const node of workflow.nodes) {
-      if (nodeIds.has(node.id)) {
-        throw new DuplicateNodeIdError(node.id);
+      // Validate node structure
+      try {
+        NodeStructureSchema.parse(node);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          const firstIssue = error.issues[0];
+          const field = firstIssue?.path.join('.') ?? 'unknown';
+          throw new WorkflowValidationError(
+            `Node ${node.id ?? 'unknown'} has invalid ${field}: ${firstIssue?.message ?? 'validation failed'}`,
+          );
+        }
+        throw error;
       }
 
-      if (!node.type) {
-        throw new WorkflowValidationError(`Node ${node.id} must have a type`);
+      // Context-dependent validations (keep as manual checks)
+      if (nodeIds.has(node.id)) {
+        throw new DuplicateNodeIdError(node.id);
       }
 
       if (!this.nodePlugins.has(node.type)) {
