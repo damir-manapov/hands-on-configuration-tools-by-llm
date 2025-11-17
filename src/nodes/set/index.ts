@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { WorkflowNode } from '../../types.js';
-import type { NodePlugin } from '../../plugin.js';
+import type { NodePlugin, ParametersExample } from '../../plugin.js';
 import type { TypedField } from '../../types.js';
 import { validateNodeParameters } from '../validate.js';
 import { serializeParameterSchema } from '../../schema-serializer.js';
@@ -84,6 +84,52 @@ function executeSetNode(
   return result;
 }
 
+const parametersExamples: ParametersExample[] = [
+  {
+    title: 'Set Single Field',
+    description:
+      'Set a single field "status" to the value "active" in all data items.',
+    parameters: {
+      values: [
+        {
+          name: 'status',
+          value: 'active',
+        },
+      ],
+    },
+  },
+  {
+    title: 'Set Multiple Fields',
+    description:
+      'Set multiple fields at once: "status" to "active" and "priority" to "high".',
+    parameters: {
+      values: [
+        {
+          name: 'status',
+          value: 'active',
+        },
+        {
+          name: 'priority',
+          value: 'high',
+        },
+      ],
+    },
+  },
+  {
+    title: 'Override Existing Field',
+    description:
+      'Override an existing field value. The "name" field will be set to "Updated Name" regardless of its previous value.',
+    parameters: {
+      values: [
+        {
+          name: 'name',
+          value: 'Updated Name',
+        },
+      ],
+    },
+  },
+];
+
 export const setNodePlugin: NodePlugin = {
   nodeType: 'builtIn.set',
   name: 'Set',
@@ -97,4 +143,5 @@ export const setNodePlugin: NodePlugin = {
   getParameterSchema: () => serializeParameterSchema(SetNodeParametersSchema),
   validate: validateSetNodeParameters,
   execute: executeSetNode,
+  parametersExamples,
 };

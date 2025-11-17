@@ -21,6 +21,13 @@ describe('WorkflowEngine - Plugin System', () => {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
       execute: (): TypedField[][] => [[]],
+      parametersExamples: [
+        {
+          title: 'Basic Custom Node',
+          description: 'A simple custom node with no parameters.',
+          parameters: {},
+        },
+      ],
     };
 
     engine.registerNode(customPlugin);
@@ -40,6 +47,13 @@ describe('WorkflowEngine - Plugin System', () => {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
       execute: (): TypedField[][] => [[]],
+      parametersExamples: [
+        {
+          title: 'Test Start Node',
+          description: 'A test start node example.',
+          parameters: {},
+        },
+      ],
     };
 
     expect(() => {
@@ -67,6 +81,13 @@ describe('WorkflowEngine - Plugin System', () => {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
       execute: (): TypedField[][] => [[]],
+      parametersExamples: [
+        {
+          title: 'Test Custom Node',
+          description: 'A test custom node example.',
+          parameters: {},
+        },
+      ],
     };
 
     engine.registerNode(customPlugin);
@@ -110,6 +131,15 @@ describe('WorkflowEngine - Plugin System', () => {
           return [{ value: outputObj, kind: 'primitive' as const }];
         });
       },
+      parametersExamples: [
+        {
+          title: 'Echo Hello World',
+          description: 'Echo the text "Hello World" in the output data.',
+          parameters: {
+            text: 'Hello World',
+          },
+        },
+      ],
     };
 
     engine.registerNode(customPlugin);
@@ -174,6 +204,15 @@ describe('WorkflowEngine - Plugin System', () => {
         }
       },
       execute: (): TypedField[][] => [[]],
+      parametersExamples: [
+        {
+          title: 'Required Field Example',
+          description: 'An example with the required field set.',
+          parameters: {
+            requiredField: 'test-value',
+          },
+        },
+      ],
     };
 
     engine.registerNode(customPlugin);
@@ -245,6 +284,13 @@ describe('WorkflowEngine - Plugin System', () => {
         capturedResolver = resolver;
         return [[]];
       },
+      parametersExamples: [
+        {
+          title: 'Resolver Test Example',
+          description: 'An example for testing resolver passing.',
+          parameters: {},
+        },
+      ],
     };
 
     engine.registerNode(customPlugin);

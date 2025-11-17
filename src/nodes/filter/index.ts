@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { WorkflowNode } from '../../types.js';
-import type { NodePlugin } from '../../plugin.js';
+import type { NodePlugin, ParametersExample } from '../../plugin.js';
 import type { TypedField } from '../../types.js';
 import { NodeExecutionError } from '../../errors/index.js';
 import { validateNodeParameters } from '../validate.js';
@@ -70,6 +70,47 @@ async function executeFilterNode(
   return result;
 }
 
+const parametersExamples: ParametersExample[] = [
+  {
+    title: 'Filter Active Items',
+    description:
+      'Keep only items where the status field equals "active". Uses pass mode to include matching items.',
+    parameters: {
+      condition: {
+        path: 'status',
+        value: 'active',
+        operator: 'equals',
+      },
+      mode: 'pass',
+    },
+  },
+  {
+    title: 'Remove Invalid Email Addresses',
+    description:
+      'Remove items where the user.email field contains "@example.com". Uses drop mode to exclude matching items and supports nested field paths.',
+    parameters: {
+      condition: {
+        path: 'user.email',
+        value: '@example.com',
+        operator: 'contains',
+      },
+      mode: 'drop',
+    },
+  },
+  {
+    title: 'Filter Out Low Priority Items',
+    description:
+      'Keep items where the priority field does not equal "low". Uses the default pass mode and notEquals operator to exclude low priority items.',
+    parameters: {
+      condition: {
+        path: 'priority',
+        value: 'low',
+        operator: 'notEquals',
+      },
+    },
+  },
+];
+
 export const filterNodePlugin: NodePlugin = {
   nodeType: 'builtIn.filter',
   name: 'Filter',
@@ -85,4 +126,5 @@ export const filterNodePlugin: NodePlugin = {
     serializeParameterSchema(FilterNodeParametersSchema),
   validate: validateFilterNodeParameters,
   execute: executeFilterNode,
+  parametersExamples,
 };

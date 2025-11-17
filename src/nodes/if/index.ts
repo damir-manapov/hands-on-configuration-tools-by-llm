@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { WorkflowNode, TypedField } from '../../types.js';
-import type { NodePlugin } from '../../plugin.js';
+import type { NodePlugin, ParametersExample } from '../../plugin.js';
 import { NodeExecutionError } from '../../errors/index.js';
 import { validateNodeParameters } from '../validate.js';
 import { serializeParameterSchema } from '../../schema-serializer.js';
@@ -67,6 +67,45 @@ async function executeIfNode(
   return result;
 }
 
+const parametersExamples: ParametersExample[] = [
+  {
+    title: 'Check Status Equals Active',
+    description:
+      'Evaluate if the status field equals "active". Adds a _matched field set to true if the condition matches, false otherwise.',
+    parameters: {
+      condition: {
+        path: 'status',
+        value: 'active',
+        operator: 'equals',
+      },
+    },
+  },
+  {
+    title: 'Check Email Contains Domain',
+    description:
+      'Check if the user.email field contains "@example.com". Uses nested field path to access email within user object.',
+    parameters: {
+      condition: {
+        path: 'user.email',
+        value: '@example.com',
+        operator: 'contains',
+      },
+    },
+  },
+  {
+    title: 'Check Priority Not Low',
+    description:
+      'Evaluate if the priority field does not equal "low". Useful for filtering out low priority items.',
+    parameters: {
+      condition: {
+        path: 'priority',
+        value: 'low',
+        operator: 'notEquals',
+      },
+    },
+  },
+];
+
 export const ifNodePlugin: NodePlugin = {
   nodeType: 'builtIn.if',
   name: 'If',
@@ -81,4 +120,5 @@ export const ifNodePlugin: NodePlugin = {
   getParameterSchema: () => serializeParameterSchema(IfNodeParametersSchema),
   validate: validateIfNodeParameters,
   execute: executeIfNode,
+  parametersExamples,
 };

@@ -20,6 +20,7 @@ import {
   WorkflowNotActiveError,
   WorkflowValidationError,
   NodeNotFoundError,
+  NodeValidationError,
   NodeTypeError,
   DuplicateNodeIdError,
   UnknownNodeTypeError,
@@ -54,6 +55,33 @@ export class WorkflowEngine {
     if (this.nodePlugins.has(plugin.nodeType)) {
       throw new NodeTypeAlreadyRegisteredError(plugin.nodeType);
     }
+
+    // Validate parameters examples if provided
+    if (plugin.parametersExamples) {
+      for (const [index, example] of plugin.parametersExamples.entries()) {
+        const node: WorkflowNode = {
+          id: `example-${index}`,
+          name: 'Example',
+          type: plugin.nodeType,
+          position: { x: 0, y: 0 },
+          parameters: example.parameters,
+          connections: {},
+        };
+
+        try {
+          plugin.validate(node);
+        } catch (error) {
+          const errorMessage =
+            error instanceof Error ? error.message : String(error);
+          throw new NodeValidationError(
+            `parametersExample[${index}]`,
+            plugin.nodeType,
+            `Example "${example.title}" failed validation: ${errorMessage}`,
+          );
+        }
+      }
+    }
+
     this.nodePlugins.set(plugin.nodeType, plugin);
   }
 

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { VM } from 'vm2';
 import { parse } from 'acorn';
 import type { WorkflowNode, FieldResolver, TypedField } from '../../types.js';
-import type { NodePlugin } from '../../plugin.js';
+import type { NodePlugin, ParametersExample } from '../../plugin.js';
 import { validateNodeParameters } from '../validate.js';
 import { serializeParameterSchema } from '../../schema-serializer.js';
 import { NodeExecutionError } from '../../errors/index.js';
@@ -224,6 +224,45 @@ async function executeCodeNode(
   }
 }
 
+const parametersExamples: ParametersExample[] = [
+  {
+    title: 'Simple Field Extraction',
+    description:
+      'Extract a single field value from the item and return it as a new TypedField. Uses extractValue() to get the plain value from nested fields.',
+    parameters: {
+      code: `const status = extractValue(item.value.status);
+return toTypedField(status);`,
+      timeout: 5000,
+    },
+  },
+  {
+    title: 'Transform and Add Field',
+    description:
+      'Transform the item by adding a new computed field. Accesses nested fields and creates a new object with additional computed values.',
+    parameters: {
+      code: `const name = extractValue(item.value.name);
+const email = extractValue(item.value.email);
+const fullInfo = \`\${name} <\${email}>\`;
+return toTypedField({ ...item.value, fullInfo: toTypedField(fullInfo) });`,
+      timeout: 5000,
+    },
+  },
+  {
+    title: 'Custom Timeout',
+    description:
+      'Execute code with a custom timeout of 10 seconds. Useful for code that performs complex calculations or data processing.',
+    parameters: {
+      code: `// Complex calculation
+let sum = 0;
+for (let i = 0; i < 1000000; i++) {
+  sum += i;
+}
+return toTypedField(sum);`,
+      timeout: 10000,
+    },
+  },
+];
+
 export const codeNodePlugin: NodePlugin = {
   nodeType: 'builtIn.code',
   name: 'Code',
@@ -242,6 +281,7 @@ export const codeNodePlugin: NodePlugin = {
     input: TypedField[][],
     resolver?: FieldResolver,
   ) => executeCodeNode(node, input, resolver),
+  parametersExamples,
 };
 
 // Export error classes for use by consumers
