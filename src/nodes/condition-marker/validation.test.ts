@@ -96,4 +96,70 @@ describe('Condition Marker Node - Validation', () => {
       conditionMarkerNodePlugin.validate(node);
     }).not.toThrow();
   });
+
+  it('should validate condition marker node with custom field name', () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
+      position: { x: 0, y: 0 },
+      parameters: {
+        condition: {
+          path: 'field1',
+          value: 'value1',
+          operator: 'equals',
+        },
+        field: 'isValid',
+      },
+      connections: [],
+    };
+
+    expect(() => {
+      conditionMarkerNodePlugin.validate(node);
+    }).not.toThrow();
+  });
+
+  it('should throw error when field name is empty string', () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
+      position: { x: 0, y: 0 },
+      parameters: {
+        condition: {
+          path: 'field1',
+          value: 'value1',
+          operator: 'equals',
+        },
+        field: '',
+      },
+      connections: [],
+    };
+
+    expect(() => {
+      conditionMarkerNodePlugin.validate(node);
+    }).toThrow('has invalid parameters');
+  });
+
+  it('should throw error when field name is not a string', () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
+      position: { x: 0, y: 0 },
+      parameters: {
+        condition: {
+          path: 'field1',
+          value: 'value1',
+          operator: 'equals',
+        },
+        field: 123,
+      },
+      connections: [],
+    };
+
+    expect(() => {
+      conditionMarkerNodePlugin.validate(node);
+    }).toThrow('has invalid parameters');
+  });
 });

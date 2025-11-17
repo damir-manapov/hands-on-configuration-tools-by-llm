@@ -12,8 +12,16 @@ import {
 
 const ConditionMarkerNodeParametersSchema = z.object({
   condition: ConditionSchema.describe(
-    'The condition to evaluate. If the condition matches, the item will have a _matched field set to true, otherwise false.',
+    'The condition to evaluate. If the condition matches, the item will have the specified field set to true, otherwise false.',
   ),
+  field: z
+    .string()
+    .min(1, 'Field name cannot be empty')
+    .optional()
+    .default('_matched')
+    .describe(
+      'The name of the field to add to each item indicating whether the condition matched. Defaults to "_matched".',
+    ),
 });
 
 function validateConditionMarkerNodeParameters(node: WorkflowNode): void {
@@ -25,6 +33,7 @@ async function executeConditionMarkerNode(
   input: TypedField[][],
 ): Promise<Record<string, TypedField[][]>> {
   const condition = node.parameters['condition'] as Condition;
+  const fieldName = (node.parameters['field'] as string) ?? '_matched';
 
   const result: TypedField[][] = [];
 
@@ -44,7 +53,7 @@ async function executeConditionMarkerNode(
       const outputObj: Record<string, TypedField> = {
         ...(inputField.value as Record<string, TypedField>),
       };
-      outputObj['_matched'] = {
+      outputObj[fieldName] = {
         value: matches,
         kind: 'primitive',
       };
@@ -99,13 +108,26 @@ const parametersExamples: ParametersExample[] = [
       },
     },
   },
+  {
+    title: 'Mark with Custom Field Name',
+    description:
+      'Mark items with a custom field name "isValid" instead of the default "_matched" field.',
+    parameters: {
+      condition: {
+        path: 'status',
+        value: 'active',
+        operator: 'equals',
+      },
+      field: 'isValid',
+    },
+  },
 ];
 
 export const conditionMarkerNodePlugin: NodePlugin = {
   nodeType: 'builtIn.conditionMarker',
   name: 'Condition Marker',
   purpose:
-    'Marks data items with a _matched field based on a condition evaluation. Does not route data - all items pass through with the _matched field indicating whether the condition was met.',
+    'Marks data items with a field (default: "_matched") based on a condition evaluation. Does not route data - all items pass through with the specified field indicating whether the condition was met.',
   useCases: [
     'Marking data items with condition results',
     'Adding metadata for downstream filtering',

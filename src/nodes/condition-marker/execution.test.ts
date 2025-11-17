@@ -406,6 +406,61 @@ describe('Condition Marker Node - Execution', () => {
     ).rejects.toThrow();
   });
 
+  it('should use custom field name when specified', async () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
+      position: { x: 0, y: 0 },
+      parameters: {
+        condition: {
+          path: 'status',
+          value: 'active',
+          operator: 'equals',
+        },
+        field: 'isValid',
+      },
+      connections: [],
+    };
+
+    const input = toTypedFieldInput([
+      [{ status: 'active', name: 'test1' }],
+      [{ status: 'inactive', name: 'test2' }],
+    ]);
+
+    const result = await conditionMarkerNodePlugin.execute(node, input);
+
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
+      [{ status: 'active', name: 'test1', isValid: true }],
+      [{ status: 'inactive', name: 'test2', isValid: false }],
+    ]);
+  });
+
+  it('should default to _matched field when field parameter is not specified', async () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      title: 'Condition Marker',
+      type: 'builtIn.conditionMarker',
+      position: { x: 0, y: 0 },
+      parameters: {
+        condition: {
+          path: 'status',
+          value: 'active',
+          operator: 'equals',
+        },
+      },
+      connections: [],
+    };
+
+    const input = toTypedFieldInput([[{ status: 'active', name: 'test' }]]);
+
+    const result = await conditionMarkerNodePlugin.execute(node, input);
+
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
+      [{ status: 'active', name: 'test', _matched: true }],
+    ]);
+  });
+
   it('should throw error when null/undefined encountered in nested path', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
