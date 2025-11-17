@@ -212,4 +212,3 @@ describe('setNestedField', () => {
     expect(obj['field']).toEqual(value);
   });
 });
-

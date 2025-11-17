@@ -17,7 +17,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "mcp:server": "tsx mcp/server.ts"
+    "mcp:run": "tsx mcp/server.ts",
+    "mcp:inspector": "mcp-inspector -- pnpm --silent mcp:run"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.22.0",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@modelcontextprotocol/inspector": "^0.17.2",
     "@types/node": "^24.10.1",
     "@typescript-eslint/eslint-plugin": "^8.46.4",
     "@typescript-eslint/parser": "^8.46.4",

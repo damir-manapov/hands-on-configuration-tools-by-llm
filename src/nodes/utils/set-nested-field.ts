@@ -33,12 +33,12 @@ export function setNestedField(
     const part = parts[i]!;
     const currentPath = traversedPath.join('.');
     const field = current[part];
-    
+
     // Fail fast: check for array first before any other operations
     if (field && Array.isArray(field.value)) {
       throw new CannotTraverseError(path, part, currentPath);
     }
-    
+
     if (!field || field.value === null || field.value === undefined) {
       // Create a new object if it doesn't exist
       const newField: TypedField = {
@@ -60,4 +60,3 @@ export function setNestedField(
   const finalPart = parts[parts.length - 1]!;
   current[finalPart] = value;
 }
-

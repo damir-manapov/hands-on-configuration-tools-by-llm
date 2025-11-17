@@ -57,7 +57,7 @@ pnpm install
 - `./check.sh` - Runs formatting (fixing issues), lint check, build check (without emitting), gitleaks check (including git), and tests
 - `./health.sh` - Checks for outdated dependencies and vulnerabilities. Fails if any are found
 - `./all-checks.sh` - Runs both check.sh and health.sh
-- `pnpm mcp:server` - Starts the local Model Context Protocol (MCP) server
+- `pnpm mcp:run` - Starts the local Model Context Protocol (MCP) server
 
 ## Development
 
@@ -86,7 +86,7 @@ The repository ships with an MCP server (`mcp/server.ts`) that exposes the curre
 
 ```bash
 # From the project root
-pnpm mcp:server
+pnpm mcp:run
 ```
 
 The server uses the stdio transport, so it is meant to be launched as a child process by MCP-aware tools.
@@ -97,7 +97,7 @@ The server uses the stdio transport, so it is meant to be launched as a child pr
 2. Start the inspector and point it to the server command, for example:
 
    ```bash
-   npx @modelcontextprotocol/inspector -- pnpm --silent mcp:server
+   npx @modelcontextprotocol/inspector -- pnpm --silent mcp:run
    ```
 
 3. Once connected, call the `list-available-nodes` tool inside the inspector to view every node plugin that the engine currently exposes.
