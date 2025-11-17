@@ -352,8 +352,24 @@ export class WorkflowEngine {
         );
       }
 
-      // Validate workflow-specific rules (node exists, no self-reference, no duplicates)
+      // Get plugin to validate output ports
+      const plugin = this.nodePlugins.get(node.type);
+      if (!plugin) {
+        // This should not happen as node type is validated earlier, but keep as safety net
+        throw new WorkflowValidationError(
+          `Node ${node.id} has unknown type "${node.type}"`,
+        );
+      }
+
+      // Validate workflow-specific rules (node exists, no self-reference, no duplicates, valid output ports)
       for (const [index, connection] of node.connections.entries()) {
+        // Validate output port is allowed for this node type
+        if (!plugin.outputPorts.includes(connection.outputPort)) {
+          throw new WorkflowValidationError(
+            `Node ${node.id} uses invalid output port "${connection.outputPort}" at connection[${index}]. Allowed ports: ${plugin.outputPorts.join(', ')}`,
+          );
+        }
+
         // Validate target node exists
         if (!nodeIds.has(connection.node)) {
           throw new WorkflowValidationError(

@@ -38,6 +38,7 @@ export const noopNodePlugin: NodePlugin = {
     'Placeholder nodes during workflow design',
     'Passing through data without modification',
   ],
+  outputPorts: ['main'],
   getParameterSchema: () => serializeParameterSchema(NoopNodeParametersSchema),
   validate: validateNoopNodeParameters,
   execute: executeNoopNode,

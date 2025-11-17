@@ -274,6 +274,7 @@ export const codeNodePlugin: NodePlugin = {
     'Data manipulation not possible with other nodes',
     'Custom business logic implementation',
   ],
+  outputPorts: ['main'],
   getParameterSchema: () => serializeParameterSchema(CodeNodeParametersSchema),
   validate: validateCodeNodeParameters,
   execute: (

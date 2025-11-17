@@ -117,6 +117,7 @@ export const ifNodePlugin: NodePlugin = {
     'Implementing business logic with conditions',
     'Data validation and routing',
   ],
+  outputPorts: ['main'],
   getParameterSchema: () => serializeParameterSchema(IfNodeParametersSchema),
   validate: validateIfNodeParameters,
   execute: executeIfNode,

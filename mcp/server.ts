@@ -12,6 +12,7 @@ interface NodeSummary {
   name: string;
   purpose: string;
   useCases: string[];
+  outputPorts: string[];
   parameterSchema: SerializableParameterSchema;
 }
 
@@ -38,6 +39,7 @@ function getAvailableNodeSummaries(): NodeSummary[] {
     name: plugin.name,
     purpose: plugin.purpose,
     useCases: plugin.useCases,
+    outputPorts: plugin.outputPorts,
     parameterSchema: plugin.getParameterSchema(),
   }));
 }
@@ -54,6 +56,7 @@ function getNodeData(nodeType: string): NodeData | null {
     name: plugin.name,
     purpose: plugin.purpose,
     useCases: plugin.useCases,
+    outputPorts: plugin.outputPorts,
     parameterSchema: plugin.getParameterSchema(),
     parametersExamples: plugin.parametersExamples,
   };

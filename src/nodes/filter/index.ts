@@ -122,6 +122,7 @@ export const filterNodePlugin: NodePlugin = {
     'Data cleaning and preprocessing',
     'Filtering data before further processing',
   ],
+  outputPorts: ['main'],
   getParameterSchema: () =>
     serializeParameterSchema(FilterNodeParametersSchema),
   validate: validateFilterNodeParameters,

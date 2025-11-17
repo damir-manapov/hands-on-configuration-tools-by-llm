@@ -12,6 +12,7 @@ export interface NodePlugin {
   name: string;
   purpose: string;
   useCases: string[];
+  outputPorts: string[]; // List of allowed output port names (e.g., ['main'], ['true', 'false'])
   getParameterSchema: () => SerializableParameterSchema;
   validate: (node: WorkflowNode) => void;
   execute: (

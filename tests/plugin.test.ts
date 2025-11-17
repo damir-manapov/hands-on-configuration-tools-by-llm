@@ -17,6 +17,7 @@ describe('WorkflowEngine - Plugin System', () => {
       name: 'Custom Node',
       purpose: 'A custom node for testing plugin registration.',
       useCases: ['Testing plugin system', 'Custom functionality'],
+      outputPorts: ['main'],
       getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
@@ -43,6 +44,7 @@ describe('WorkflowEngine - Plugin System', () => {
       name: 'Test Noop',
       purpose: 'Test plugin',
       useCases: ['Testing'],
+      outputPorts: ['main'],
       getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
@@ -77,6 +79,7 @@ describe('WorkflowEngine - Plugin System', () => {
       name: 'Custom Node',
       purpose: 'Test custom node',
       useCases: ['Testing'],
+      outputPorts: ['main'],
       getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
@@ -105,6 +108,7 @@ describe('WorkflowEngine - Plugin System', () => {
       name: 'Echo',
       purpose: 'Echoes text back in the output data.',
       useCases: ['Adding echo text to data', 'Testing custom nodes'],
+      outputPorts: ['main'],
       getParameterSchema: () =>
         serializeParameterSchema(
           z.object({
@@ -189,6 +193,7 @@ describe('WorkflowEngine - Plugin System', () => {
       name: 'Required Field',
       purpose: 'Validates that a required field is present.',
       useCases: ['Parameter validation testing'],
+      outputPorts: ['main'],
       getParameterSchema: () =>
         serializeParameterSchema(
           z.object({
@@ -268,6 +273,7 @@ describe('WorkflowEngine - Plugin System', () => {
       name: 'Resolver Test',
       purpose: 'Tests that resolver is passed to plugins.',
       useCases: ['Testing resolver passing'],
+      outputPorts: ['main'],
       getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},

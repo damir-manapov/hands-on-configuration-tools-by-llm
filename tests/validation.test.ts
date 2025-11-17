@@ -680,7 +680,7 @@ describe('WorkflowEngine - General Validation', () => {
       }).toThrow('Duplicate connection');
     });
 
-    it('should allow different connections to same node with different output ports', () => {
+    it('should allow multiple connections to same node from same output port', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
@@ -695,11 +695,19 @@ describe('WorkflowEngine - General Validation', () => {
             parameters: {},
             connections: [
               { node: 'node-2', outputPort: 'main' },
-              { node: 'node-2', outputPort: 'secondary' }, // Different output port
+              { node: 'node-3', outputPort: 'main' }, // Different target, same port
             ],
           },
           {
             id: 'node-2',
+            name: 'Set',
+            type: 'builtIn.set',
+            position: { x: 0, y: 0 },
+            parameters: { values: [] },
+            connections: [],
+          },
+          {
+            id: 'node-3',
             name: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
@@ -714,7 +722,7 @@ describe('WorkflowEngine - General Validation', () => {
       }).not.toThrow();
     });
 
-    it('should allow same connection from different output ports', () => {
+    it('should throw error when using invalid output port', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
@@ -723,19 +731,12 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'If',
-            type: 'builtIn.if',
+            name: 'Noop',
+            type: 'builtIn.noop',
             position: { x: 0, y: 0 },
-            parameters: {
-              condition: {
-                path: 'test',
-                value: 'value',
-                operator: 'equals',
-              },
-            },
+            parameters: {},
             connections: [
-              { node: 'node-2', outputPort: 'true' },
-              { node: 'node-2', outputPort: 'false' }, // Same target, different port
+              { node: 'node-2', outputPort: 'invalid-port' }, // Invalid port
             ],
           },
           {
@@ -751,7 +752,7 @@ describe('WorkflowEngine - General Validation', () => {
 
       expect(() => {
         engine.addWorkflow(workflow);
-      }).not.toThrow();
+      }).toThrow('uses invalid output port');
     });
   });
 
