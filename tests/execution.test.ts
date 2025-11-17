@@ -21,7 +21,6 @@ describe('WorkflowEngine - Execution', () => {
           connections: {},
         },
       ],
-      connections: {},
     };
 
     engine.addWorkflow(workflow);
@@ -55,7 +54,6 @@ describe('WorkflowEngine - Execution', () => {
           connections: {},
         },
       ],
-      connections: {},
     };
 
     engine.addWorkflow(workflow);
@@ -83,9 +81,6 @@ describe('WorkflowEngine - Execution', () => {
           },
         },
       ],
-      connections: {
-        'node-1': [{ node: 'node-2', type: 'main', index: 0 }],
-      },
     };
 
     engine.addWorkflow(workflow);
@@ -129,9 +124,6 @@ describe('WorkflowEngine - Execution', () => {
           connections: {},
         },
       ],
-      connections: {
-        // No connections - code node will use inputData directly
-      },
     };
 
     engine.addWorkflow(workflow);
@@ -201,9 +193,6 @@ describe('WorkflowEngine - Execution', () => {
           connections: {},
         },
       ],
-      connections: {
-        // No connections - node will use inputData directly
-      },
     };
 
     engine.addWorkflow(workflow);
@@ -257,9 +246,6 @@ describe('WorkflowEngine - Execution', () => {
           connections: {},
         },
       ],
-      connections: {
-        // No connections
-      },
     };
 
     engine.addWorkflow(workflow);

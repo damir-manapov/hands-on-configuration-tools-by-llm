@@ -19,7 +19,6 @@ describe('WorkflowEngine - CRUD Operations', () => {
           connections: {},
         },
       ],
-      connections: {},
     };
 
     engine.addWorkflow(workflow);
@@ -46,7 +45,6 @@ describe('WorkflowEngine - CRUD Operations', () => {
           connections: {},
         },
       ],
-      connections: {},
     };
 
     engine.addWorkflow(workflow);
@@ -72,7 +70,6 @@ describe('WorkflowEngine - CRUD Operations', () => {
           connections: {},
         },
       ],
-      connections: {},
     };
 
     engine.addWorkflow(workflow);
@@ -99,7 +96,6 @@ describe('WorkflowEngine - CRUD Operations', () => {
           connections: {},
         },
       ],
-      connections: {},
     };
 
     const workflow2: Workflow = {
@@ -116,7 +112,6 @@ describe('WorkflowEngine - CRUD Operations', () => {
           connections: {},
         },
       ],
-      connections: {},
     };
 
     engine.addWorkflow(workflow1);

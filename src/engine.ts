@@ -4,6 +4,7 @@ import type {
   ExecutionData,
   ExecutionResult,
   FieldResolver,
+  Connection,
 } from './types.js';
 import type { TypedField } from './types.js';
 import type { NodePlugin } from './plugin.js';
@@ -136,6 +137,7 @@ export class WorkflowEngine {
 
     const executionData: ExecutionData = inputData ?? {};
     const executionOrder = this.getExecutionOrder(workflow);
+    const incomingConnections = this.buildIncomingConnections(workflow);
 
     try {
       for (const nodeId of executionOrder) {
@@ -144,7 +146,11 @@ export class WorkflowEngine {
           throw new NodeNotFoundError(nodeId, id);
         }
 
-        const input = this.getNodeInput(node, workflow, executionData);
+        const input = this.getNodeInput(
+          node,
+          incomingConnections,
+          executionData,
+        );
         const output = await this.executeNode(node, input, resolver);
         executionData[nodeId] = output;
       }
@@ -239,14 +245,41 @@ export class WorkflowEngine {
     return order.reverse();
   }
 
+  private buildIncomingConnections(
+    workflow: Workflow,
+  ): Record<string, Connection[]> {
+    const incoming: Record<string, Connection[]> = {};
+
+    for (const sourceNode of workflow.nodes) {
+      for (const outputConnections of Object.values(sourceNode.connections)) {
+        for (const connectionGroup of outputConnections) {
+          for (const connection of connectionGroup) {
+            const targetNodeId = connection.node;
+            if (!targetNodeId) {
+              continue;
+            }
+            incoming[targetNodeId] ??= [];
+            incoming[targetNodeId].push({
+              node: sourceNode.id,
+              type: connection.type,
+              index: connection.index,
+            });
+          }
+        }
+      }
+    }
+
+    return incoming;
+  }
+
   private getNodeInput(
     node: WorkflowNode,
-    workflow: Workflow,
+    incomingConnections: Record<string, Connection[]>,
     executionData: ExecutionData,
   ): TypedField[][] {
     const input: TypedField[][] = [];
 
-    const connections = workflow.connections[node.id];
+    const connections = incomingConnections[node.id];
     if (!connections || connections.length === 0) {
       // If no connections, check if there's input data provided for this node
       const nodeData = executionData[node.id];

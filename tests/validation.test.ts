@@ -19,7 +19,6 @@ describe('WorkflowEngine - General Validation', () => {
           connections: {},
         },
       ],
-      connections: {},
     };
 
     expect(() => {
@@ -43,7 +42,6 @@ describe('WorkflowEngine - General Validation', () => {
           connections: {},
         },
       ],
-      connections: {},
     };
 
     expect(() => {

@@ -114,6 +114,15 @@ server.registerResource(
         })),
       };
     },
+    complete: {
+      nodeType: (value: string) => {
+        const nodes = engine.getRegisteredNodePlugins();
+        const lowerValue = value.toLowerCase();
+        return nodes
+          .map((plugin) => plugin.nodeType)
+          .filter((nodeType) => nodeType.toLowerCase().startsWith(lowerValue));
+      },
+    },
   }),
   {
     title: 'Workflow Node Resource',

@@ -155,7 +155,9 @@ describe('WorkflowEngine - Plugin System', () => {
           type: 'builtIn.start',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: {
+            main: [[{ node: 'node-2', type: 'main', index: 0 }]],
+          },
         },
         {
           id: 'node-2',
@@ -168,9 +170,6 @@ describe('WorkflowEngine - Plugin System', () => {
           connections: {},
         },
       ],
-      connections: {
-        'node-1': [{ node: 'node-2', type: 'main', index: 0 }],
-      },
     };
 
     engine.addWorkflow(workflow);
@@ -231,7 +230,6 @@ describe('WorkflowEngine - Plugin System', () => {
           connections: {},
         },
       ],
-      connections: {},
     };
 
     expect(() => {
@@ -256,7 +254,6 @@ describe('WorkflowEngine - Plugin System', () => {
           connections: {},
         },
       ],
-      connections: {},
     };
 
     expect(() => {
@@ -306,7 +303,9 @@ describe('WorkflowEngine - Plugin System', () => {
           type: 'builtIn.start',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: {
+            main: [[{ node: 'node-2', type: 'main', index: 0 }]],
+          },
         },
         {
           id: 'node-2',
@@ -317,9 +316,6 @@ describe('WorkflowEngine - Plugin System', () => {
           connections: {},
         },
       ],
-      connections: {
-        'node-1': [{ node: 'node-2', type: 'main', index: 0 }],
-      },
     };
 
     engine.addWorkflow(workflow);

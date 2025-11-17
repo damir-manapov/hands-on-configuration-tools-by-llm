@@ -23,7 +23,6 @@ export interface Workflow {
   id: string;
   name: string;
   nodes: WorkflowNode[];
-  connections: Record<string, Connection[]>;
   active: boolean;
 }
 
