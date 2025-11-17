@@ -1,6 +1,10 @@
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import {
+  McpServer,
+  ResourceTemplate,
+} from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import type { SerializableParameterSchema } from '../src/schema-serializer.js';
+import type { ParametersExample } from '../src/plugin.js';
 import { WorkflowEngine } from '../src/engine.js';
 
 interface NodeSummary {
@@ -9,6 +13,10 @@ interface NodeSummary {
   purpose: string;
   useCases: string[];
   parameterSchema: SerializableParameterSchema;
+}
+
+interface NodeData extends NodeSummary {
+  parametersExamples: ParametersExample[];
 }
 
 const engine = new WorkflowEngine();
@@ -32,6 +40,23 @@ function getAvailableNodeSummaries(): NodeSummary[] {
     useCases: plugin.useCases,
     parameterSchema: plugin.getParameterSchema(),
   }));
+}
+
+function getNodeData(nodeType: string): NodeData | null {
+  const plugin = engine
+    .getRegisteredNodePlugins()
+    .find((p) => p.nodeType === nodeType);
+  if (!plugin) {
+    return null;
+  }
+  return {
+    nodeType: plugin.nodeType,
+    name: plugin.name,
+    purpose: plugin.purpose,
+    useCases: plugin.useCases,
+    parameterSchema: plugin.getParameterSchema(),
+    parametersExamples: plugin.parametersExamples,
+  };
 }
 
 server.registerTool(
@@ -71,6 +96,35 @@ server.registerTool(
         },
       ],
       structuredContent: { nodes },
+    };
+  },
+);
+
+server.registerResource(
+  'workflow-node',
+  new ResourceTemplate('workflow-mng://nodes/{nodeType}', { list: undefined }),
+  {
+    title: 'Workflow Node Resource',
+    description:
+      'Returns complete information about a workflow node including its schema, examples, and use cases.',
+    mimeType: 'application/json',
+  },
+  async (uri, { nodeType }) => {
+    if (!nodeType || typeof nodeType !== 'string') {
+      throw new Error(`Invalid node resource URI: ${uri.toString()}`);
+    }
+    const nodeData = getNodeData(nodeType);
+    if (!nodeData) {
+      throw new Error(`Node type "${nodeType}" not found`);
+    }
+    return {
+      contents: [
+        {
+          uri: uri.href,
+          mimeType: 'application/json',
+          text: JSON.stringify(nodeData, null, 2),
+        },
+      ],
     };
   },
 );
