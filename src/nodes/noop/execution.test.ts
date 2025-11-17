@@ -7,7 +7,7 @@ describe('Noop Node - Execution', () => {
   it('should pass through input data unchanged', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Noop',
+      title: 'Noop',
       type: 'builtIn.noop',
       position: { x: 0, y: 0 },
       parameters: {},
@@ -30,7 +30,7 @@ describe('Noop Node - Execution', () => {
   it('should return empty array when input is empty', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Noop',
+      title: 'Noop',
       type: 'builtIn.noop',
       position: { x: 0, y: 0 },
       parameters: {},
@@ -46,7 +46,7 @@ describe('Noop Node - Execution', () => {
   it('should pass through multiple batches', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Noop',
+      title: 'Noop',
       type: 'builtIn.noop',
       position: { x: 0, y: 0 },
       parameters: {},

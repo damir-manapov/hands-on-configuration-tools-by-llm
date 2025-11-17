@@ -8,7 +8,7 @@ describe('If Node - Execution', () => {
   it('should execute if node with equals operator - match', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -32,7 +32,7 @@ describe('If Node - Execution', () => {
   it('should execute if node with equals operator - no match', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -56,7 +56,7 @@ describe('If Node - Execution', () => {
   it('should execute if node with notEquals operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -80,7 +80,7 @@ describe('If Node - Execution', () => {
   it('should execute if node with contains operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -106,7 +106,7 @@ describe('If Node - Execution', () => {
   it('should execute if node with contains operator - no match', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -132,7 +132,7 @@ describe('If Node - Execution', () => {
   it('should throw error when field is missing', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -154,7 +154,7 @@ describe('If Node - Execution', () => {
   it('should execute if node with number field value', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -178,7 +178,7 @@ describe('If Node - Execution', () => {
   it('should execute if node with boolean field value', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -202,7 +202,7 @@ describe('If Node - Execution', () => {
   it('should execute if node with multiple input items', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -232,7 +232,7 @@ describe('If Node - Execution', () => {
   it('should process all items in inner array, not just the first one', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -266,7 +266,7 @@ describe('If Node - Execution', () => {
   it('should execute if node with nested fields using dot notation', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -296,7 +296,7 @@ describe('If Node - Execution', () => {
   it('should execute if node with deeply nested fields', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -312,7 +312,7 @@ describe('If Node - Execution', () => {
     const input = toTypedFieldInput([
       [
         {
-          name: 'Item 1',
+          title: 'Item 1',
           user: {
             address: {
               location: { city: 'New York', country: 'USA' },
@@ -322,7 +322,7 @@ describe('If Node - Execution', () => {
       ],
       [
         {
-          name: 'Item 2',
+          title: 'Item 2',
           user: {
             address: {
               location: { city: 'London', country: 'UK' },
@@ -332,7 +332,7 @@ describe('If Node - Execution', () => {
       ],
       [
         {
-          name: 'Item 3',
+          title: 'Item 3',
           user: {
             address: {
               location: { city: 'New York', country: 'USA' },
@@ -346,7 +346,7 @@ describe('If Node - Execution', () => {
     expect(extractTypedFieldResult(result)).toEqual([
       [
         {
-          name: 'Item 1',
+          title: 'Item 1',
           user: {
             address: {
               location: { city: 'New York', country: 'USA' },
@@ -357,7 +357,7 @@ describe('If Node - Execution', () => {
       ],
       [
         {
-          name: 'Item 2',
+          title: 'Item 2',
           user: {
             address: {
               location: { city: 'London', country: 'UK' },
@@ -368,7 +368,7 @@ describe('If Node - Execution', () => {
       ],
       [
         {
-          name: 'Item 3',
+          title: 'Item 3',
           user: {
             address: {
               location: { city: 'New York', country: 'USA' },
@@ -383,7 +383,7 @@ describe('If Node - Execution', () => {
   it('should throw error when nested field is missing', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -407,7 +407,7 @@ describe('If Node - Execution', () => {
   it('should throw error when null/undefined encountered in nested path', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -432,7 +432,7 @@ describe('If Node - Execution', () => {
   it('should execute if node with nested fields using contains operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -462,7 +462,7 @@ describe('If Node - Execution', () => {
   it('should execute if node with nested fields using notEquals operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {

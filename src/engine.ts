@@ -69,7 +69,7 @@ export class WorkflowEngine {
       for (const [index, example] of plugin.parametersExamples.entries()) {
         const node: WorkflowNode = {
           id: `example-${index}`,
-          name: 'Example',
+          title: 'Example',
           type: plugin.nodeType,
           position: { x: 0, y: 0 },
           parameters: example.parameters,
@@ -225,7 +225,7 @@ export class WorkflowEngine {
     // Validate maximum limits
     this.validateMaximumLimits(workflow);
 
-    // Validate node structure with Zod (including ID format and name length)
+    // Validate node structure with Zod (including ID format and title length)
     const NodeStructureSchema = z.object({
       id: z
         .string()
@@ -238,12 +238,12 @@ export class WorkflowEngine {
           WorkflowEngine.ID_REGEX,
           'Node ID must contain only alphanumeric characters, dashes, and underscores',
         ),
-      name: z
+      title: z
         .string()
         .min(1)
         .max(
           WorkflowEngine.MAX_NAME_LENGTH,
-          `Node name must be ${WorkflowEngine.MAX_NAME_LENGTH} characters or less`,
+          `Node title must be ${WorkflowEngine.MAX_NAME_LENGTH} characters or less`,
         ),
       type: z.string().min(1),
       position: z.object({

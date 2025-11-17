@@ -15,7 +15,7 @@ describe('Code Node - Execution', () => {
   it('should execute code and return transformed data', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code',
+      title: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -38,7 +38,7 @@ describe('Code Node - Execution', () => {
   it('should handle multiple input items', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code',
+      title: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -67,7 +67,7 @@ describe('Code Node - Execution', () => {
   it('should have access to Math and JSON utilities', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code',
+      title: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -94,7 +94,7 @@ describe('Code Node - Execution', () => {
   it('should throw CodeInvalidReturnFormatError when code returns invalid format', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code',
+      title: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -115,7 +115,7 @@ describe('Code Node - Execution', () => {
   it('should throw CodeExecutionTimeoutError when timeout is exceeded', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code',
+      title: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -139,7 +139,7 @@ describe('Code Node - Execution', () => {
   it('should throw CodeExecutionError when code has syntax or runtime errors', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code',
+      title: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -160,7 +160,7 @@ describe('Code Node - Execution', () => {
   it('should throw CodeExecutionError for syntax errors', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code',
+      title: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -196,7 +196,7 @@ describe('Code Node - Execution', () => {
   it('should work with extractValue utility function', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code',
+      title: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -217,7 +217,7 @@ describe('Code Node - Execution', () => {
   it('should work with toTypedField utility function', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code',
+      title: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -240,7 +240,7 @@ describe('Code Node - Execution', () => {
   it('should work with resolve utility function when resolver is provided', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code',
+      title: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -284,7 +284,7 @@ describe('Code Node - Execution', () => {
   it('should throw error when resolve is called without resolver', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code',
+      title: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -315,7 +315,7 @@ describe('Code Node - Execution', () => {
   it('should validate that returned values are TypedField objects', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code',
+      title: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {

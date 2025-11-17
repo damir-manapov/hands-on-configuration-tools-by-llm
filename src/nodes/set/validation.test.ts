@@ -6,7 +6,7 @@ describe('Set Node - Validation', () => {
   it('should throw error when set node is missing values parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {},
@@ -21,7 +21,7 @@ describe('Set Node - Validation', () => {
   it('should throw error when set node has invalid values parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -38,7 +38,7 @@ describe('Set Node - Validation', () => {
   it('should throw error when set node has invalid value item', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -55,7 +55,7 @@ describe('Set Node - Validation', () => {
   it('should validate set node with valid parameters', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {

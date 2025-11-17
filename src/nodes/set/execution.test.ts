@@ -10,7 +10,7 @@ describe('Set Node - Execution', () => {
   it('should execute set node and add values', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -33,7 +33,7 @@ describe('Set Node - Execution', () => {
   it('should execute set node with empty values array', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -51,7 +51,7 @@ describe('Set Node - Execution', () => {
   it('should execute set node with multiple input items', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -75,7 +75,7 @@ describe('Set Node - Execution', () => {
   it('should execute set node and overwrite existing fields', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -97,7 +97,7 @@ describe('Set Node - Execution', () => {
   it('should process all items in inner array', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -123,7 +123,7 @@ describe('Set Node - Execution', () => {
   it('should throw NodeExecutionError when inputField is missing', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -141,7 +141,7 @@ describe('Set Node - Execution', () => {
   it('should throw NodeExecutionError when inputField.value is null', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -159,7 +159,7 @@ describe('Set Node - Execution', () => {
   it('should throw NodeExecutionError when inputField.value is undefined', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -177,7 +177,7 @@ describe('Set Node - Execution', () => {
   it('should throw NodeExecutionError when inputField.value is a primitive', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -197,7 +197,7 @@ describe('Set Node - Execution', () => {
   it('should throw NodeExecutionError when inputField.value is an array', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -215,7 +215,7 @@ describe('Set Node - Execution', () => {
   it('should handle empty input array', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -233,7 +233,7 @@ describe('Set Node - Execution', () => {
   it('should handle empty inner array', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -252,7 +252,7 @@ describe('Set Node - Execution', () => {
   it('should set nested field using dot notation', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -272,7 +272,7 @@ describe('Set Node - Execution', () => {
   it('should set deeply nested field and create intermediate objects', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
@@ -297,7 +297,7 @@ describe('Set Node - Execution', () => {
   it('should overwrite existing nested field', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Set',
+      title: 'Set',
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {

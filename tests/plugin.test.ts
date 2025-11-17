@@ -155,7 +155,7 @@ describe('WorkflowEngine - Plugin System', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Noop',
+          title: 'Noop',
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
@@ -163,7 +163,7 @@ describe('WorkflowEngine - Plugin System', () => {
         },
         {
           id: 'node-2',
-          name: 'Custom Echo',
+          title: 'Custom Echo',
           type: 'custom-echo',
           position: { x: 0, y: 0 },
           parameters: {
@@ -226,7 +226,7 @@ describe('WorkflowEngine - Plugin System', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Custom',
+          title: 'Custom',
           type: 'custom-required',
           position: { x: 0, y: 0 },
           parameters: {},
@@ -250,7 +250,7 @@ describe('WorkflowEngine - Plugin System', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Unknown',
+          title: 'Unknown',
           type: 'unknown-node-type',
           position: { x: 0, y: 0 },
           parameters: {},
@@ -303,7 +303,7 @@ describe('WorkflowEngine - Plugin System', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Noop',
+          title: 'Noop',
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
@@ -311,7 +311,7 @@ describe('WorkflowEngine - Plugin System', () => {
         },
         {
           id: 'node-2',
-          name: 'Resolver Test',
+          title: 'Resolver Test',
           type: 'custom-resolver-test',
           position: { x: 0, y: 0 },
           parameters: {},

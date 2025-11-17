@@ -12,7 +12,7 @@ describe('WorkflowEngine - General Validation', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Invalid Node',
+          title: 'Invalid Node',
           type: 'invalid-node-type',
           position: { x: 0, y: 0 },
           parameters: {},
@@ -35,7 +35,7 @@ describe('WorkflowEngine - General Validation', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'No Type Node',
+          title: 'No Type Node',
           type: '',
           position: { x: 0, y: 0 },
           parameters: {},
@@ -59,7 +59,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -85,7 +85,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -108,7 +108,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -131,7 +131,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -154,7 +154,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -177,7 +177,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -188,7 +188,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-2',
-            name: 'Set',
+            title: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
@@ -211,7 +211,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -222,7 +222,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-2',
-            name: 'Set',
+            title: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
@@ -245,7 +245,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -253,7 +253,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-2',
-            name: 'Set',
+            title: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
@@ -276,7 +276,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -284,7 +284,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-2',
-            name: 'Set',
+            title: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
@@ -307,7 +307,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -332,7 +332,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -340,7 +340,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-2',
-            name: 'Set',
+            title: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
@@ -365,7 +365,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -388,7 +388,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -411,7 +411,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node@1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -434,7 +434,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'a'.repeat(101),
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -457,7 +457,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1_test',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -482,7 +482,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -496,7 +496,7 @@ describe('WorkflowEngine - General Validation', () => {
       }).toThrow('Workflow name must be 200 characters or less');
     });
 
-    it('should throw error when node name is too long', () => {
+    it('should throw error when node title is too long', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
@@ -505,7 +505,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'a'.repeat(201),
+            title: 'a'.repeat(201),
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -516,7 +516,7 @@ describe('WorkflowEngine - General Validation', () => {
 
       expect(() => {
         engine.addWorkflow(workflow);
-      }).toThrow('Node name must be 200 characters or less');
+      }).toThrow('Node title must be 200 characters or less');
     });
 
     it('should accept names at maximum length', () => {
@@ -528,7 +528,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'b'.repeat(200),
+            title: 'b'.repeat(200),
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -548,7 +548,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const nodes = Array.from({ length: 1001 }, (_, i) => ({
         id: `node-${i}`,
-        name: 'Noop',
+        title: 'Noop',
         type: 'builtIn.noop',
         position: { x: 0, y: 0 },
         parameters: {},
@@ -575,7 +575,7 @@ describe('WorkflowEngine - General Validation', () => {
       for (let i = 0; i < 101; i++) {
         nodes.push({
           id: `node-${i}`,
-          name: 'Noop',
+          title: 'Noop',
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
@@ -625,7 +625,7 @@ describe('WorkflowEngine - General Validation', () => {
       const engine = new WorkflowEngine();
       const nodes = Array.from({ length: 1000 }, (_, i) => ({
         id: `node-${i}`,
-        name: 'Noop',
+        title: 'Noop',
         type: 'builtIn.noop',
         position: { x: 0, y: 0 },
         parameters: {},
@@ -655,7 +655,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -666,7 +666,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-2',
-            name: 'Set',
+            title: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
@@ -689,7 +689,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -700,7 +700,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-2',
-            name: 'Set',
+            title: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
@@ -708,7 +708,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-3',
-            name: 'Set',
+            title: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
@@ -731,7 +731,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -741,7 +741,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-2',
-            name: 'Set',
+            title: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
@@ -766,7 +766,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -774,7 +774,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-2',
-            name: 'Set',
+            title: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
@@ -782,7 +782,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-3',
-            name: 'Unreachable',
+            title: 'Unreachable',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -790,7 +790,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-4',
-            name: 'Also Unreachable',
+            title: 'Also Unreachable',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -813,7 +813,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -821,7 +821,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-2',
-            name: 'Set',
+            title: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
@@ -846,7 +846,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop',
+            title: 'Noop',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -854,7 +854,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-2',
-            name: 'Set',
+            title: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
@@ -877,7 +877,7 @@ describe('WorkflowEngine - General Validation', () => {
         nodes: [
           {
             id: 'node-1',
-            name: 'Noop 1',
+            title: 'Noop 1',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -885,7 +885,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-2',
-            name: 'Noop 2',
+            title: 'Noop 2',
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
@@ -893,7 +893,7 @@ describe('WorkflowEngine - General Validation', () => {
           },
           {
             id: 'node-3',
-            name: 'Set',
+            title: 'Set',
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },

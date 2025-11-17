@@ -8,7 +8,7 @@ describe('Filter Node - Execution', () => {
   it('should filter items in pass mode - keep matching items', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -39,7 +39,7 @@ describe('Filter Node - Execution', () => {
   it('should filter items in drop mode - remove matching items', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -70,7 +70,7 @@ describe('Filter Node - Execution', () => {
   it('should use pass mode as default when mode is not specified', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -98,7 +98,7 @@ describe('Filter Node - Execution', () => {
   it('should filter with notEquals operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -129,7 +129,7 @@ describe('Filter Node - Execution', () => {
   it('should filter with contains operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -160,7 +160,7 @@ describe('Filter Node - Execution', () => {
   it('should handle empty input', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -183,7 +183,7 @@ describe('Filter Node - Execution', () => {
   it('should throw error when field is missing', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -209,7 +209,7 @@ describe('Filter Node - Execution', () => {
   it('should handle number field values', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -240,7 +240,7 @@ describe('Filter Node - Execution', () => {
   it('should handle boolean field values', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -271,7 +271,7 @@ describe('Filter Node - Execution', () => {
   it('should preserve empty batches when all items are filtered out', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -297,7 +297,7 @@ describe('Filter Node - Execution', () => {
   it('should keep all items when all match in drop mode', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -326,7 +326,7 @@ describe('Filter Node - Execution', () => {
   it('should filter on nested fields using dot notation', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -357,7 +357,7 @@ describe('Filter Node - Execution', () => {
   it('should filter on deeply nested fields', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -374,7 +374,7 @@ describe('Filter Node - Execution', () => {
     const input = toTypedFieldInput([
       [
         {
-          name: 'Item 1',
+          title: 'Item 1',
           user: {
             address: {
               location: { city: 'New York', country: 'USA' },
@@ -384,7 +384,7 @@ describe('Filter Node - Execution', () => {
       ],
       [
         {
-          name: 'Item 2',
+          title: 'Item 2',
           user: {
             address: {
               location: { city: 'London', country: 'UK' },
@@ -394,7 +394,7 @@ describe('Filter Node - Execution', () => {
       ],
       [
         {
-          name: 'Item 3',
+          title: 'Item 3',
           user: {
             address: {
               location: { city: 'New York', country: 'USA' },
@@ -404,7 +404,7 @@ describe('Filter Node - Execution', () => {
       ],
       [
         {
-          name: 'Item 4',
+          title: 'Item 4',
           user: {
             address: {
               location: { city: 'Paris', country: 'France' },
@@ -418,7 +418,7 @@ describe('Filter Node - Execution', () => {
     expect(extractTypedFieldResult(result)).toEqual([
       [
         {
-          name: 'Item 1',
+          title: 'Item 1',
           user: {
             address: {
               location: { city: 'New York', country: 'USA' },
@@ -429,7 +429,7 @@ describe('Filter Node - Execution', () => {
       [],
       [
         {
-          name: 'Item 3',
+          title: 'Item 3',
           user: {
             address: {
               location: { city: 'New York', country: 'USA' },
@@ -444,7 +444,7 @@ describe('Filter Node - Execution', () => {
   it('should throw error when nested field is missing', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -469,7 +469,7 @@ describe('Filter Node - Execution', () => {
   it('should throw error when null/undefined encountered in nested path', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -495,7 +495,7 @@ describe('Filter Node - Execution', () => {
   it('should filter on nested fields with contains operator', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -526,7 +526,7 @@ describe('Filter Node - Execution', () => {
   it('should filter all items in inner array, not just the first one', async () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter',
+      title: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {

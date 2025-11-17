@@ -6,7 +6,7 @@ describe('If Node - Validation', () => {
   it('should throw error when if node is missing condition parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {},
@@ -21,7 +21,7 @@ describe('If Node - Validation', () => {
   it('should throw error when if node has invalid condition parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -38,7 +38,7 @@ describe('If Node - Validation', () => {
   it('should throw error when if node has missing condition fields', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -58,7 +58,7 @@ describe('If Node - Validation', () => {
   it('should throw error when if node has invalid operator', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {
@@ -79,7 +79,7 @@ describe('If Node - Validation', () => {
   it('should validate if node with valid parameters', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'If',
+      title: 'If',
       type: 'builtIn.if',
       position: { x: 0, y: 0 },
       parameters: {

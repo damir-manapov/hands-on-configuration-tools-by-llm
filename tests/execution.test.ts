@@ -14,7 +14,7 @@ describe('WorkflowEngine - Execution', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Noop',
+          title: 'Noop',
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
@@ -47,7 +47,7 @@ describe('WorkflowEngine - Execution', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Noop',
+          title: 'Noop',
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
@@ -72,7 +72,7 @@ describe('WorkflowEngine - Execution', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Noop',
+          title: 'Noop',
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
@@ -98,7 +98,7 @@ describe('WorkflowEngine - Execution', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Noop',
+          title: 'Noop',
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
@@ -106,7 +106,7 @@ describe('WorkflowEngine - Execution', () => {
         },
         {
           id: 'node-2',
-          name: 'Code',
+          title: 'Code',
           type: 'builtIn.code',
           position: { x: 0, y: 0 },
           parameters: {
@@ -177,7 +177,7 @@ describe('WorkflowEngine - Execution', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Set',
+          title: 'Set',
           type: 'builtIn.set',
           position: { x: 0, y: 0 },
           parameters: {
@@ -235,7 +235,7 @@ describe('WorkflowEngine - Execution', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Set',
+          title: 'Set',
           type: 'builtIn.set',
           position: { x: 0, y: 0 },
           parameters: {

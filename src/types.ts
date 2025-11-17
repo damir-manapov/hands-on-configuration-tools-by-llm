@@ -1,6 +1,6 @@
 export interface NodeConfig {
   id: string;
-  name: string;
+  title: string;
   type: string;
   position: {
     x: number;

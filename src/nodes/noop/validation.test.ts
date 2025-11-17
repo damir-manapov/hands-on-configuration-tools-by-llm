@@ -6,7 +6,7 @@ describe('Noop Node - Validation', () => {
   it('should accept noop node with empty parameters', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Noop',
+      title: 'Noop',
       type: 'builtIn.noop',
       position: { x: 0, y: 0 },
       parameters: {},
