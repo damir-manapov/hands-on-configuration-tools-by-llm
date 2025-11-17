@@ -2,30 +2,29 @@
 
 ## ToDo
 
-* new node types
-* saving state of nodes
-* run nodes in case of errors
-* config examples to plugin, check they pass validation
-* path in filter, if, set
-* meta about scalar type
-* validation of paths against metadata of value including external entities
-* returned values of nodes defined
-* input data for nodes defined
-* output of one node validated against input of another node
-* links to entities validated against external meta so ids are valid types
-* proper scalar types for if, filter, no string intermediary (postponed)
-* passing to resolver field that we are interested in so it doest gather full object
-* special nodes to work with repository
-* cache for resolver inside single node execution
-* what if workflow has several start nodes?
-* set looks too complicated
-* "(resultField as { value: unknown }).value" why do we need assert?
-* if we are going to use toTypedFieldInput for test files lets use similar in expectations
-* input: Record<string, unknown>[][] => TypedField[][] - is there a logical problem? we are mapping objects to individual values
-* 2 spaces
-* walidate all nodes reacheble and only one start node present
-* what happens if node passes data to another one and that another also have initial data?
-
+- new node types
+- saving state of nodes
+- run nodes in case of errors
+- config examples to plugin, check they pass validation
+- path in filter, if, set
+- meta about scalar type
+- validation of paths against metadata of value including external entities
+- returned values of nodes defined
+- input data for nodes defined
+- output of one node validated against input of another node
+- links to entities validated against external meta so ids are valid types
+- proper scalar types for if, filter, no string intermediary (postponed)
+- passing to resolver field that we are interested in so it doest gather full object
+- special nodes to work with repository
+- cache for resolver inside single node execution
+- what if workflow has several start nodes?
+- set looks too complicated
+- "(resultField as { value: unknown }).value" why do we need assert?
+- if we are going to use toTypedFieldInput for test files lets use similar in expectations
+- input: Record<string, unknown>[][] => TypedField[][] - is there a logical problem? we are mapping objects to individual values
+- 2 spaces
+- walidate all nodes reacheble and only one start node present
+- what happens if node passes data to another one and that another also have initial data?
 
 ## Project Overview
 
