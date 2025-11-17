@@ -393,17 +393,19 @@ export class WorkflowEngine {
     const reachable = new Set<string>();
 
     // Find entry points (nodes with no incoming connections)
+    // These can execute immediately with empty input data
     const incomingConnections = this.buildIncomingConnections(workflow);
     const entryPoints = workflow.nodes.filter((node) => {
       const connections = incomingConnections[node.id];
       return !connections || connections.length === 0;
     });
 
-    // If no entry points, all nodes are unreachable (except if workflow has no nodes)
-    if (entryPoints.length === 0 && workflow.nodes.length > 0) {
-      throw new WorkflowValidationError(
-        'Workflow has no entry points (all nodes have incoming connections)',
-      );
+    // If no entry points exist, all nodes have incoming connections
+    // This is valid - nodes can receive external input via inputData parameter
+    // or they form a cycle where all nodes are reachable from each other
+    // Skip unreachable check in this case
+    if (entryPoints.length === 0) {
+      return;
     }
 
     // BFS from entry points to find all reachable nodes
@@ -427,7 +429,8 @@ export class WorkflowEngine {
       }
     }
 
-    // Check for unreachable nodes
+    // Check for unreachable nodes (isolated subgraphs)
+    // Only report nodes that are disconnected from entry points
     const unreachable = Array.from(nodeIds).filter((id) => !reachable.has(id));
     if (unreachable.length > 0) {
       throw new WorkflowValidationError(

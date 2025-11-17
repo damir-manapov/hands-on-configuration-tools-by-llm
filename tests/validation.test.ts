@@ -863,7 +863,7 @@ describe('WorkflowEngine - General Validation', () => {
       }).toThrow('Unreachable nodes detected');
     });
 
-    it('should throw error when all nodes have incoming connections', () => {
+    it('should accept workflow where all nodes have incoming connections', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
@@ -893,9 +893,11 @@ describe('WorkflowEngine - General Validation', () => {
         ],
       };
 
+      // This is valid - nodes can execute with input data provided externally
+      // or nodes without incoming connections can execute with empty input
       expect(() => {
         engine.addWorkflow(workflow);
-      }).toThrow('Workflow has no entry points');
+      }).not.toThrow();
     });
 
     it('should accept workflow with all nodes reachable', () => {
