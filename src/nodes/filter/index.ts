@@ -117,6 +117,7 @@ export const filterNodePlugin: NodePlugin = {
     'Filtering data before further processing',
   ],
   outputPorts: ['main'],
+  dynamicOutputsAllowed: false,
   getParameterSchema: () =>
     serializeParameterSchema(FilterNodeParametersSchema),
   validate: validateFilterNodeParameters,

@@ -135,6 +135,7 @@ export const markerNodePlugin: NodePlugin = {
     'Data validation and marking',
   ],
   outputPorts: ['main'],
+  dynamicOutputsAllowed: false,
   getParameterSchema: () =>
     serializeParameterSchema(MarkerNodeParametersSchema),
   validate: validateMarkerNodeParameters,

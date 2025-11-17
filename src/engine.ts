@@ -366,7 +366,7 @@ export class WorkflowEngine {
       // Validate workflow-specific rules (node exists, no self-reference, no duplicates, valid output ports)
       // Get output ports (static or dynamic)
       const allowedPorts =
-        plugin.hasDynamicOutputs && plugin.getOutputPorts
+        plugin.dynamicOutputsAllowed && plugin.getOutputPorts
           ? plugin.getOutputPorts(node)
           : plugin.outputPorts;
 

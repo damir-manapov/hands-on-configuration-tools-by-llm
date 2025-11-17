@@ -116,6 +116,7 @@ export const ifNodePlugin: NodePlugin = {
     'Data splitting and categorization',
   ],
   outputPorts: ['true', 'false'],
+  dynamicOutputsAllowed: false,
   getParameterSchema: () => serializeParameterSchema(IfNodeParametersSchema),
   validate: validateIfNodeParameters,
   execute: executeIfNode,

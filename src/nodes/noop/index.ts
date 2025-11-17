@@ -41,6 +41,7 @@ export const noopNodePlugin: NodePlugin = {
     'Passing through data without modification',
   ],
   outputPorts: ['main'],
+  dynamicOutputsAllowed: false,
   getParameterSchema: () => serializeParameterSchema(NoopNodeParametersSchema),
   validate: validateNoopNodeParameters,
   execute: executeNoopNode,

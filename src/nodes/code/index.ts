@@ -277,6 +277,7 @@ export const codeNodePlugin: NodePlugin = {
     'Custom business logic implementation',
   ],
   outputPorts: ['main'],
+  dynamicOutputsAllowed: false,
   getParameterSchema: () => serializeParameterSchema(CodeNodeParametersSchema),
   validate: validateCodeNodeParameters,
   execute: (

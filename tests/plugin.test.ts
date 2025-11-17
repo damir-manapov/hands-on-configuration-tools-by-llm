@@ -18,6 +18,7 @@ describe('WorkflowEngine - Plugin System', () => {
       purpose: 'A custom node for testing plugin registration.',
       useCases: ['Testing plugin system', 'Custom functionality'],
       outputPorts: ['main'],
+      dynamicOutputsAllowed: false,
       getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
@@ -45,6 +46,7 @@ describe('WorkflowEngine - Plugin System', () => {
       purpose: 'Test plugin',
       useCases: ['Testing'],
       outputPorts: ['main'],
+      dynamicOutputsAllowed: false,
       getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
@@ -80,6 +82,7 @@ describe('WorkflowEngine - Plugin System', () => {
       purpose: 'Test custom node',
       useCases: ['Testing'],
       outputPorts: ['main'],
+      dynamicOutputsAllowed: false,
       getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
@@ -109,6 +112,7 @@ describe('WorkflowEngine - Plugin System', () => {
       purpose: 'Echoes text back in the output data.',
       useCases: ['Adding echo text to data', 'Testing custom nodes'],
       outputPorts: ['main'],
+      dynamicOutputsAllowed: false,
       getParameterSchema: () =>
         serializeParameterSchema(
           z.object({
@@ -196,6 +200,7 @@ describe('WorkflowEngine - Plugin System', () => {
       purpose: 'Validates that a required field is present.',
       useCases: ['Parameter validation testing'],
       outputPorts: ['main'],
+      dynamicOutputsAllowed: false,
       getParameterSchema: () =>
         serializeParameterSchema(
           z.object({
@@ -276,6 +281,7 @@ describe('WorkflowEngine - Plugin System', () => {
       purpose: 'Tests that resolver is passed to plugins.',
       useCases: ['Testing resolver passing'],
       outputPorts: ['main'],
+      dynamicOutputsAllowed: false,
       getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},

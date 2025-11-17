@@ -235,7 +235,7 @@ export const switchNodePlugin: NodePlugin = {
     'Status-based workflow branching',
   ],
   outputPorts: ['default'], // Default/fallback outputs
-  hasDynamicOutputs: true, // Explicit flag for dynamic outputs
+  dynamicOutputsAllowed: true, // Explicit flag for dynamic outputs
   getOutputPorts: getSwitchOutputPorts, // Function to get dynamic outputs
   getParameterSchema: () =>
     serializeParameterSchema(SwitchNodeParametersSchema),

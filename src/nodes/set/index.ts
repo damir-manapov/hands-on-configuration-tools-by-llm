@@ -165,6 +165,7 @@ export const setNodePlugin: NodePlugin = {
     'Transforming data structure by adding fields',
   ],
   outputPorts: ['main'],
+  dynamicOutputsAllowed: false,
   getParameterSchema: () => serializeParameterSchema(SetNodeParametersSchema),
   validate: validateSetNodeParameters,
   execute: executeSetNode,
