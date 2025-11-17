@@ -5,11 +5,14 @@ import type { TypedField } from '../../types.js';
 import { validateNodeParameters } from '../validate.js';
 import { serializeParameterSchema } from '../../schema-serializer.js';
 import { NodeExecutionError } from '../../errors/index.js';
+import { setNestedField } from '../utils/set-nested-field.js';
 
 const SetNodeValueSchema = z.object({
-  name: z
+  path: z
     .string()
-    .describe('The name of the field to set or overwrite in the data item.'),
+    .describe(
+      'The path to the field to set or overwrite. Supports nested paths using dot notation (e.g., "status" or "user.name" or "address.city").',
+    ),
   value: z
     .string()
     .describe(
@@ -34,7 +37,7 @@ function executeSetNode(
   input: TypedField[][],
 ): TypedField[][] {
   const values =
-    (node.parameters['values'] as { name: string; value: string }[]) ?? [];
+    (node.parameters['values'] as { path: string; value: string }[]) ?? [];
   const result: TypedField[][] = [];
 
   for (const inputItem of input) {
@@ -65,12 +68,17 @@ function executeSetNode(
       }
       const inputObj = inputField.value as Record<string, TypedField>;
 
-      const outputObj: Record<string, TypedField> = { ...inputObj };
-      for (const value of values) {
-        outputObj[value.name] = {
-          value: value.value,
+      // Deep clone the input object to avoid mutating the original
+      const outputObj: Record<string, TypedField> = JSON.parse(
+        JSON.stringify(inputObj),
+      );
+
+      for (const valueConfig of values) {
+        const typedFieldValue: TypedField = {
+          value: valueConfig.value,
           kind: 'primitive',
         };
+        setNestedField(outputObj, valueConfig.path, typedFieldValue);
       }
       outputItem.push({
         value: outputObj,
@@ -92,7 +100,7 @@ const parametersExamples: ParametersExample[] = [
     parameters: {
       values: [
         {
-          name: 'status',
+          path: 'status',
           value: 'active',
         },
       ],
@@ -105,25 +113,38 @@ const parametersExamples: ParametersExample[] = [
     parameters: {
       values: [
         {
-          name: 'status',
+          path: 'status',
           value: 'active',
         },
         {
-          name: 'priority',
+          path: 'priority',
           value: 'high',
         },
       ],
     },
   },
   {
-    title: 'Override Existing Field',
+    title: 'Set Nested Field',
     description:
-      'Override an existing field value. The "name" field will be set to "Updated Name" regardless of its previous value.',
+      'Set a nested field using dot notation. The path "user.name" will create or update the name field within the user object.',
     parameters: {
       values: [
         {
-          name: 'name',
-          value: 'Updated Name',
+          path: 'user.name',
+          value: 'John Doe',
+        },
+      ],
+    },
+  },
+  {
+    title: 'Set Deep Nested Field',
+    description:
+      'Set a deeply nested field. The path "address.location.city" will create intermediate objects if they don\'t exist.',
+    parameters: {
+      values: [
+        {
+          path: 'address.location.city',
+          value: 'New York',
         },
       ],
     },

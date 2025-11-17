@@ -193,7 +193,7 @@ describe('WorkflowEngine - Execution', () => {
           parameters: {
             values: [
               {
-                name: 'test',
+                path: 'test',
                 value: 'value',
               },
             ],
@@ -249,7 +249,7 @@ describe('WorkflowEngine - Execution', () => {
           parameters: {
             values: [
               {
-                name: 'test',
+                path: 'test',
                 value: 'value',
               },
             ],

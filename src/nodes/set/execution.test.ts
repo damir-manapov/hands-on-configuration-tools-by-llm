@@ -15,8 +15,8 @@ describe('Set Node - Execution', () => {
       position: { x: 0, y: 0 },
       parameters: {
         values: [
-          { name: 'field1', value: 'value1' },
-          { name: 'field2', value: 'value2' },
+          { path: 'field1', value: 'value1' },
+          { path: 'field2', value: 'value2' },
         ],
       },
       connections: {},
@@ -55,7 +55,7 @@ describe('Set Node - Execution', () => {
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
-        values: [{ name: 'added', value: 'value' }],
+        values: [{ path: 'added', value: 'value' }],
       },
       connections: {},
     };
@@ -79,7 +79,7 @@ describe('Set Node - Execution', () => {
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
-        values: [{ name: 'field1', value: 'new-value' }],
+        values: [{ path: 'field1', value: 'new-value' }],
       },
       connections: {},
     };
@@ -101,7 +101,7 @@ describe('Set Node - Execution', () => {
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
-        values: [{ name: 'added', value: 'value' }],
+        values: [{ path: 'added', value: 'value' }],
       },
       connections: {},
     };
@@ -127,7 +127,7 @@ describe('Set Node - Execution', () => {
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
-        values: [{ name: 'field1', value: 'value1' }],
+        values: [{ path: 'field1', value: 'value1' }],
       },
       connections: {},
     };
@@ -145,7 +145,7 @@ describe('Set Node - Execution', () => {
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
-        values: [{ name: 'field1', value: 'value1' }],
+        values: [{ path: 'field1', value: 'value1' }],
       },
       connections: {},
     };
@@ -163,7 +163,7 @@ describe('Set Node - Execution', () => {
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
-        values: [{ name: 'field1', value: 'value1' }],
+        values: [{ path: 'field1', value: 'value1' }],
       },
       connections: {},
     };
@@ -181,7 +181,7 @@ describe('Set Node - Execution', () => {
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
-        values: [{ name: 'field1', value: 'value1' }],
+        values: [{ path: 'field1', value: 'value1' }],
       },
       connections: {},
     };
@@ -201,7 +201,7 @@ describe('Set Node - Execution', () => {
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
-        values: [{ name: 'field1', value: 'value1' }],
+        values: [{ path: 'field1', value: 'value1' }],
       },
       connections: {},
     };
@@ -219,7 +219,7 @@ describe('Set Node - Execution', () => {
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
-        values: [{ name: 'field1', value: 'value1' }],
+        values: [{ path: 'field1', value: 'value1' }],
       },
       connections: {},
     };
@@ -237,7 +237,7 @@ describe('Set Node - Execution', () => {
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
-        values: [{ name: 'field1', value: 'value1' }],
+        values: [{ path: 'field1', value: 'value1' }],
       },
       connections: {},
     };
@@ -247,5 +247,72 @@ describe('Set Node - Execution', () => {
 
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual([]);
+  });
+
+  it('should set nested field using dot notation', () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      name: 'Set',
+      type: 'builtIn.set',
+      position: { x: 0, y: 0 },
+      parameters: {
+        values: [{ path: 'user.name', value: 'John Doe' }],
+      },
+      connections: {},
+    };
+
+    const input = toTypedFieldInput([[{ existing: 'data' }]]);
+    const result = setNodePlugin.execute(node, input) as TypedField[][];
+
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ existing: 'data', user: { name: 'John Doe' } }],
+    ]);
+  });
+
+  it('should set deeply nested field and create intermediate objects', () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      name: 'Set',
+      type: 'builtIn.set',
+      position: { x: 0, y: 0 },
+      parameters: {
+        values: [{ path: 'address.location.city', value: 'New York' }],
+      },
+      connections: {},
+    };
+
+    const input = toTypedFieldInput([[{ existing: 'data' }]]);
+    const result = setNodePlugin.execute(node, input) as TypedField[][];
+
+    expect(extractTypedFieldResult(result)).toEqual([
+      [
+        {
+          existing: 'data',
+          address: { location: { city: 'New York' } },
+        },
+      ],
+    ]);
+  });
+
+  it('should overwrite existing nested field', () => {
+    const node: WorkflowNode = {
+      id: 'node-1',
+      name: 'Set',
+      type: 'builtIn.set',
+      position: { x: 0, y: 0 },
+      parameters: {
+        values: [{ path: 'user.name', value: 'Updated Name' }],
+      },
+      connections: {},
+    };
+
+    const input = toTypedFieldInput([
+      [{ user: { name: 'Old Name', age: 30 } }],
+    ]);
+    const result = setNodePlugin.execute(node, input) as TypedField[][];
+
+    expect(extractTypedFieldResult(result)).toEqual([
+      [{ user: { name: 'Updated Name', age: 30 } }],
+    ]);
   });
 });

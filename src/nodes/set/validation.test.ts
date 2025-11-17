@@ -42,7 +42,7 @@ describe('Set Node - Validation', () => {
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {
-        values: [{ name: 123, value: 'test' }],
+        values: [{ path: 123, value: 'test' }],
       },
       connections: {},
     };
@@ -60,8 +60,8 @@ describe('Set Node - Validation', () => {
       position: { x: 0, y: 0 },
       parameters: {
         values: [
-          { name: 'field1', value: 'value1' },
-          { name: 'field2', value: 'value2' },
+          { path: 'field1', value: 'value1' },
+          { path: 'field2', value: 'value2' },
         ],
       },
       connections: {},
