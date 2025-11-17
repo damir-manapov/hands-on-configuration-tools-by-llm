@@ -202,6 +202,74 @@ export class WorkflowEngine {
 
       nodeIds.add(node.id);
     }
+
+    // Validate connections after all nodes are validated and IDs are collected
+    this.validateConnections(workflow, nodeIds);
+  }
+
+  private validateConnections(workflow: Workflow, nodeIds: Set<string>): void {
+    for (const node of workflow.nodes) {
+      for (const [outputPort, connections] of Object.entries(
+        node.connections,
+      )) {
+        if (!Array.isArray(connections)) {
+          throw new WorkflowValidationError(
+            `Node ${node.id} has invalid connections for output port "${outputPort}": must be an array`,
+          );
+        }
+
+        for (const [index, connection] of connections.entries()) {
+          // Validate connection.node
+          if (!connection.node || typeof connection.node !== 'string') {
+            throw new WorkflowValidationError(
+              `Node ${node.id} has invalid connection at output port "${outputPort}"[${index}]: node field is required and must be a non-empty string`,
+            );
+          }
+
+          if (connection.node.trim() === '') {
+            throw new WorkflowValidationError(
+              `Node ${node.id} has invalid connection at output port "${outputPort}"[${index}]: node field cannot be empty`,
+            );
+          }
+
+          // Validate target node exists
+          if (!nodeIds.has(connection.node)) {
+            throw new WorkflowValidationError(
+              `Node ${node.id} connects to non-existent node "${connection.node}" at output port "${outputPort}"[${index}]`,
+            );
+          }
+
+          // Validate no self-reference
+          if (connection.node === node.id) {
+            throw new WorkflowValidationError(
+              `Node ${node.id} cannot connect to itself at output port "${outputPort}"[${index}]`,
+            );
+          }
+
+          // Validate connection.type
+          if (
+            !connection.type ||
+            typeof connection.type !== 'string' ||
+            connection.type.trim() === ''
+          ) {
+            throw new WorkflowValidationError(
+              `Node ${node.id} has invalid connection at output port "${outputPort}"[${index}]: type field is required and must be a non-empty string`,
+            );
+          }
+
+          // Validate connection.index
+          if (
+            typeof connection.index !== 'number' ||
+            !Number.isInteger(connection.index) ||
+            connection.index < 0
+          ) {
+            throw new WorkflowValidationError(
+              `Node ${node.id} has invalid connection at output port "${outputPort}"[${index}]: index must be a non-negative integer, got ${connection.index}`,
+            );
+          }
+        }
+      }
+    }
   }
 
   private validateNodeParameters(node: WorkflowNode): void {
@@ -251,6 +319,8 @@ export class WorkflowEngine {
     for (const sourceNode of workflow.nodes) {
       for (const outputConnections of Object.values(sourceNode.connections)) {
         for (const connection of outputConnections) {
+          // Connections are validated in validateConnections(), but we keep this check
+          // as a safety net for TypeScript and runtime safety
           const targetNodeId = connection.node;
           if (!targetNodeId) {
             continue;

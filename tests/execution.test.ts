@@ -63,7 +63,7 @@ describe('WorkflowEngine - Execution', () => {
     );
   });
 
-  it('should throw error when node is not found in workflow', async () => {
+  it('should throw error when node connects to non-existent node', () => {
     const engine = new WorkflowEngine();
     const workflow: Workflow = {
       id: 'test-1',
@@ -83,11 +83,9 @@ describe('WorkflowEngine - Execution', () => {
       ],
     };
 
-    engine.addWorkflow(workflow);
-
-    await expect(engine.executeWorkflow('test-1')).rejects.toThrow(
-      'not found in workflow',
-    );
+    expect(() => {
+      engine.addWorkflow(workflow);
+    }).toThrow('connects to non-existent node');
   });
 
   it('should pass resolver to code node through workflow execution', async () => {
