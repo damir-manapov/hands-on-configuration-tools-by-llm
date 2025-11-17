@@ -73,7 +73,7 @@ export class WorkflowEngine {
           type: plugin.nodeType,
           position: { x: 0, y: 0 },
           parameters: example.parameters,
-          connections: {},
+          connections: [],
         };
 
         try {
@@ -304,9 +304,7 @@ export class WorkflowEngine {
     // Validate maximum number of connections
     let totalConnections = 0;
     for (const node of workflow.nodes) {
-      for (const connections of Object.values(node.connections)) {
-        totalConnections += connections.length;
-      }
+      totalConnections += node.connections.length;
     }
     if (totalConnections > WorkflowEngine.MAX_WORKFLOW_CONNECTIONS) {
       throw new WorkflowValidationError(
@@ -338,50 +336,46 @@ export class WorkflowEngine {
     const connectionSet = new Set<string>();
 
     for (const node of workflow.nodes) {
-      for (const [outputPort, connections] of Object.entries(
-        node.connections,
-      )) {
-        // Validate connections is an array and each connection structure
-        const arrayResult = ConnectionsArraySchema.safeParse(connections);
-        if (!arrayResult.success) {
-          const firstError = arrayResult.error.issues[0];
-          if (!firstError) {
-            throw new WorkflowValidationError(
-              `Node ${node.id} has invalid connections for output port "${outputPort}"`,
-            );
-          }
-          const errorPath =
-            firstError.path.length > 0 ? `[${firstError.path.join('][')}]` : '';
+      // Validate connections is an array and each connection structure
+      const arrayResult = ConnectionsArraySchema.safeParse(node.connections);
+      if (!arrayResult.success) {
+        const firstError = arrayResult.error.issues[0];
+        if (!firstError) {
           throw new WorkflowValidationError(
-            `Node ${node.id} has invalid connection at output port "${outputPort}"${errorPath}: ${firstError.message}`,
+            `Node ${node.id} has invalid connections`,
+          );
+        }
+        const errorPath =
+          firstError.path.length > 0 ? `[${firstError.path.join('][')}]` : '';
+        throw new WorkflowValidationError(
+          `Node ${node.id} has invalid connection${errorPath}: ${firstError.message}`,
+        );
+      }
+
+      // Validate workflow-specific rules (node exists, no self-reference, no duplicates)
+      for (const [index, connection] of node.connections.entries()) {
+        // Validate target node exists
+        if (!nodeIds.has(connection.node)) {
+          throw new WorkflowValidationError(
+            `Node ${node.id} connects to non-existent node "${connection.node}" at connection[${index}]`,
           );
         }
 
-        // Validate workflow-specific rules (node exists, no self-reference, no duplicates)
-        for (const [index, connection] of connections.entries()) {
-          // Validate target node exists
-          if (!nodeIds.has(connection.node)) {
-            throw new WorkflowValidationError(
-              `Node ${node.id} connects to non-existent node "${connection.node}" at output port "${outputPort}"[${index}]`,
-            );
-          }
-
-          // Validate no self-reference
-          if (connection.node === node.id) {
-            throw new WorkflowValidationError(
-              `Node ${node.id} cannot connect to itself at output port "${outputPort}"[${index}]`,
-            );
-          }
-
-          // Validate no duplicate connections
-          const connectionKey = `${node.id}:${outputPort}->${connection.node}:${connection.outputPort}`;
-          if (connectionSet.has(connectionKey)) {
-            throw new WorkflowValidationError(
-              `Duplicate connection from node "${node.id}" port "${outputPort}" to node "${connection.node}" port "${connection.outputPort}"`,
-            );
-          }
-          connectionSet.add(connectionKey);
+        // Validate no self-reference
+        if (connection.node === node.id) {
+          throw new WorkflowValidationError(
+            `Node ${node.id} cannot connect to itself at connection[${index}]`,
+          );
         }
+
+        // Validate no duplicate connections
+        const connectionKey = `${node.id}:${connection.outputPort}->${connection.node}:${connection.outputPort}`;
+        if (connectionSet.has(connectionKey)) {
+          throw new WorkflowValidationError(
+            `Duplicate connection from node "${node.id}" port "${connection.outputPort}" to node "${connection.node}" port "${connection.outputPort}"`,
+          );
+        }
+        connectionSet.add(connectionKey);
       }
     }
   }
@@ -419,11 +413,9 @@ export class WorkflowEngine {
       reachable.add(nodeId);
       const node = workflow.nodes.find((n) => n.id === nodeId);
       if (node) {
-        for (const connections of Object.values(node.connections)) {
-          for (const connection of connections) {
-            if (!reachable.has(connection.node)) {
-              queue.push(connection.node);
-            }
+        for (const connection of node.connections) {
+          if (!reachable.has(connection.node)) {
+            queue.push(connection.node);
           }
         }
       }
@@ -461,10 +453,8 @@ export class WorkflowEngine {
         throw new NodeNotFoundError(nodeId, workflow.id);
       }
 
-      for (const outputConnections of Object.values(node.connections)) {
-        for (const connection of outputConnections) {
-          visit(connection.node);
-        }
+      for (const connection of node.connections) {
+        visit(connection.node);
       }
 
       visited.add(nodeId);
@@ -484,22 +474,18 @@ export class WorkflowEngine {
     const incoming: Record<string, Connection[]> = {};
 
     for (const sourceNode of workflow.nodes) {
-      for (const [outputPort, connections] of Object.entries(
-        sourceNode.connections,
-      )) {
-        for (const connection of connections) {
-          // Connections are validated in validateConnections(), but we keep this check
-          // as a safety net for TypeScript and runtime safety
-          const targetNodeId = connection.node;
-          if (!targetNodeId) {
-            continue;
-          }
-          incoming[targetNodeId] ??= [];
-          incoming[targetNodeId].push({
-            node: sourceNode.id,
-            outputPort: outputPort,
-          });
+      for (const connection of sourceNode.connections) {
+        // Connections are validated in validateConnections(), but we keep this check
+        // as a safety net for TypeScript and runtime safety
+        const targetNodeId = connection.node;
+        if (!targetNodeId) {
+          continue;
         }
+        incoming[targetNodeId] ??= [];
+        incoming[targetNodeId].push({
+          node: sourceNode.id,
+          outputPort: connection.outputPort,
+        });
       }
     }
 

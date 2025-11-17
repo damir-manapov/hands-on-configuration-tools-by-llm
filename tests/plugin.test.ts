@@ -155,9 +155,7 @@ describe('WorkflowEngine - Plugin System', () => {
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {
-            main: [{ node: 'node-2', outputPort: 'main' }],
-          },
+          connections: [{ node: 'node-2', outputPort: 'main' }],
         },
         {
           id: 'node-2',
@@ -167,7 +165,7 @@ describe('WorkflowEngine - Plugin System', () => {
           parameters: {
             text: 'Hello World',
           },
-          connections: {},
+          connections: [],
         },
       ],
     };
@@ -227,7 +225,7 @@ describe('WorkflowEngine - Plugin System', () => {
           type: 'custom-required',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         },
       ],
     };
@@ -251,7 +249,7 @@ describe('WorkflowEngine - Plugin System', () => {
           type: 'unknown-node-type',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         },
       ],
     };
@@ -303,9 +301,7 @@ describe('WorkflowEngine - Plugin System', () => {
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {
-            main: [{ node: 'node-2', outputPort: 'main' }],
-          },
+          connections: [{ node: 'node-2', outputPort: 'main' }],
         },
         {
           id: 'node-2',
@@ -313,7 +309,7 @@ describe('WorkflowEngine - Plugin System', () => {
           type: 'custom-resolver-test',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         },
       ],
     };

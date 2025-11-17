@@ -18,7 +18,7 @@ describe('If Node - Execution', () => {
           operator: 'equals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ status: 'active', name: 'test' }]]);
@@ -42,7 +42,7 @@ describe('If Node - Execution', () => {
           operator: 'equals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ status: 'inactive', name: 'test' }]]);
@@ -66,7 +66,7 @@ describe('If Node - Execution', () => {
           operator: 'notEquals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ status: 'inactive' }]]);
@@ -90,7 +90,7 @@ describe('If Node - Execution', () => {
           operator: 'contains',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -116,7 +116,7 @@ describe('If Node - Execution', () => {
           operator: 'contains',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -142,7 +142,7 @@ describe('If Node - Execution', () => {
           operator: 'equals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ other: 'field' }]]);
@@ -164,7 +164,7 @@ describe('If Node - Execution', () => {
           operator: 'equals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ count: 5 }]]);
@@ -188,7 +188,7 @@ describe('If Node - Execution', () => {
           operator: 'equals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ enabled: true }]]);
@@ -212,7 +212,7 @@ describe('If Node - Execution', () => {
           operator: 'equals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -242,7 +242,7 @@ describe('If Node - Execution', () => {
           operator: 'equals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -276,7 +276,7 @@ describe('If Node - Execution', () => {
           operator: 'equals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -306,7 +306,7 @@ describe('If Node - Execution', () => {
           operator: 'equals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -393,7 +393,7 @@ describe('If Node - Execution', () => {
           operator: 'equals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -417,7 +417,7 @@ describe('If Node - Execution', () => {
           operator: 'equals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -442,7 +442,7 @@ describe('If Node - Execution', () => {
           operator: 'contains',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -472,7 +472,7 @@ describe('If Node - Execution', () => {
           operator: 'notEquals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([

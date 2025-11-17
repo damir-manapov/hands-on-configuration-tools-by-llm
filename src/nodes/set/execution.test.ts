@@ -19,7 +19,7 @@ describe('Set Node - Execution', () => {
           { path: 'field2', value: 'value2' },
         ],
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ existing: 'data' }]]);
@@ -39,7 +39,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [],
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ existing: 'data' }]]);
@@ -57,7 +57,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [{ path: 'added', value: 'value' }],
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -81,7 +81,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [{ path: 'field1', value: 'new-value' }],
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -103,7 +103,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [{ path: 'added', value: 'value' }],
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -129,7 +129,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [{ path: 'field1', value: 'value1' }],
       },
-      connections: {},
+      connections: [],
     };
 
     const input: TypedField[][] = [[undefined as unknown as TypedField]];
@@ -147,7 +147,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [{ path: 'field1', value: 'value1' }],
       },
-      connections: {},
+      connections: [],
     };
 
     const input: TypedField[][] = [[{ value: null, kind: 'primitive' }]];
@@ -165,7 +165,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [{ path: 'field1', value: 'value1' }],
       },
-      connections: {},
+      connections: [],
     };
 
     const input: TypedField[][] = [[{ value: undefined, kind: 'primitive' }]];
@@ -183,7 +183,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [{ path: 'field1', value: 'value1' }],
       },
-      connections: {},
+      connections: [],
     };
 
     const input: TypedField[][] = [
@@ -203,7 +203,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [{ path: 'field1', value: 'value1' }],
       },
-      connections: {},
+      connections: [],
     };
 
     const input: TypedField[][] = [[{ value: [1, 2, 3], kind: 'primitive' }]];
@@ -221,7 +221,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [{ path: 'field1', value: 'value1' }],
       },
-      connections: {},
+      connections: [],
     };
 
     const input: TypedField[][] = [];
@@ -239,7 +239,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [{ path: 'field1', value: 'value1' }],
       },
-      connections: {},
+      connections: [],
     };
 
     const input: TypedField[][] = [[]];
@@ -258,7 +258,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [{ path: 'user.name', value: 'John Doe' }],
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ existing: 'data' }]]);
@@ -278,7 +278,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [{ path: 'address.location.city', value: 'New York' }],
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ existing: 'data' }]]);
@@ -303,7 +303,7 @@ describe('Set Node - Execution', () => {
       parameters: {
         values: [{ path: 'user.name', value: 'Updated Name' }],
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([

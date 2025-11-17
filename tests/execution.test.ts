@@ -18,7 +18,7 @@ describe('WorkflowEngine - Execution', () => {
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         },
       ],
     };
@@ -51,7 +51,7 @@ describe('WorkflowEngine - Execution', () => {
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         },
       ],
     };
@@ -76,9 +76,7 @@ describe('WorkflowEngine - Execution', () => {
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {
-            main: [{ node: 'node-2', outputPort: 'main' }],
-          },
+          connections: [{ node: 'node-2', outputPort: 'main' }],
         },
       ],
     };
@@ -104,7 +102,7 @@ describe('WorkflowEngine - Execution', () => {
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         },
         {
           id: 'node-2',
@@ -119,7 +117,7 @@ describe('WorkflowEngine - Execution', () => {
               });
             `,
           },
-          connections: {},
+          connections: [],
         },
       ],
     };
@@ -190,7 +188,7 @@ describe('WorkflowEngine - Execution', () => {
               },
             ],
           },
-          connections: {},
+          connections: [],
         },
       ],
     };
@@ -248,7 +246,7 @@ describe('WorkflowEngine - Execution', () => {
               },
             ],
           },
-          connections: {},
+          connections: [],
         },
       ],
     };

@@ -24,7 +24,7 @@ describe('Code Node - Execution', () => {
           return toTypedField({ ...plain, processed: true });
         `,
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ name: 'test', value: 123 }]]);
@@ -47,7 +47,7 @@ describe('Code Node - Execution', () => {
           return toTypedField({ ...plain, doubled: plain.value * 2 });
         `,
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -80,7 +80,7 @@ describe('Code Node - Execution', () => {
           });
         `,
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ value: 16 }]]);
@@ -100,7 +100,7 @@ describe('Code Node - Execution', () => {
       parameters: {
         code: 'return "not an array";',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ test: 'data' }]]);
@@ -126,7 +126,7 @@ describe('Code Node - Execution', () => {
         `,
         timeout: 100,
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ test: 'data' }]]);
@@ -145,7 +145,7 @@ describe('Code Node - Execution', () => {
       parameters: {
         code: 'require("fs");',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ test: 'data' }]]);
@@ -166,7 +166,7 @@ describe('Code Node - Execution', () => {
       parameters: {
         code: 'return { invalid syntax }',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ test: 'data' }]]);
@@ -205,7 +205,7 @@ describe('Code Node - Execution', () => {
           return toTypedField({ extracted: plain.name });
         `,
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ name: 'John', age: 30 }]]);
@@ -226,7 +226,7 @@ describe('Code Node - Execution', () => {
           return toTypedField({ ...plain, newField: 'added' });
         `,
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ name: 'test' }]]);
@@ -251,7 +251,7 @@ describe('Code Node - Execution', () => {
           });
         `,
       },
-      connections: {},
+      connections: [],
     };
 
     const input: TypedField[][] = [
@@ -294,7 +294,7 @@ describe('Code Node - Execution', () => {
           });
         `,
       },
-      connections: {},
+      connections: [],
     };
 
     const input: TypedField[][] = [
@@ -321,7 +321,7 @@ describe('Code Node - Execution', () => {
       parameters: {
         code: 'return { not: "a TypedField" };',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([[{ test: 'data' }]]);

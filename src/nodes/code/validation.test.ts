@@ -10,7 +10,7 @@ describe('Code Node - Validation', () => {
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {},
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -27,7 +27,7 @@ describe('Code Node - Validation', () => {
       parameters: {
         code: 123, // not a string
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -45,7 +45,7 @@ describe('Code Node - Validation', () => {
         code: 'return input;',
         timeout: 'not-a-number',
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -62,7 +62,7 @@ describe('Code Node - Validation', () => {
       parameters: {
         code: 'return input;',
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -80,7 +80,7 @@ describe('Code Node - Validation', () => {
         code: 'return input;',
         timeout: 10000,
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -97,7 +97,7 @@ describe('Code Node - Validation', () => {
       parameters: {
         code: 'return { invalid syntax }',
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -114,7 +114,7 @@ describe('Code Node - Validation', () => {
       parameters: {
         code: 'return input.map(item => {',
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -131,7 +131,7 @@ describe('Code Node - Validation', () => {
       parameters: {
         code: 'return @invalid;',
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -148,7 +148,7 @@ describe('Code Node - Validation', () => {
       parameters: {
         code: '',
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -165,7 +165,7 @@ describe('Code Node - Validation', () => {
       parameters: {
         code: '   \n\t  ',
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {

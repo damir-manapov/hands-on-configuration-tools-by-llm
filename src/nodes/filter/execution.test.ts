@@ -19,7 +19,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -50,7 +50,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'drop',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -80,7 +80,7 @@ describe('Filter Node - Execution', () => {
           operator: 'equals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -109,7 +109,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -140,7 +140,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -171,7 +171,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input: TypedField[][] = [];
@@ -194,7 +194,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -220,7 +220,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -251,7 +251,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -282,7 +282,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -308,7 +308,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'drop',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -337,7 +337,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -368,7 +368,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -455,7 +455,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -480,7 +480,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -506,7 +506,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([
@@ -537,7 +537,7 @@ describe('Filter Node - Execution', () => {
         },
         mode: 'pass',
       },
-      connections: {},
+      connections: [],
     };
 
     const input = toTypedFieldInput([

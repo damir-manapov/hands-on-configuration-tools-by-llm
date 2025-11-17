@@ -10,7 +10,7 @@ describe('Noop Node - Validation', () => {
       type: 'builtIn.noop',
       position: { x: 0, y: 0 },
       parameters: {},
-      connections: {},
+      connections: [],
     };
 
     expect(() => {

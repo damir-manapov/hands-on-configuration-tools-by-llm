@@ -10,7 +10,7 @@ describe('Filter Node - Validation', () => {
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {},
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -27,7 +27,7 @@ describe('Filter Node - Validation', () => {
       parameters: {
         condition: 'not-an-object',
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -47,7 +47,7 @@ describe('Filter Node - Validation', () => {
           value: 'value1',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -68,7 +68,7 @@ describe('Filter Node - Validation', () => {
           operator: 'invalid-operator',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -90,7 +90,7 @@ describe('Filter Node - Validation', () => {
         },
         mode: 'invalid-mode',
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -111,7 +111,7 @@ describe('Filter Node - Validation', () => {
           operator: 'equals',
         },
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -133,7 +133,7 @@ describe('Filter Node - Validation', () => {
         },
         mode: 'drop',
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {

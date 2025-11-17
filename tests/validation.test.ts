@@ -16,7 +16,7 @@ describe('WorkflowEngine - General Validation', () => {
           type: 'invalid-node-type',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         },
       ],
     };
@@ -39,7 +39,7 @@ describe('WorkflowEngine - General Validation', () => {
           type: '',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         },
       ],
     };
@@ -63,10 +63,10 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
+            connections: [
               // @ts-expect-error - Testing invalid connection without node field
-              main: [{ outputPort: 'main' }],
-            },
+              { outputPort: 'main' },
+            ],
           },
         ],
       };
@@ -89,9 +89,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: '', outputPort: 'main' }],
-            },
+            connections: [{ node: '', outputPort: 'main' }],
           },
         ],
       };
@@ -114,9 +112,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: '   ', outputPort: 'main' }],
-            },
+            connections: [{ node: '   ', outputPort: 'main' }],
           },
         ],
       };
@@ -139,9 +135,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: 'node-2', outputPort: 'main' }],
-            },
+            connections: [{ node: 'node-2', outputPort: 'main' }],
           },
         ],
       };
@@ -164,9 +158,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: 'node-1', outputPort: 'main' }],
-            },
+            connections: [{ node: 'node-1', outputPort: 'main' }],
           },
         ],
       };
@@ -189,10 +181,10 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
+            connections: [
               // @ts-expect-error - Testing invalid connection without outputPort field
-              main: [{ node: 'node-2' }],
-            },
+              { node: 'node-2' },
+            ],
           },
           {
             id: 'node-2',
@@ -200,7 +192,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -223,10 +215,10 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
+            connections: [
               // @ts-expect-error - Testing invalid connection without outputPort field
-              main: [{ node: 'node-2' }],
-            },
+              { node: 'node-2' },
+            ],
           },
           {
             id: 'node-2',
@@ -234,7 +226,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -257,9 +249,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: 'node-2', outputPort: '' }],
-            },
+            connections: [{ node: 'node-2', outputPort: '' }],
           },
           {
             id: 'node-2',
@@ -267,7 +257,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -290,9 +280,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: 'node-2', outputPort: '   ' }],
-            },
+            connections: [{ node: 'node-2', outputPort: '   ' }],
           },
           {
             id: 'node-2',
@@ -300,7 +288,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -323,10 +311,9 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              // @ts-expect-error - Testing invalid connections structure (not an array)
-              main: { node: 'node-2', outputPort: 'main' },
-            },
+            // Testing invalid connections structure (not an array)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
+            connections: { node: 'node-2', outputPort: 'main' } as any,
           },
         ],
       };
@@ -349,9 +336,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: 'node-2', outputPort: 'main' }],
-            },
+            connections: [{ node: 'node-2', outputPort: 'main' }],
           },
           {
             id: 'node-2',
@@ -359,7 +344,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -384,7 +369,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -407,7 +392,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -430,7 +415,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -453,7 +438,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -476,7 +461,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -501,7 +486,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -524,7 +509,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -547,7 +532,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -567,7 +552,7 @@ describe('WorkflowEngine - General Validation', () => {
         type: 'builtIn.noop',
         position: { x: 0, y: 0 },
         parameters: {},
-        connections: {},
+        connections: [],
       }));
 
       const workflow: Workflow = {
@@ -594,7 +579,7 @@ describe('WorkflowEngine - General Validation', () => {
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         });
       }
 
@@ -613,10 +598,10 @@ describe('WorkflowEngine - General Validation', () => {
             });
           }
         }
-        node.connections = { main: connections };
+        node.connections = connections;
       }
       // Add one more connection to node-100 from node-0 to exceed limit
-      const node0Connections = nodes[0]?.connections['main'];
+      const node0Connections = nodes[0]?.connections;
       if (node0Connections) {
         node0Connections.push({
           node: 'node-100',
@@ -644,7 +629,7 @@ describe('WorkflowEngine - General Validation', () => {
         type: 'builtIn.noop',
         position: { x: 0, y: 0 },
         parameters: {},
-        connections: {},
+        connections: [],
       }));
 
       const workflow: Workflow = {
@@ -674,12 +659,10 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [
-                { node: 'node-2', outputPort: 'main' },
-                { node: 'node-2', outputPort: 'main' }, // Duplicate
-              ],
-            },
+            connections: [
+              { node: 'node-2', outputPort: 'main' },
+              { node: 'node-2', outputPort: 'main' }, // Duplicate
+            ],
           },
           {
             id: 'node-2',
@@ -687,7 +670,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -710,12 +693,10 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [
-                { node: 'node-2', outputPort: 'main' },
-                { node: 'node-2', outputPort: 'secondary' }, // Different output port
-              ],
-            },
+            connections: [
+              { node: 'node-2', outputPort: 'main' },
+              { node: 'node-2', outputPort: 'secondary' }, // Different output port
+            ],
           },
           {
             id: 'node-2',
@@ -723,7 +704,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -752,10 +733,10 @@ describe('WorkflowEngine - General Validation', () => {
                 operator: 'equals',
               },
             },
-            connections: {
-              true: [{ node: 'node-2', outputPort: 'main' }],
-              false: [{ node: 'node-2', outputPort: 'main' }], // Same target, different port
-            },
+            connections: [
+              { node: 'node-2', outputPort: 'true' },
+              { node: 'node-2', outputPort: 'false' }, // Same target, different port
+            ],
           },
           {
             id: 'node-2',
@@ -763,7 +744,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -788,9 +769,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: 'node-2', outputPort: 'main' }],
-            },
+            connections: [{ node: 'node-2', outputPort: 'main' }],
           },
           {
             id: 'node-2',
@@ -798,7 +777,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
-            connections: {},
+            connections: [],
           },
           {
             id: 'node-3',
@@ -806,9 +785,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: 'node-4', outputPort: 'main' }],
-            },
+            connections: [{ node: 'node-4', outputPort: 'main' }],
           },
           {
             id: 'node-4',
@@ -816,9 +793,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: 'node-3', outputPort: 'main' }],
-            },
+            connections: [{ node: 'node-3', outputPort: 'main' }],
           },
         ],
       };
@@ -841,9 +816,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: 'node-2', outputPort: 'main' }],
-            },
+            connections: [{ node: 'node-2', outputPort: 'main' }],
           },
           {
             id: 'node-2',
@@ -851,9 +824,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
-            connections: {
-              main: [{ node: 'node-1', outputPort: 'main' }],
-            },
+            connections: [{ node: 'node-1', outputPort: 'main' }],
           },
         ],
       };
@@ -878,9 +849,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: 'node-2', outputPort: 'main' }],
-            },
+            connections: [{ node: 'node-2', outputPort: 'main' }],
           },
           {
             id: 'node-2',
@@ -888,7 +857,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
-            connections: {},
+            connections: [],
           },
         ],
       };
@@ -911,9 +880,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: 'node-3', outputPort: 'main' }],
-            },
+            connections: [{ node: 'node-3', outputPort: 'main' }],
           },
           {
             id: 'node-2',
@@ -921,9 +888,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.noop',
             position: { x: 0, y: 0 },
             parameters: {},
-            connections: {
-              main: [{ node: 'node-3', outputPort: 'main' }],
-            },
+            connections: [{ node: 'node-3', outputPort: 'main' }],
           },
           {
             id: 'node-3',
@@ -931,7 +896,7 @@ describe('WorkflowEngine - General Validation', () => {
             type: 'builtIn.set',
             position: { x: 0, y: 0 },
             parameters: { values: [] },
-            connections: {},
+            connections: [],
           },
         ],
       };

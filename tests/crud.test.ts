@@ -16,7 +16,7 @@ describe('WorkflowEngine - CRUD Operations', () => {
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         },
       ],
     };
@@ -42,7 +42,7 @@ describe('WorkflowEngine - CRUD Operations', () => {
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         },
       ],
     };
@@ -67,7 +67,7 @@ describe('WorkflowEngine - CRUD Operations', () => {
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         },
       ],
     };
@@ -93,7 +93,7 @@ describe('WorkflowEngine - CRUD Operations', () => {
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         },
       ],
     };
@@ -109,7 +109,7 @@ describe('WorkflowEngine - CRUD Operations', () => {
           type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
-          connections: {},
+          connections: [],
         },
       ],
     };

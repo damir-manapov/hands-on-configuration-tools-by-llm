@@ -10,7 +10,7 @@ describe('Set Node - Validation', () => {
       type: 'builtIn.set',
       position: { x: 0, y: 0 },
       parameters: {},
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -27,7 +27,7 @@ describe('Set Node - Validation', () => {
       parameters: {
         values: 'not-an-array',
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -44,7 +44,7 @@ describe('Set Node - Validation', () => {
       parameters: {
         values: [{ path: 123, value: 'test' }],
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {
@@ -64,7 +64,7 @@ describe('Set Node - Validation', () => {
           { path: 'field2', value: 'value2' },
         ],
       },
-      connections: {},
+      connections: [],
     };
 
     expect(() => {

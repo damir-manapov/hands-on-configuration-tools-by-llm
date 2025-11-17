@@ -11,7 +11,7 @@ describe('Noop Node - Execution', () => {
       type: 'builtIn.noop',
       position: { x: 0, y: 0 },
       parameters: {},
-      connections: {},
+      connections: [],
     };
 
     const input: TypedField[][] = [
@@ -34,7 +34,7 @@ describe('Noop Node - Execution', () => {
       type: 'builtIn.noop',
       position: { x: 0, y: 0 },
       parameters: {},
-      connections: {},
+      connections: [],
     };
 
     const input: TypedField[][] = [];
@@ -50,7 +50,7 @@ describe('Noop Node - Execution', () => {
       type: 'builtIn.noop',
       position: { x: 0, y: 0 },
       parameters: {},
-      connections: {},
+      connections: [],
     };
 
     const input: TypedField[][] = [

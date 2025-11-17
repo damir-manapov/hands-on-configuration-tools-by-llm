@@ -15,7 +15,7 @@ export interface Connection {
 }
 
 export interface WorkflowNode extends NodeConfig {
-  connections: Record<string, Connection[]>;
+  connections: Connection[];
 }
 
 export interface Workflow {
