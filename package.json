@@ -8,6 +8,18 @@
   "engines": {
     "node": ">=20.0.0"
   },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "mcp:server": "tsx mcp/server.ts",
+    "mcp:server:build": "pnpm build && node dist/mcp/server.js"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.22.0",
     "acorn": "^8.15.0",
@@ -27,16 +39,5 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.4",
     "vitest": "^4.0.9"
-  },
-  "scripts": {
-    "build": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit",
-    "mcp:server": "tsx mcp/server.ts"
   }
 }
