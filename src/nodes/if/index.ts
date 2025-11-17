@@ -60,8 +60,8 @@ async function executeIfNode(
   }
 
   return {
-    true: trueBatches.length > 0 ? trueBatches : [[]],
-    false: falseBatches.length > 0 ? falseBatches : [[]],
+    true: trueBatches,
+    false: falseBatches,
   };
 }
 

@@ -146,17 +146,7 @@ async function executeSwitchNode(
     }
   }
 
-  // Ensure all outputs have at least empty batch
-  const result: Record<string, TypedField[][]> = {};
-  const allOutputs = getSwitchOutputPorts(node);
-  for (const outputPort of allOutputs) {
-    result[outputPort] =
-      outputBatches[outputPort] && outputBatches[outputPort].length > 0
-        ? outputBatches[outputPort]
-        : [[]];
-  }
-
-  return result;
+  return outputBatches;
 }
 
 const parametersExamples: ParametersExample[] = [

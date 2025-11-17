@@ -65,7 +65,7 @@ describe('If Node - Execution', () => {
       true: extractTypedFieldResult(result['true']!),
       false: extractTypedFieldResult(result['false']!),
     }).toEqual({
-      true: [[]],
+      true: [],
       false: [[{ status: 'inactive' }], [{ status: 'pending' }]],
     });
   });
@@ -98,7 +98,7 @@ describe('If Node - Execution', () => {
       false: extractTypedFieldResult(result['false']!),
     }).toEqual({
       true: [[{ status: 'active' }], [{ status: 'active' }]],
-      false: [[]],
+      false: [],
     });
   });
 
@@ -122,8 +122,8 @@ describe('If Node - Execution', () => {
 
     const result = await ifNodePlugin.execute(node, input);
 
-    expect(result['true']).toEqual([[]]);
-    expect(result['false']).toEqual([[]]);
+    expect(result['true']).toEqual([]);
+    expect(result['false']).toEqual([]);
   });
 
   it('should handle nested field paths', async () => {

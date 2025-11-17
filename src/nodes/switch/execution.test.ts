@@ -87,7 +87,7 @@ describe('Switch Node - Execution', () => {
       active: extractTypedFieldResult(result['active']!),
       inactive: extractTypedFieldResult(result['inactive']!),
     }).toEqual({
-      active: [[]],
+      active: [],
       inactive: [
         [{ status: 'pending', name: 'item1' }],
         [{ status: 'inactive', name: 'item2' }],
@@ -135,8 +135,8 @@ describe('Switch Node - Execution', () => {
       default: extractTypedFieldResult(result['default']!),
     }).toEqual({
       first: [[{ status: 'active', name: 'item1' }]],
-      second: [[]],
-      default: [[]],
+      second: [],
+      default: [],
     });
   });
 
@@ -166,8 +166,8 @@ describe('Switch Node - Execution', () => {
 
     const result = await switchNodePlugin.execute(node, input);
 
-    expect(result['high']).toEqual([[]]);
-    expect(result['low']).toEqual([[]]);
+    expect(result['high']).toEqual([]);
+    expect(result['low']).toEqual([]);
   });
 
   it('should handle nested field paths', async () => {
@@ -288,7 +288,7 @@ describe('Switch Node - Execution', () => {
       active: extractTypedFieldResult(result['active']!),
       default: extractTypedFieldResult(result['default']!),
     }).toEqual({
-      active: [[]],
+      active: [],
       default: [[{ status: 'inactive', name: 'item1' }]],
     });
   });
