@@ -22,9 +22,12 @@ describe('Noop Node - Execution', () => {
         },
       ],
     ];
-    const result = noopNodePlugin.execute(node, input);
+    const result = noopNodePlugin.execute(node, input) as Record<
+      string,
+      TypedField[][]
+    >;
 
-    expect(result).toEqual(input);
+    expect(result['main']).toEqual(input);
   });
 
   it('should return empty array when input is empty', () => {
@@ -38,9 +41,12 @@ describe('Noop Node - Execution', () => {
     };
 
     const input: TypedField[][] = [];
-    const result = noopNodePlugin.execute(node, input);
+    const result = noopNodePlugin.execute(node, input) as Record<
+      string,
+      TypedField[][]
+    >;
 
-    expect(result).toEqual([[]]);
+    expect(result['main']).toEqual([]);
   });
 
   it('should pass through multiple batches', () => {
@@ -57,8 +63,11 @@ describe('Noop Node - Execution', () => {
       [{ value: 'batch1', kind: 'primitive' }],
       [{ value: 'batch2', kind: 'primitive' }],
     ];
-    const result = noopNodePlugin.execute(node, input);
+    const result = noopNodePlugin.execute(node, input) as Record<
+      string,
+      TypedField[][]
+    >;
 
-    expect(result).toEqual(input);
+    expect(result['main']).toEqual(input);
   });
 });

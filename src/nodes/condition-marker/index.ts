@@ -23,7 +23,7 @@ function validateConditionMarkerNodeParameters(node: WorkflowNode): void {
 async function executeConditionMarkerNode(
   node: WorkflowNode,
   input: TypedField[][],
-): Promise<TypedField[][]> {
+): Promise<Record<string, TypedField[][]>> {
   const condition = node.parameters['condition'] as Condition;
 
   if (!condition || typeof condition !== 'object') {
@@ -64,7 +64,9 @@ async function executeConditionMarkerNode(
     result.push(outputItem);
   }
 
-  return result;
+  return {
+    main: result,
+  };
 }
 
 const parametersExamples: ParametersExample[] = [

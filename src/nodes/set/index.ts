@@ -35,7 +35,7 @@ function validateSetNodeParameters(node: WorkflowNode): void {
 function executeSetNode(
   node: WorkflowNode,
   input: TypedField[][],
-): TypedField[][] {
+): Record<string, TypedField[][]> {
   const values =
     (node.parameters['values'] as { path: string; value: string }[]) ?? [];
   const result: TypedField[][] = [];
@@ -90,7 +90,9 @@ function executeSetNode(
     result.push(outputItem);
   }
 
-  return result;
+  return {
+    main: result,
+  };
 }
 
 const parametersExamples: ParametersExample[] = [

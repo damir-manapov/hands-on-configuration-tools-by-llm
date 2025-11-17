@@ -13,6 +13,7 @@ import {
   noopNodePlugin,
   setNodePlugin,
   conditionMarkerNodePlugin,
+  ifNodePlugin,
   codeNodePlugin,
   filterNodePlugin,
 } from './nodes/index.js';
@@ -28,12 +29,14 @@ import {
   UnknownNodeTypeError,
   NodeTypeAlreadyRegisteredError,
   CannotUnregisterBuiltInNodeError,
+  NodeExecutionError,
 } from './errors/index.js';
 
 const BUILT_IN_PLUGINS = [
   noopNodePlugin,
   setNodePlugin,
   conditionMarkerNodePlugin,
+  ifNodePlugin,
   codeNodePlugin,
   filterNodePlugin,
 ] as const;
@@ -159,12 +162,8 @@ export class WorkflowEngine {
           executionData,
         );
         const output = await this.executeNode(node, input, resolver);
-        // Store output under "main" port (default output port for nodes)
-        // Future: nodes could output to multiple ports (e.g., If node -> "true" and "false")
-        // Note: Condition Marker node marks items but doesn't route - all items go to "main"
-        executionData[nodeId] = {
-          main: output,
-        };
+        // Store output per port (nodes can output to multiple ports, e.g., If node -> "true" and "false")
+        executionData[nodeId] = output;
       }
 
       return {
@@ -549,12 +548,25 @@ export class WorkflowEngine {
     node: WorkflowNode,
     input: TypedField[][],
     resolver?: FieldResolver,
-  ): Promise<TypedField[][]> {
+  ): Promise<Record<string, TypedField[][]>> {
     const plugin = this.nodePlugins.get(node.type);
     if (!plugin) {
       throw new UnknownNodeTypeError(node.id, node.type, 'execution');
     }
     const result = await plugin.execute(node, input, resolver);
+    // Ensure result is a Record (for backward compatibility, single-port nodes return { main: batches })
+    if (
+      !result ||
+      typeof result !== 'object' ||
+      Array.isArray(result) ||
+      result === null
+    ) {
+      const error = new NodeExecutionError(
+        node.id,
+        `Node ${node.id} (${node.type}) must return a Record<string, TypedField[][]> mapping output ports to batches`,
+      );
+      throw error;
+    }
     return result;
   }
 }

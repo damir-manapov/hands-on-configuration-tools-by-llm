@@ -23,9 +23,13 @@ describe('Set Node - Execution', () => {
     };
 
     const input = toTypedFieldInput([[{ existing: 'data' }]]);
-    const result = setNodePlugin.execute(node, input) as TypedField[][];
+    const result = setNodePlugin.execute(node, input) as Record<
+      string,
+      TypedField[][]
+    >;
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    const mainOutput = result['main']!;
+    expect(extractTypedFieldResult(mainOutput)).toEqual([
       [{ existing: 'data', field1: 'value1', field2: 'value2' }],
     ]);
   });
@@ -43,9 +47,15 @@ describe('Set Node - Execution', () => {
     };
 
     const input = toTypedFieldInput([[{ existing: 'data' }]]);
-    const result = setNodePlugin.execute(node, input) as TypedField[][];
+    const result = setNodePlugin.execute(node, input) as Record<
+      string,
+      TypedField[][]
+    >;
 
-    expect(extractTypedFieldResult(result)).toEqual([[{ existing: 'data' }]]);
+    const mainOutput = result['main']!;
+    expect(extractTypedFieldResult(mainOutput)).toEqual([
+      [{ existing: 'data' }],
+    ]);
   });
 
   it('should execute set node with multiple input items', () => {
@@ -64,9 +74,13 @@ describe('Set Node - Execution', () => {
       [{ item1: 'data1' }],
       [{ item2: 'data2' }],
     ]);
-    const result = setNodePlugin.execute(node, input) as TypedField[][];
+    const result = setNodePlugin.execute(node, input) as Record<
+      string,
+      TypedField[][]
+    >;
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    const mainOutput = result['main']!;
+    expect(extractTypedFieldResult(mainOutput)).toEqual([
       [{ item1: 'data1', added: 'value' }],
       [{ item2: 'data2', added: 'value' }],
     ]);
@@ -87,9 +101,13 @@ describe('Set Node - Execution', () => {
     const input = toTypedFieldInput([
       [{ field1: 'old-value', field2: 'keep' }],
     ]);
-    const result = setNodePlugin.execute(node, input) as TypedField[][];
+    const result = setNodePlugin.execute(node, input) as Record<
+      string,
+      TypedField[][]
+    >;
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    const mainOutput = result['main']!;
+    expect(extractTypedFieldResult(mainOutput)).toEqual([
       [{ field1: 'new-value', field2: 'keep' }],
     ]);
   });
@@ -109,9 +127,13 @@ describe('Set Node - Execution', () => {
     const input = toTypedFieldInput([
       [{ item1: 'data1' }, { item2: 'data2' }, { item3: 'data3' }],
     ]);
-    const result = setNodePlugin.execute(node, input) as TypedField[][];
+    const result = setNodePlugin.execute(node, input) as Record<
+      string,
+      TypedField[][]
+    >;
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    const mainOutput = result['main']!;
+    expect(extractTypedFieldResult(mainOutput)).toEqual([
       [
         { item1: 'data1', added: 'value' },
         { item2: 'data2', added: 'value' },
@@ -225,9 +247,12 @@ describe('Set Node - Execution', () => {
     };
 
     const input: TypedField[][] = [];
-    const result = setNodePlugin.execute(node, input) as TypedField[][];
+    const result = setNodePlugin.execute(node, input) as Record<
+      string,
+      TypedField[][]
+    >;
 
-    expect(result).toEqual([]);
+    expect(result['main']).toEqual([]);
   });
 
   it('should handle empty inner array', () => {
@@ -243,10 +268,14 @@ describe('Set Node - Execution', () => {
     };
 
     const input: TypedField[][] = [[]];
-    const result = setNodePlugin.execute(node, input) as TypedField[][];
+    const result = setNodePlugin.execute(node, input) as Record<
+      string,
+      TypedField[][]
+    >;
 
-    expect(result).toHaveLength(1);
-    expect(result[0]).toEqual([]);
+    expect(result['main']).toHaveLength(1);
+    const mainOutput = result['main']!;
+    expect(mainOutput[0]).toEqual([]);
   });
 
   it('should set nested field using dot notation', () => {
@@ -262,9 +291,13 @@ describe('Set Node - Execution', () => {
     };
 
     const input = toTypedFieldInput([[{ existing: 'data' }]]);
-    const result = setNodePlugin.execute(node, input) as TypedField[][];
+    const result = setNodePlugin.execute(node, input) as Record<
+      string,
+      TypedField[][]
+    >;
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    const mainOutput = result['main']!;
+    expect(extractTypedFieldResult(mainOutput)).toEqual([
       [{ existing: 'data', user: { name: 'John Doe' } }],
     ]);
   });
@@ -282,9 +315,13 @@ describe('Set Node - Execution', () => {
     };
 
     const input = toTypedFieldInput([[{ existing: 'data' }]]);
-    const result = setNodePlugin.execute(node, input) as TypedField[][];
+    const result = setNodePlugin.execute(node, input) as Record<
+      string,
+      TypedField[][]
+    >;
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    const mainOutput = result['main']!;
+    expect(extractTypedFieldResult(mainOutput)).toEqual([
       [
         {
           existing: 'data',
@@ -309,9 +346,13 @@ describe('Set Node - Execution', () => {
     const input = toTypedFieldInput([
       [{ user: { name: 'Old Name', age: 30 } }],
     ]);
-    const result = setNodePlugin.execute(node, input) as TypedField[][];
+    const result = setNodePlugin.execute(node, input) as Record<
+      string,
+      TypedField[][]
+    >;
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    const mainOutput = result['main']!;
+    expect(extractTypedFieldResult(mainOutput)).toEqual([
       [{ user: { name: 'Updated Name', age: 30 } }],
     ]);
   });

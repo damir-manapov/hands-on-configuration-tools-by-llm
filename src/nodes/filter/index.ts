@@ -30,7 +30,7 @@ function validateFilterNodeParameters(node: WorkflowNode): void {
 async function executeFilterNode(
   node: WorkflowNode,
   input: TypedField[][],
-): Promise<TypedField[][]> {
+): Promise<Record<string, TypedField[][]>> {
   const condition = node.parameters['condition'] as Condition;
 
   if (!condition || typeof condition !== 'object') {
@@ -67,7 +67,9 @@ async function executeFilterNode(
     result.push(filteredItem);
   }
 
-  return result;
+  return {
+    main: result,
+  };
 }
 
 const parametersExamples: ParametersExample[] = [

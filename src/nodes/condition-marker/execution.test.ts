@@ -24,7 +24,7 @@ describe('Condition Marker Node - Execution', () => {
     const input = toTypedFieldInput([[{ status: 'active', name: 'test' }]]);
     const result = await conditionMarkerNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ status: 'active', name: 'test', _matched: true }],
     ]);
   });
@@ -48,7 +48,7 @@ describe('Condition Marker Node - Execution', () => {
     const input = toTypedFieldInput([[{ status: 'inactive', name: 'test' }]]);
     const result = await conditionMarkerNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ status: 'inactive', name: 'test', _matched: false }],
     ]);
   });
@@ -72,7 +72,7 @@ describe('Condition Marker Node - Execution', () => {
     const input = toTypedFieldInput([[{ status: 'inactive' }]]);
     const result = await conditionMarkerNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ status: 'inactive', _matched: true }],
     ]);
   });
@@ -98,7 +98,7 @@ describe('Condition Marker Node - Execution', () => {
     ]);
     const result = await conditionMarkerNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ message: 'This is an error message', _matched: true }],
     ]);
   });
@@ -124,7 +124,7 @@ describe('Condition Marker Node - Execution', () => {
     ]);
     const result = await conditionMarkerNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ message: 'This is a success message', _matched: false }],
     ]);
   });
@@ -170,7 +170,7 @@ describe('Condition Marker Node - Execution', () => {
     const input = toTypedFieldInput([[{ count: 5 }]]);
     const result = await conditionMarkerNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ count: 5, _matched: true }],
     ]);
   });
@@ -194,7 +194,7 @@ describe('Condition Marker Node - Execution', () => {
     const input = toTypedFieldInput([[{ enabled: true }]]);
     const result = await conditionMarkerNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ enabled: true, _matched: true }],
     ]);
   });
@@ -222,7 +222,7 @@ describe('Condition Marker Node - Execution', () => {
     ]);
     const result = await conditionMarkerNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ status: 'active', _matched: true }],
       [{ status: 'inactive', _matched: false }],
       [{ status: 'active', _matched: true }],
@@ -254,7 +254,7 @@ describe('Condition Marker Node - Execution', () => {
     ]);
     const result = await conditionMarkerNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [
         { status: 'active', name: 'item1', _matched: true },
         { status: 'inactive', name: 'item2', _matched: false },
@@ -286,7 +286,7 @@ describe('Condition Marker Node - Execution', () => {
     ]);
     const result = await conditionMarkerNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ user: { name: 'John', age: 30 }, id: 1, _matched: true }],
       [{ user: { name: 'Jane', age: 25 }, id: 2, _matched: false }],
       [{ user: { name: 'John', age: 35 }, id: 3, _matched: true }],
@@ -343,7 +343,7 @@ describe('Condition Marker Node - Execution', () => {
     ]);
     const result = await conditionMarkerNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [
         {
           title: 'Item 1',
@@ -456,7 +456,7 @@ describe('Condition Marker Node - Execution', () => {
     ]);
     const result = await conditionMarkerNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ metadata: { tags: 'important urgent' }, id: 1, _matched: true }],
       [{ metadata: { tags: 'normal' }, id: 2, _matched: false }],
       [{ metadata: { tags: 'important' }, id: 3, _matched: true }],
@@ -486,7 +486,7 @@ describe('Condition Marker Node - Execution', () => {
     ]);
     const result = await conditionMarkerNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ user: { role: 'user', name: 'John' }, id: 1, _matched: true }],
       [{ user: { role: 'admin', name: 'Jane' }, id: 2, _matched: false }],
       [{ user: { role: 'moderator', name: 'Bob' }, id: 3, _matched: true }],

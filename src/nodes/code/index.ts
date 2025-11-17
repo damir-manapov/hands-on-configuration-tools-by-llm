@@ -71,7 +71,7 @@ async function executeCodeNode(
   node: WorkflowNode,
   input: TypedField[][],
   resolver?: FieldResolver,
-): Promise<TypedField[][]> {
+): Promise<Record<string, TypedField[][]>> {
   const code = node.parameters['code'] as string;
   const timeout = (node.parameters['timeout'] as number) ?? 5000;
 
@@ -208,7 +208,9 @@ async function executeCodeNode(
       }
     }
 
-    return typedResult as TypedField[][];
+    return {
+      main: typedResult as TypedField[][],
+    };
   } catch (error) {
     // Handle errors from code execution, converting them to appropriate error types
     // Re-throw our custom errors as-is (they already have the correct type and context)

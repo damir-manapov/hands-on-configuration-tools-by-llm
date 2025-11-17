@@ -29,7 +29,7 @@ describe('Filter Node - Execution', () => {
     ]);
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ status: 'active', name: 'item1' }],
       [],
       [{ status: 'active', name: 'item3' }],
@@ -60,7 +60,7 @@ describe('Filter Node - Execution', () => {
     ]);
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [],
       [{ status: 'inactive', name: 'item2' }],
       [],
@@ -89,7 +89,7 @@ describe('Filter Node - Execution', () => {
     ]);
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ status: 'active', name: 'item1' }],
       [],
     ]);
@@ -119,7 +119,7 @@ describe('Filter Node - Execution', () => {
     ]);
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ status: 'active', name: 'item1' }],
       [],
       [{ status: 'pending', name: 'item3' }],
@@ -150,7 +150,7 @@ describe('Filter Node - Execution', () => {
     ]);
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ message: 'This is an error message', id: 1 }],
       [],
       [{ message: 'Another error occurred', id: 3 }],
@@ -177,7 +177,7 @@ describe('Filter Node - Execution', () => {
     const input: TypedField[][] = [];
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(result).toHaveLength(0);
+    expect(result['main']).toHaveLength(0);
   });
 
   it('should throw error when field is missing', async () => {
@@ -230,7 +230,7 @@ describe('Filter Node - Execution', () => {
     ]);
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ count: 5 }],
       [],
       [{ count: 5 }],
@@ -261,7 +261,7 @@ describe('Filter Node - Execution', () => {
     ]);
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ enabled: true }],
       [],
       [{ enabled: true }],
@@ -291,7 +291,7 @@ describe('Filter Node - Execution', () => {
     ]);
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([[], []]);
+    expect(extractTypedFieldResult(result['main']!)).toEqual([[], []]);
   });
 
   it('should keep all items when all match in drop mode', async () => {
@@ -317,7 +317,7 @@ describe('Filter Node - Execution', () => {
     ]);
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ status: 'active', name: 'item1' }],
       [{ status: 'pending', name: 'item2' }],
     ]);
@@ -347,7 +347,7 @@ describe('Filter Node - Execution', () => {
     ]);
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ user: { name: 'John', age: 30 }, id: 1 }],
       [],
       [{ user: { name: 'John', age: 35 }, id: 3 }],
@@ -415,7 +415,7 @@ describe('Filter Node - Execution', () => {
     ]);
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [
         {
           title: 'Item 1',
@@ -516,7 +516,7 @@ describe('Filter Node - Execution', () => {
     ]);
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ metadata: { tags: 'important urgent' }, id: 1 }],
       [],
       [{ metadata: { tags: 'important' }, id: 3 }],
@@ -550,7 +550,7 @@ describe('Filter Node - Execution', () => {
     ]);
     const result = await filterNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [
         { status: 'active', name: 'item1' },
         { status: 'active', name: 'item3' },

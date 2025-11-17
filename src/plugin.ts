@@ -19,6 +19,6 @@ export interface NodePlugin {
     node: WorkflowNode,
     input: TypedField[][],
     resolver?: FieldResolver,
-  ) => Promise<TypedField[][]> | TypedField[][];
+  ) => Promise<Record<string, TypedField[][]>> | Record<string, TypedField[][]>;
   parametersExamples: ParametersExample[];
 }

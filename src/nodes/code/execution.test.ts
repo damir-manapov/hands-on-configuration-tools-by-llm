@@ -30,7 +30,7 @@ describe('Code Node - Execution', () => {
     const input = toTypedFieldInput([[{ name: 'test', value: 123 }]]);
     const result = await codeNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ name: 'test', value: 123, processed: true }],
     ]);
   });
@@ -57,7 +57,7 @@ describe('Code Node - Execution', () => {
     ]);
     const result = await codeNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ value: 5, doubled: 10 }],
       [{ value: 10, doubled: 20 }],
       [{ value: 15, doubled: 30 }],
@@ -86,7 +86,7 @@ describe('Code Node - Execution', () => {
     const input = toTypedFieldInput([[{ value: 16 }]]);
     const result = await codeNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ value: 16, sqrt: 4, json: '{"value":16}' }],
     ]);
   });
@@ -211,7 +211,9 @@ describe('Code Node - Execution', () => {
     const input = toTypedFieldInput([[{ name: 'John', age: 30 }]]);
     const result = await codeNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([[{ extracted: 'John' }]]);
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
+      [{ extracted: 'John' }],
+    ]);
   });
 
   it('should work with toTypedField utility function', async () => {
@@ -232,7 +234,7 @@ describe('Code Node - Execution', () => {
     const input = toTypedFieldInput([[{ name: 'test' }]]);
     const result = await codeNodePlugin.execute(node, input);
 
-    expect(extractTypedFieldResult(result)).toEqual([
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
       [{ name: 'test', newField: 'added' }],
     ]);
   });
@@ -278,7 +280,9 @@ describe('Code Node - Execution', () => {
 
     const result = await codeNodePlugin.execute(node, input, resolver);
 
-    expect(extractTypedFieldResult(result)).toEqual([[{ resolved: 'John' }]]);
+    expect(extractTypedFieldResult(result['main']!)).toEqual([
+      [{ resolved: 'John' }],
+    ]);
   });
 
   it('should throw error when resolve is called without resolver', async () => {

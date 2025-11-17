@@ -14,9 +14,11 @@ function validateNoopNodeParameters(node: WorkflowNode): void {
 function executeNoopNode(
   _node: WorkflowNode,
   input: TypedField[][],
-): TypedField[][] {
+): Record<string, TypedField[][]> {
   // No-op: just pass through the input unchanged
-  return input.length > 0 ? input : [[]];
+  return {
+    main: input,
+  };
 }
 
 const parametersExamples: ParametersExample[] = [

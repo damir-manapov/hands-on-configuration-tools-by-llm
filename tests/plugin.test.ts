@@ -21,7 +21,7 @@ describe('WorkflowEngine - Plugin System', () => {
       getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
-      execute: (): TypedField[][] => [[]],
+      execute: (): Record<string, TypedField[][]> => ({ main: [[]] }),
       parametersExamples: [
         {
           title: 'Basic Custom Node',
@@ -48,7 +48,7 @@ describe('WorkflowEngine - Plugin System', () => {
       getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
-      execute: (): TypedField[][] => [[]],
+      execute: (): Record<string, TypedField[][]> => ({ main: [[]] }),
       parametersExamples: [
         {
           title: 'Test Noop Node',
@@ -83,7 +83,7 @@ describe('WorkflowEngine - Plugin System', () => {
       getParameterSchema: () => serializeParameterSchema(z.object({})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       validate: () => {},
-      execute: (): TypedField[][] => [[]],
+      execute: (): Record<string, TypedField[][]> => ({ main: [[]] }),
       parametersExamples: [
         {
           title: 'Test Custom Node',
@@ -122,18 +122,20 @@ describe('WorkflowEngine - Plugin System', () => {
       },
       execute: (node: WorkflowNode, input: TypedField[][]) => {
         const text = node.parameters['text'] as string;
-        return input.map((item) => {
-          const inputField = item[0];
-          const inputObj =
-            inputField &&
-            typeof inputField.value === 'object' &&
-            !Array.isArray(inputField.value)
-              ? (inputField.value as Record<string, TypedField>)
-              : {};
-          const outputObj: Record<string, TypedField> = { ...inputObj };
-          outputObj['echo'] = convertValueToTypedField(text);
-          return [{ value: outputObj, kind: 'primitive' as const }];
-        });
+        return {
+          main: input.map((item) => {
+            const inputField = item[0];
+            const inputObj =
+              inputField &&
+              typeof inputField.value === 'object' &&
+              !Array.isArray(inputField.value)
+                ? (inputField.value as Record<string, TypedField>)
+                : {};
+            const outputObj: Record<string, TypedField> = { ...inputObj };
+            outputObj['echo'] = convertValueToTypedField(text);
+            return [{ value: outputObj, kind: 'primitive' as const }];
+          }),
+        };
       },
       parametersExamples: [
         {
@@ -205,7 +207,7 @@ describe('WorkflowEngine - Plugin System', () => {
           throw new Error('requiredField is required');
         }
       },
-      execute: (): TypedField[][] => [[]],
+      execute: (): Record<string, TypedField[][]> => ({ main: [[]] }),
       parametersExamples: [
         {
           title: 'Required Field Example',
@@ -281,9 +283,9 @@ describe('WorkflowEngine - Plugin System', () => {
         _node: WorkflowNode,
         _input: TypedField[][],
         resolver?: FieldResolver,
-      ): TypedField[][] => {
+      ): Record<string, TypedField[][]> => {
         capturedResolver = resolver;
-        return [[]];
+        return { main: [[]] };
       },
       parametersExamples: [
         {
