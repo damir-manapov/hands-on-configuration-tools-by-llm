@@ -354,7 +354,7 @@ export class WorkflowEngine {
         );
       }
 
-      // Get plugin to validate output ports
+      // Get plugin to validate output ports (only for static nodes)
       const plugin = this.nodePlugins.get(node.type);
       if (!plugin) {
         // This should not happen as node type is validated earlier, but keep as safety net
@@ -364,15 +364,14 @@ export class WorkflowEngine {
       }
 
       // Validate workflow-specific rules (node exists, no self-reference, no duplicates, valid output ports)
-      // Get output ports (static or dynamic)
-      const allowedPorts =
-        plugin.dynamicOutputsAllowed && plugin.getOutputPorts
-          ? plugin.getOutputPorts(node)
-          : plugin.outputPorts;
+      // For static nodes, validate output ports here. For dynamic nodes, validation is done in the node's validate function.
+      const allowedPorts = plugin.dynamicOutputsAllowed
+        ? null // Dynamic nodes validate output ports in their validate function
+        : plugin.outputPorts;
 
       for (const [index, connection] of node.connections.entries()) {
-        // Validate output port is allowed for this node type
-        if (!allowedPorts.includes(connection.outputPort)) {
+        // Validate output port is allowed for this node type (only for static nodes)
+        if (allowedPorts && !allowedPorts.includes(connection.outputPort)) {
           throw new WorkflowValidationError(
             `Node ${node.id} uses invalid output port "${connection.outputPort}" at connection[${index}]. Allowed ports: ${allowedPorts.join(', ')}`,
           );

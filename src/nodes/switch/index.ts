@@ -60,25 +60,29 @@ function validateSwitchNodeParameters(node: WorkflowNode): void {
       }
     }
   }
-}
 
-function getSwitchOutputPorts(node: WorkflowNode): string[] {
-  const rules = node.parameters['rules'] as { output: string }[] | undefined;
-  const outputs = new Set<string>();
-
+  // Validate that all connections use valid output ports
+  const allowedPorts = new Set<string>();
   if (rules && Array.isArray(rules)) {
     for (const rule of rules) {
       if (rule.output && typeof rule.output === 'string') {
-        outputs.add(rule.output);
+        allowedPorts.add(rule.output);
       }
     }
   }
-
   const defaultOutput =
     (node.parameters['defaultOutput'] as string) ?? 'default';
-  outputs.add(defaultOutput);
+  allowedPorts.add(defaultOutput);
 
-  return Array.from(outputs);
+  for (const [index, connection] of node.connections.entries()) {
+    if (!allowedPorts.has(connection.outputPort)) {
+      throw new NodeValidationError(
+        node.id,
+        node.type,
+        `Connection[${index}] uses invalid output port "${connection.outputPort}". Allowed ports: ${Array.from(allowedPorts).join(', ')}`,
+      );
+    }
+  }
 }
 
 async function executeSwitchNode(
@@ -236,7 +240,6 @@ export const switchNodePlugin: NodePlugin = {
   ],
   outputPorts: ['default'], // Default/fallback outputs
   dynamicOutputsAllowed: true, // Explicit flag for dynamic outputs
-  getOutputPorts: getSwitchOutputPorts, // Function to get dynamic outputs
   getParameterSchema: () =>
     serializeParameterSchema(SwitchNodeParametersSchema),
   validate: validateSwitchNodeParameters,
