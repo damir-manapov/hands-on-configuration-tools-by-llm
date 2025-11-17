@@ -11,8 +11,7 @@ export interface NodeConfig {
 
 export interface Connection {
   node: string;
-  type: string;
-  index: number;
+  outputPort: string;
 }
 
 export interface WorkflowNode extends NodeConfig {
@@ -73,7 +72,7 @@ export type FieldResolver = (
   entityName: string,
 ) => Promise<Record<string, TypedField>> | Record<string, TypedField>;
 
-export type ExecutionData = Record<string, TypedField[][]>;
+export type ExecutionData = Record<string, Record<string, TypedField[][]>>;
 
 export interface ExecutionResult {
   data: ExecutionData;

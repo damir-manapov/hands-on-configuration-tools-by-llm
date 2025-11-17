@@ -156,7 +156,7 @@ describe('WorkflowEngine - Plugin System', () => {
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {
-            main: [{ node: 'node-2', type: 'main', index: 0 }],
+            main: [{ node: 'node-2', outputPort: 'main' }],
           },
         },
         {
@@ -176,7 +176,7 @@ describe('WorkflowEngine - Plugin System', () => {
     const result = await engine.executeWorkflow('test-1');
 
     expect(result.finished).toBe(true);
-    const field = result.data['node-2']?.[0]?.[0];
+    const field = result.data['node-2']?.['main']?.[0]?.[0];
     expect(field).toBeDefined();
     expect(extractTypedFieldValue(field!)).toEqual({
       echo: 'Hello World',
@@ -304,7 +304,7 @@ describe('WorkflowEngine - Plugin System', () => {
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {
-            main: [{ node: 'node-2', type: 'main', index: 0 }],
+            main: [{ node: 'node-2', outputPort: 'main' }],
           },
         },
         {

@@ -159,7 +159,11 @@ export class WorkflowEngine {
           executionData,
         );
         const output = await this.executeNode(node, input, resolver);
-        executionData[nodeId] = output;
+        // Store output under "main" port (default output port for nodes)
+        // Future: nodes could output to multiple ports (e.g., If node -> "true" and "false")
+        executionData[nodeId] = {
+          main: output,
+        };
       }
 
       return {
@@ -320,15 +324,11 @@ export class WorkflowEngine {
           .min(1, 'node field is required and must be a non-empty string')
           .trim()
           .min(1, 'node field cannot be empty'),
-        type: z
+        outputPort: z
           .string()
-          .min(1, 'type field is required and must be a non-empty string')
+          .min(1, 'outputPort field is required and must be a non-empty string')
           .trim()
-          .min(1, 'type field cannot be empty'),
-        index: z
-          .number()
-          .int('index must be an integer')
-          .nonnegative('index must be a non-negative integer'),
+          .min(1, 'outputPort field cannot be empty'),
       })
       .strict();
 
@@ -374,10 +374,10 @@ export class WorkflowEngine {
           }
 
           // Validate no duplicate connections
-          const connectionKey = `${node.id}:${outputPort}->${connection.node}:${connection.type}:${connection.index}`;
+          const connectionKey = `${node.id}:${outputPort}->${connection.node}:${connection.outputPort}`;
           if (connectionSet.has(connectionKey)) {
             throw new WorkflowValidationError(
-              `Duplicate connection from node "${node.id}" port "${outputPort}" to node "${connection.node}" at index ${connection.index}`,
+              `Duplicate connection from node "${node.id}" port "${outputPort}" to node "${connection.node}" port "${connection.outputPort}"`,
             );
           }
           connectionSet.add(connectionKey);
@@ -484,8 +484,10 @@ export class WorkflowEngine {
     const incoming: Record<string, Connection[]> = {};
 
     for (const sourceNode of workflow.nodes) {
-      for (const outputConnections of Object.values(sourceNode.connections)) {
-        for (const connection of outputConnections) {
+      for (const [outputPort, connections] of Object.entries(
+        sourceNode.connections,
+      )) {
+        for (const connection of connections) {
           // Connections are validated in validateConnections(), but we keep this check
           // as a safety net for TypeScript and runtime safety
           const targetNodeId = connection.node;
@@ -495,8 +497,7 @@ export class WorkflowEngine {
           incoming[targetNodeId] ??= [];
           incoming[targetNodeId].push({
             node: sourceNode.id,
-            type: connection.type,
-            index: connection.index,
+            outputPort: outputPort,
           });
         }
       }
@@ -515,7 +516,9 @@ export class WorkflowEngine {
     const connections = incomingConnections[node.id];
     if (!connections || connections.length === 0) {
       // If no connections, check if there's input data provided for this node
-      const nodeData = executionData[node.id];
+      // Check for "main" port as default
+      const nodeOutputs = executionData[node.id];
+      const nodeData = nodeOutputs?.['main'];
       if (nodeData && nodeData.length > 0) {
         return nodeData;
       }
@@ -523,10 +526,14 @@ export class WorkflowEngine {
     }
 
     for (const connection of connections) {
-      const sourceData = executionData[connection.node];
-      const sourceItem = sourceData?.[connection.index];
-      if (sourceItem) {
-        input.push(sourceItem);
+      const sourceOutputs = executionData[connection.node];
+      const sourceBatches = sourceOutputs?.[connection.outputPort];
+      if (sourceBatches && sourceBatches.length > 0) {
+        // For each batch from the source port, add it as an input batch
+        // This allows multiple batches from the same port to be processed
+        for (const batch of sourceBatches) {
+          input.push(batch);
+        }
       } else {
         input.push([]);
       }

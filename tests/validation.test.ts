@@ -65,7 +65,7 @@ describe('WorkflowEngine - General Validation', () => {
             parameters: {},
             connections: {
               // @ts-expect-error - Testing invalid connection without node field
-              main: [{ type: 'main', index: 0 }],
+              main: [{ outputPort: 'main' }],
             },
           },
         ],
@@ -90,7 +90,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: '', type: 'main', index: 0 }],
+              main: [{ node: '', outputPort: 'main' }],
             },
           },
         ],
@@ -115,7 +115,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: '   ', type: 'main', index: 0 }],
+              main: [{ node: '   ', outputPort: 'main' }],
             },
           },
         ],
@@ -140,7 +140,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: 'node-2', type: 'main', index: 0 }],
+              main: [{ node: 'node-2', outputPort: 'main' }],
             },
           },
         ],
@@ -165,7 +165,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: 'node-1', type: 'main', index: 0 }],
+              main: [{ node: 'node-1', outputPort: 'main' }],
             },
           },
         ],
@@ -176,7 +176,7 @@ describe('WorkflowEngine - General Validation', () => {
       }).toThrow('cannot connect to itself');
     });
 
-    it('should throw error when connection.type is missing', () => {
+    it('should throw error when connection.outputPort is missing', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
@@ -190,8 +190,8 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              // @ts-expect-error - Testing invalid connection without type field
-              main: [{ node: 'node-2', index: 0 }],
+              // @ts-expect-error - Testing invalid connection without outputPort field
+              main: [{ node: 'node-2' }],
             },
           },
           {
@@ -210,7 +210,7 @@ describe('WorkflowEngine - General Validation', () => {
       }).toThrow('expected string');
     });
 
-    it('should throw error when connection.type is empty string', () => {
+    it('should throw error when connection.outputPort is missing', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
@@ -224,7 +224,8 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: 'node-2', type: '', index: 0 }],
+              // @ts-expect-error - Testing invalid connection without outputPort field
+              main: [{ node: 'node-2' }],
             },
           },
           {
@@ -240,10 +241,10 @@ describe('WorkflowEngine - General Validation', () => {
 
       expect(() => {
         engine.addWorkflow(workflow);
-      }).toThrow('type field is required and must be a non-empty string');
+      }).toThrow('expected string');
     });
 
-    it('should throw error when connection.index is missing', () => {
+    it('should throw error when connection.outputPort is empty string', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
@@ -257,8 +258,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              // @ts-expect-error - Testing invalid connection without index field
-              main: [{ node: 'node-2', type: 'main' }],
+              main: [{ node: 'node-2', outputPort: '' }],
             },
           },
           {
@@ -274,10 +274,10 @@ describe('WorkflowEngine - General Validation', () => {
 
       expect(() => {
         engine.addWorkflow(workflow);
-      }).toThrow('expected number');
+      }).toThrow('outputPort field is required and must be a non-empty string');
     });
 
-    it('should throw error when connection.index is negative', () => {
+    it('should throw error when connection.outputPort is whitespace only', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
@@ -291,7 +291,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: 'node-2', type: 'main', index: -1 }],
+              main: [{ node: 'node-2', outputPort: '   ' }],
             },
           },
           {
@@ -307,40 +307,7 @@ describe('WorkflowEngine - General Validation', () => {
 
       expect(() => {
         engine.addWorkflow(workflow);
-      }).toThrow('index must be a non-negative integer');
-    });
-
-    it('should throw error when connection.index is not an integer', () => {
-      const engine = new WorkflowEngine();
-      const workflow: Workflow = {
-        id: 'test-1',
-        name: 'Test Workflow',
-        active: true,
-        nodes: [
-          {
-            id: 'node-1',
-            name: 'Noop',
-            type: 'builtIn.noop',
-            position: { x: 0, y: 0 },
-            parameters: {},
-            connections: {
-              main: [{ node: 'node-2', type: 'main', index: 1.5 }],
-            },
-          },
-          {
-            id: 'node-2',
-            name: 'Set',
-            type: 'builtIn.set',
-            position: { x: 0, y: 0 },
-            parameters: { values: [] },
-            connections: {},
-          },
-        ],
-      };
-
-      expect(() => {
-        engine.addWorkflow(workflow);
-      }).toThrow('index must be an integer');
+      }).toThrow('outputPort field cannot be empty');
     });
 
     it('should throw error when connections is not an array', () => {
@@ -358,7 +325,7 @@ describe('WorkflowEngine - General Validation', () => {
             parameters: {},
             connections: {
               // @ts-expect-error - Testing invalid connections structure (not an array)
-              main: { node: 'node-2', type: 'main', index: 0 },
+              main: { node: 'node-2', outputPort: 'main' },
             },
           },
         ],
@@ -383,7 +350,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: 'node-2', type: 'main', index: 0 }],
+              main: [{ node: 'node-2', outputPort: 'main' }],
             },
           },
           {
@@ -642,8 +609,7 @@ describe('WorkflowEngine - General Validation', () => {
           if (j !== i) {
             connections.push({
               node: `node-${j}`,
-              type: 'main',
-              index: 0,
+              outputPort: 'main',
             });
           }
         }
@@ -654,8 +620,7 @@ describe('WorkflowEngine - General Validation', () => {
       if (node0Connections) {
         node0Connections.push({
           node: 'node-100',
-          type: 'main',
-          index: 1,
+          outputPort: 'main',
         });
       }
 
@@ -711,8 +676,8 @@ describe('WorkflowEngine - General Validation', () => {
             parameters: {},
             connections: {
               main: [
-                { node: 'node-2', type: 'main', index: 0 },
-                { node: 'node-2', type: 'main', index: 0 }, // Duplicate
+                { node: 'node-2', outputPort: 'main' },
+                { node: 'node-2', outputPort: 'main' }, // Duplicate
               ],
             },
           },
@@ -732,7 +697,7 @@ describe('WorkflowEngine - General Validation', () => {
       }).toThrow('Duplicate connection');
     });
 
-    it('should allow different connections to same node with different indices', () => {
+    it('should allow different connections to same node with different output ports', () => {
       const engine = new WorkflowEngine();
       const workflow: Workflow = {
         id: 'test-1',
@@ -747,8 +712,8 @@ describe('WorkflowEngine - General Validation', () => {
             parameters: {},
             connections: {
               main: [
-                { node: 'node-2', type: 'main', index: 0 },
-                { node: 'node-2', type: 'main', index: 1 }, // Different index
+                { node: 'node-2', outputPort: 'main' },
+                { node: 'node-2', outputPort: 'secondary' }, // Different output port
               ],
             },
           },
@@ -788,8 +753,8 @@ describe('WorkflowEngine - General Validation', () => {
               },
             },
             connections: {
-              true: [{ node: 'node-2', type: 'main', index: 0 }],
-              false: [{ node: 'node-2', type: 'main', index: 0 }], // Same target, different port
+              true: [{ node: 'node-2', outputPort: 'main' }],
+              false: [{ node: 'node-2', outputPort: 'main' }], // Same target, different port
             },
           },
           {
@@ -824,7 +789,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: 'node-2', type: 'main', index: 0 }],
+              main: [{ node: 'node-2', outputPort: 'main' }],
             },
           },
           {
@@ -842,7 +807,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: 'node-4', type: 'main', index: 0 }],
+              main: [{ node: 'node-4', outputPort: 'main' }],
             },
           },
           {
@@ -852,7 +817,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: 'node-3', type: 'main', index: 0 }],
+              main: [{ node: 'node-3', outputPort: 'main' }],
             },
           },
         ],
@@ -877,7 +842,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: 'node-2', type: 'main', index: 0 }],
+              main: [{ node: 'node-2', outputPort: 'main' }],
             },
           },
           {
@@ -887,7 +852,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: { values: [] },
             connections: {
-              main: [{ node: 'node-1', type: 'main', index: 0 }],
+              main: [{ node: 'node-1', outputPort: 'main' }],
             },
           },
         ],
@@ -914,7 +879,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: 'node-2', type: 'main', index: 0 }],
+              main: [{ node: 'node-2', outputPort: 'main' }],
             },
           },
           {
@@ -947,7 +912,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: 'node-3', type: 'main', index: 0 }],
+              main: [{ node: 'node-3', outputPort: 'main' }],
             },
           },
           {
@@ -957,7 +922,7 @@ describe('WorkflowEngine - General Validation', () => {
             position: { x: 0, y: 0 },
             parameters: {},
             connections: {
-              main: [{ node: 'node-3', type: 'main', index: 0 }],
+              main: [{ node: 'node-3', outputPort: 'main' }],
             },
           },
           {

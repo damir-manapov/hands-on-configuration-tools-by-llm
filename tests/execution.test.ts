@@ -77,7 +77,7 @@ describe('WorkflowEngine - Execution', () => {
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {
-            main: [{ node: 'node-2', type: 'main', index: 0 }],
+            main: [{ node: 'node-2', outputPort: 'main' }],
           },
         },
       ],
@@ -144,15 +144,17 @@ describe('WorkflowEngine - Execution', () => {
     // Provide input data directly to the code node (node-2)
     // This bypasses the noop node which passes through input data
     const inputData = {
-      'node-2': [
-        [
-          {
-            value: 'user-123',
-            kind: 'link' as const,
-            entity: 'user',
-          },
+      'node-2': {
+        main: [
+          [
+            {
+              value: 'user-123',
+              kind: 'link' as const,
+              entity: 'user',
+            },
+          ],
         ],
-      ],
+      },
     };
 
     const result = await engine.executeWorkflow('test-1', inputData, resolver);
@@ -163,7 +165,7 @@ describe('WorkflowEngine - Execution', () => {
     expect(result.finished).toBe(true);
     expect(resolverCalled).toBe(true);
     expect(resolvedValue).toBe('user-123');
-    const field = result.data['node-2']?.[0]?.[0];
+    const field = result.data['node-2']?.['main']?.[0]?.[0];
     expect(field).toBeDefined();
     expect(extractTypedFieldValue(field!)).toEqual({ resolved: 'John' });
   });
@@ -197,22 +199,27 @@ describe('WorkflowEngine - Execution', () => {
 
     // Provide input data directly to the node
     const inputData = {
-      'node-1': [
-        [
-          {
-            value: {
-              existing: { value: 'existing-value', kind: 'primitive' as const },
+      'node-1': {
+        main: [
+          [
+            {
+              value: {
+                existing: {
+                  value: 'existing-value',
+                  kind: 'primitive' as const,
+                },
+              },
+              kind: 'primitive' as const,
             },
-            kind: 'primitive' as const,
-          },
+          ],
         ],
-      ],
+      },
     };
 
     const result = await engine.executeWorkflow('test-1', inputData);
 
     expect(result.finished).toBe(true);
-    const field = result.data['node-1']?.[0]?.[0];
+    const field = result.data['node-1']?.['main']?.[0]?.[0];
     expect(field).toBeDefined();
     const extracted = extractTypedFieldValue(field!);
     expect(extracted).toEqual({
@@ -253,6 +260,6 @@ describe('WorkflowEngine - Execution', () => {
 
     expect(result.finished).toBe(true);
     // Set node with empty input batch produces empty output batch
-    expect(result.data['node-1']).toEqual([[]]);
+    expect(result.data['node-1']).toEqual({ main: [[]] });
   });
 });
