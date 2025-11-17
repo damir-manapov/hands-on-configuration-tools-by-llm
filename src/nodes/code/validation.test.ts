@@ -6,7 +6,7 @@ describe('Code Node - Validation', () => {
   it('should throw error when code node is missing code parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code Node',
+      name: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {},
@@ -21,7 +21,7 @@ describe('Code Node - Validation', () => {
   it('should throw error when code node has invalid code parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code Node',
+      name: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -38,7 +38,7 @@ describe('Code Node - Validation', () => {
   it('should throw error when code node has invalid timeout parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code Node',
+      name: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -56,7 +56,7 @@ describe('Code Node - Validation', () => {
   it('should validate code node with valid parameters', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code Node',
+      name: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -73,7 +73,7 @@ describe('Code Node - Validation', () => {
   it('should validate code node with timeout parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code Node',
+      name: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -91,7 +91,7 @@ describe('Code Node - Validation', () => {
   it('should throw error when code has syntax errors', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code Node',
+      name: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -108,7 +108,7 @@ describe('Code Node - Validation', () => {
   it('should throw error when code has missing brackets', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code Node',
+      name: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -125,7 +125,7 @@ describe('Code Node - Validation', () => {
   it('should throw error when code has invalid token', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code Node',
+      name: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -142,7 +142,7 @@ describe('Code Node - Validation', () => {
   it('should throw error when code is empty', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code Node',
+      name: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {
@@ -159,7 +159,7 @@ describe('Code Node - Validation', () => {
   it('should throw error when code is only whitespace', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Code Node',
+      name: 'Code',
       type: 'builtIn.code',
       position: { x: 0, y: 0 },
       parameters: {

@@ -6,7 +6,7 @@ describe('Filter Node - Validation', () => {
   it('should throw error when filter node is missing condition parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter Node',
+      name: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {},
@@ -21,7 +21,7 @@ describe('Filter Node - Validation', () => {
   it('should throw error when filter node has invalid condition parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter Node',
+      name: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -38,7 +38,7 @@ describe('Filter Node - Validation', () => {
   it('should throw error when filter node has missing condition fields', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter Node',
+      name: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -58,7 +58,7 @@ describe('Filter Node - Validation', () => {
   it('should throw error when filter node has invalid operator', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter Node',
+      name: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -79,7 +79,7 @@ describe('Filter Node - Validation', () => {
   it('should throw error when filter node has invalid mode', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter Node',
+      name: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -101,7 +101,7 @@ describe('Filter Node - Validation', () => {
   it('should validate filter node with valid parameters', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter Node',
+      name: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
@@ -122,7 +122,7 @@ describe('Filter Node - Validation', () => {
   it('should validate filter node with mode parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      name: 'Filter Node',
+      name: 'Filter',
       type: 'builtIn.filter',
       position: { x: 0, y: 0 },
       parameters: {
