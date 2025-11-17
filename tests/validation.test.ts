@@ -754,6 +754,122 @@ describe('WorkflowEngine - General Validation', () => {
         engine.addWorkflow(workflow);
       }).toThrow('uses invalid output port');
     });
+
+    it('should validate dynamic output ports for Switch node', () => {
+      const engine = new WorkflowEngine();
+      const workflow: Workflow = {
+        id: 'test-1',
+        title: 'Test Workflow',
+        active: true,
+        nodes: [
+          {
+            id: 'node-1',
+            title: 'Switch',
+            type: 'builtIn.switch',
+            position: { x: 0, y: 0 },
+            parameters: {
+              rules: [
+                {
+                  condition: {
+                    path: 'priority',
+                    value: 'high',
+                    operator: 'equals',
+                  },
+                  output: 'high',
+                },
+                {
+                  condition: {
+                    path: 'priority',
+                    value: 'medium',
+                    operator: 'equals',
+                  },
+                  output: 'medium',
+                },
+              ],
+              defaultOutput: 'low',
+            },
+            connections: [
+              { node: 'node-2', outputPort: 'high' },
+              { node: 'node-3', outputPort: 'medium' },
+              { node: 'node-4', outputPort: 'low' },
+            ],
+          },
+          {
+            id: 'node-2',
+            title: 'Set',
+            type: 'builtIn.set',
+            position: { x: 0, y: 0 },
+            parameters: { values: [] },
+            connections: [],
+          },
+          {
+            id: 'node-3',
+            title: 'Set',
+            type: 'builtIn.set',
+            position: { x: 0, y: 0 },
+            parameters: { values: [] },
+            connections: [],
+          },
+          {
+            id: 'node-4',
+            title: 'Set',
+            type: 'builtIn.set',
+            position: { x: 0, y: 0 },
+            parameters: { values: [] },
+            connections: [],
+          },
+        ],
+      };
+
+      expect(() => {
+        engine.addWorkflow(workflow);
+      }).not.toThrow();
+    });
+
+    it('should throw error when Switch node uses invalid dynamic output port', () => {
+      const engine = new WorkflowEngine();
+      const workflow: Workflow = {
+        id: 'test-1',
+        title: 'Test Workflow',
+        active: true,
+        nodes: [
+          {
+            id: 'node-1',
+            title: 'Switch',
+            type: 'builtIn.switch',
+            position: { x: 0, y: 0 },
+            parameters: {
+              rules: [
+                {
+                  condition: {
+                    path: 'priority',
+                    value: 'high',
+                    operator: 'equals',
+                  },
+                  output: 'high',
+                },
+              ],
+              defaultOutput: 'low',
+            },
+            connections: [
+              { node: 'node-2', outputPort: 'invalid-port' }, // Invalid - not in rules or default
+            ],
+          },
+          {
+            id: 'node-2',
+            title: 'Set',
+            type: 'builtIn.set',
+            position: { x: 0, y: 0 },
+            parameters: { values: [] },
+            connections: [],
+          },
+        ],
+      };
+
+      expect(() => {
+        engine.addWorkflow(workflow);
+      }).toThrow('uses invalid output port');
+    });
   });
 
   describe('Unreachable Nodes Validation', () => {

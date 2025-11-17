@@ -16,6 +16,7 @@ import {
   ifNodePlugin,
   codeNodePlugin,
   filterNodePlugin,
+  switchNodePlugin,
 } from './nodes/index.js';
 import {
   WorkflowNotFoundError,
@@ -39,6 +40,7 @@ const BUILT_IN_PLUGINS = [
   ifNodePlugin,
   codeNodePlugin,
   filterNodePlugin,
+  switchNodePlugin,
 ] as const;
 
 const BUILT_IN_NODE_TYPES = BUILT_IN_PLUGINS.map(
@@ -362,11 +364,17 @@ export class WorkflowEngine {
       }
 
       // Validate workflow-specific rules (node exists, no self-reference, no duplicates, valid output ports)
+      // Get output ports (static or dynamic)
+      const allowedPorts =
+        plugin.hasDynamicOutputs && plugin.getOutputPorts
+          ? plugin.getOutputPorts(node)
+          : plugin.outputPorts;
+
       for (const [index, connection] of node.connections.entries()) {
         // Validate output port is allowed for this node type
-        if (!plugin.outputPorts.includes(connection.outputPort)) {
+        if (!allowedPorts.includes(connection.outputPort)) {
           throw new WorkflowValidationError(
-            `Node ${node.id} uses invalid output port "${connection.outputPort}" at connection[${index}]. Allowed ports: ${plugin.outputPorts.join(', ')}`,
+            `Node ${node.id} uses invalid output port "${connection.outputPort}" at connection[${index}]. Allowed ports: ${allowedPorts.join(', ')}`,
           );
         }
 

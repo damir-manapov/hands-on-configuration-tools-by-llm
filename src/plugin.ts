@@ -12,7 +12,9 @@ export interface NodePlugin {
   name: string;
   purpose: string;
   useCases: string[];
-  outputPorts: string[]; // List of allowed output port names (e.g., ['main'], ['true', 'false'])
+  outputPorts: string[]; // Static output port names (or defaults for dynamic nodes)
+  hasDynamicOutputs?: boolean; // If true, output ports are determined dynamically based on node parameters
+  getOutputPorts?: (node: WorkflowNode) => string[]; // Function to get dynamic output ports (required if hasDynamicOutputs is true)
   getParameterSchema: () => SerializableParameterSchema;
   validate: (node: WorkflowNode) => void;
   execute: (
