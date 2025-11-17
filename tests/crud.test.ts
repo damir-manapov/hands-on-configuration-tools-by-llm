@@ -12,8 +12,8 @@ describe('WorkflowEngine - CRUD Operations', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Start',
-          type: 'builtIn.start',
+          name: 'Noop',
+          type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {},
@@ -38,8 +38,8 @@ describe('WorkflowEngine - CRUD Operations', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Start',
-          type: 'builtIn.start',
+          name: 'Noop',
+          type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {},
@@ -63,8 +63,8 @@ describe('WorkflowEngine - CRUD Operations', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Start',
-          type: 'builtIn.start',
+          name: 'Noop',
+          type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {},
@@ -89,8 +89,8 @@ describe('WorkflowEngine - CRUD Operations', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Start',
-          type: 'builtIn.start',
+          name: 'Noop',
+          type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {},
@@ -105,8 +105,8 @@ describe('WorkflowEngine - CRUD Operations', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Start',
-          type: 'builtIn.start',
+          name: 'Noop',
+          type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {},

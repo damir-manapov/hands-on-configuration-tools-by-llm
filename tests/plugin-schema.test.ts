@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import {
-  startNodePlugin,
+  noopNodePlugin,
   setNodePlugin,
   ifNodePlugin,
 } from '../src/nodes/index.js';
 
 describe('NodePlugin - Parameter Schema', () => {
   it('should export parameter schema for all built-in nodes', () => {
-    const plugins = [startNodePlugin, setNodePlugin, ifNodePlugin];
+    const plugins = [noopNodePlugin, setNodePlugin, ifNodePlugin];
 
     for (const plugin of plugins) {
       const schema = plugin.getParameterSchema();

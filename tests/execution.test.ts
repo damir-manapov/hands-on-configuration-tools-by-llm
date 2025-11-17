@@ -14,8 +14,8 @@ describe('WorkflowEngine - Execution', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Start',
-          type: 'builtIn.start',
+          name: 'Noop',
+          type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {},
@@ -47,8 +47,8 @@ describe('WorkflowEngine - Execution', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Start',
-          type: 'builtIn.start',
+          name: 'Noop',
+          type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {},
@@ -72,8 +72,8 @@ describe('WorkflowEngine - Execution', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Start',
-          type: 'builtIn.start',
+          name: 'Noop',
+          type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {
@@ -100,8 +100,8 @@ describe('WorkflowEngine - Execution', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Start',
-          type: 'builtIn.start',
+          name: 'Noop',
+          type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {},
@@ -142,7 +142,7 @@ describe('WorkflowEngine - Execution', () => {
     };
 
     // Provide input data directly to the code node (node-2)
-    // This bypasses the start node which always returns empty data
+    // This bypasses the noop node which passes through input data
     const inputData = {
       'node-2': [
         [

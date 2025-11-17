@@ -5,7 +5,7 @@ import {
   type SerializableParameterSchema,
 } from '../src/schema-serializer.js';
 import {
-  startNodePlugin,
+  noopNodePlugin,
   setNodePlugin,
   ifNodePlugin,
 } from '../src/nodes/index.js';
@@ -111,8 +111,8 @@ describe('Schema Serializer', () => {
     });
   });
 
-  it('should serialize start node plugin schema', () => {
-    const schema = startNodePlugin.getParameterSchema();
+  it('should serialize noop node plugin schema', () => {
+    const schema = noopNodePlugin.getParameterSchema();
 
     expect(schema).toEqual({
       type: 'object',
@@ -203,7 +203,7 @@ describe('Schema Serializer', () => {
 
   it('should be fully JSON serializable for all node types', () => {
     const schemas = [
-      startNodePlugin.getParameterSchema(),
+      noopNodePlugin.getParameterSchema(),
       setNodePlugin.getParameterSchema(),
       ifNodePlugin.getParameterSchema(),
     ];

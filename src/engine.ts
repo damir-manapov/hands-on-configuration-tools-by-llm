@@ -10,7 +10,7 @@ import type {
 import type { TypedField } from './types.js';
 import type { NodePlugin } from './plugin.js';
 import {
-  startNodePlugin,
+  noopNodePlugin,
   setNodePlugin,
   ifNodePlugin,
   codeNodePlugin,
@@ -31,7 +31,7 @@ import {
 } from './errors/index.js';
 
 const BUILT_IN_PLUGINS = [
-  startNodePlugin,
+  noopNodePlugin,
   setNodePlugin,
   ifNodePlugin,
   codeNodePlugin,

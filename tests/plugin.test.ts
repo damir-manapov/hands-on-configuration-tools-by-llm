@@ -39,8 +39,8 @@ describe('WorkflowEngine - Plugin System', () => {
     const engine = new WorkflowEngine();
 
     const plugin: NodePlugin = {
-      nodeType: 'builtIn.start',
-      name: 'Test Start',
+      nodeType: 'builtIn.noop',
+      name: 'Test Noop',
       purpose: 'Test plugin',
       useCases: ['Testing'],
       getParameterSchema: () => serializeParameterSchema(z.object({})),
@@ -49,8 +49,8 @@ describe('WorkflowEngine - Plugin System', () => {
       execute: (): TypedField[][] => [[]],
       parametersExamples: [
         {
-          title: 'Test Start Node',
-          description: 'A test start node example.',
+          title: 'Test Noop Node',
+          description: 'A test noop node example.',
           parameters: {},
         },
       ],
@@ -65,7 +65,7 @@ describe('WorkflowEngine - Plugin System', () => {
     const engine = new WorkflowEngine();
 
     expect(() => {
-      engine.unregisterNode('builtIn.start');
+      engine.unregisterNode('builtIn.noop');
     }).toThrow('Cannot unregister built-in node type');
   });
 
@@ -151,8 +151,8 @@ describe('WorkflowEngine - Plugin System', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Start',
-          type: 'builtIn.start',
+          name: 'Noop',
+          type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {
@@ -299,8 +299,8 @@ describe('WorkflowEngine - Plugin System', () => {
       nodes: [
         {
           id: 'node-1',
-          name: 'Start',
-          type: 'builtIn.start',
+          name: 'Noop',
+          type: 'builtIn.noop',
           position: { x: 0, y: 0 },
           parameters: {},
           connections: {
