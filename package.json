@@ -17,8 +17,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "mcp:server": "tsx mcp/server.ts",
-    "mcp:server:build": "pnpm build && node dist/mcp/server.js"
+    "mcp:server": "tsx mcp/server.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.22.0",
