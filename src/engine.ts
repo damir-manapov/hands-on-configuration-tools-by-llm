@@ -12,7 +12,7 @@ import type { NodePlugin } from './plugin.js';
 import {
   noopNodePlugin,
   setNodePlugin,
-  conditionMarkerNodePlugin,
+  markerNodePlugin,
   ifNodePlugin,
   codeNodePlugin,
   filterNodePlugin,
@@ -35,7 +35,7 @@ import {
 const BUILT_IN_PLUGINS = [
   noopNodePlugin,
   setNodePlugin,
-  conditionMarkerNodePlugin,
+  markerNodePlugin,
   ifNodePlugin,
   codeNodePlugin,
   filterNodePlugin,

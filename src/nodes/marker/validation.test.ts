@@ -1,28 +1,28 @@
 import { describe, it, expect } from 'vitest';
-import { conditionMarkerNodePlugin } from './index.js';
+import { markerNodePlugin } from './index.js';
 import type { WorkflowNode } from '../../types.js';
 
-describe('Condition Marker Node - Validation', () => {
-  it('should throw error when condition marker node is missing condition parameter', () => {
+describe('Marker Node - Validation', () => {
+  it('should throw error when marker node is missing condition parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'Condition Marker',
-      type: 'builtIn.conditionMarker',
+      title: 'Marker',
+      type: 'builtIn.marker',
       position: { x: 0, y: 0 },
       parameters: {},
       connections: [],
     };
 
     expect(() => {
-      conditionMarkerNodePlugin.validate(node);
+      markerNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
-  it('should throw error when condition marker node has invalid condition parameter', () => {
+  it('should throw error when marker node has invalid condition parameter', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'Condition Marker',
-      type: 'builtIn.conditionMarker',
+      title: 'Marker',
+      type: 'builtIn.marker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: 'not-an-object',
@@ -31,15 +31,15 @@ describe('Condition Marker Node - Validation', () => {
     };
 
     expect(() => {
-      conditionMarkerNodePlugin.validate(node);
+      markerNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
-  it('should throw error when condition marker node has missing condition fields', () => {
+  it('should throw error when marker node has missing condition fields', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'Condition Marker',
-      type: 'builtIn.conditionMarker',
+      title: 'Marker',
+      type: 'builtIn.marker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -51,15 +51,15 @@ describe('Condition Marker Node - Validation', () => {
     };
 
     expect(() => {
-      conditionMarkerNodePlugin.validate(node);
+      markerNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
-  it('should throw error when condition marker node has invalid operator', () => {
+  it('should throw error when marker node has invalid operator', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'Condition Marker',
-      type: 'builtIn.conditionMarker',
+      title: 'Marker',
+      type: 'builtIn.marker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -72,15 +72,15 @@ describe('Condition Marker Node - Validation', () => {
     };
 
     expect(() => {
-      conditionMarkerNodePlugin.validate(node);
+      markerNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
-  it('should validate condition marker node with valid parameters', () => {
+  it('should validate marker node with valid parameters', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'Condition Marker',
-      type: 'builtIn.conditionMarker',
+      title: 'Marker',
+      type: 'builtIn.marker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -93,15 +93,15 @@ describe('Condition Marker Node - Validation', () => {
     };
 
     expect(() => {
-      conditionMarkerNodePlugin.validate(node);
+      markerNodePlugin.validate(node);
     }).not.toThrow();
   });
 
-  it('should validate condition marker node with custom field name', () => {
+  it('should validate marker node with custom field name', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'Condition Marker',
-      type: 'builtIn.conditionMarker',
+      title: 'Marker',
+      type: 'builtIn.marker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -115,15 +115,15 @@ describe('Condition Marker Node - Validation', () => {
     };
 
     expect(() => {
-      conditionMarkerNodePlugin.validate(node);
+      markerNodePlugin.validate(node);
     }).not.toThrow();
   });
 
   it('should throw error when field name is empty string', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'Condition Marker',
-      type: 'builtIn.conditionMarker',
+      title: 'Marker',
+      type: 'builtIn.marker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -137,15 +137,15 @@ describe('Condition Marker Node - Validation', () => {
     };
 
     expect(() => {
-      conditionMarkerNodePlugin.validate(node);
+      markerNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 
   it('should throw error when field name is not a string', () => {
     const node: WorkflowNode = {
       id: 'node-1',
-      title: 'Condition Marker',
-      type: 'builtIn.conditionMarker',
+      title: 'Marker',
+      type: 'builtIn.marker',
       position: { x: 0, y: 0 },
       parameters: {
         condition: {
@@ -159,7 +159,7 @@ describe('Condition Marker Node - Validation', () => {
     };
 
     expect(() => {
-      conditionMarkerNodePlugin.validate(node);
+      markerNodePlugin.validate(node);
     }).toThrow('has invalid parameters');
   });
 });

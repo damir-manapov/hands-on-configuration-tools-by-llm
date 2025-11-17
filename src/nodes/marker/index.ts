@@ -10,7 +10,7 @@ import {
   evaluateCondition,
 } from '../utils/evaluate-condition.js';
 
-const ConditionMarkerNodeParametersSchema = z.object({
+const MarkerNodeParametersSchema = z.object({
   condition: ConditionSchema.describe(
     'The condition to evaluate. If the condition matches, the item will have the specified field set to true, otherwise false.',
   ),
@@ -24,11 +24,11 @@ const ConditionMarkerNodeParametersSchema = z.object({
     ),
 });
 
-function validateConditionMarkerNodeParameters(node: WorkflowNode): void {
-  validateNodeParameters(node, ConditionMarkerNodeParametersSchema);
+function validateMarkerNodeParameters(node: WorkflowNode): void {
+  validateNodeParameters(node, MarkerNodeParametersSchema);
 }
 
-async function executeConditionMarkerNode(
+async function executeMarkerNode(
   node: WorkflowNode,
   input: TypedField[][],
 ): Promise<Record<string, TypedField[][]>> {
@@ -44,7 +44,7 @@ async function executeConditionMarkerNode(
       if (!inputField) {
         throw new NodeExecutionError(
           node.id,
-          'Condition Marker node received undefined or null input field',
+          'Marker node received undefined or null input field',
         );
       }
 
@@ -123,9 +123,9 @@ const parametersExamples: ParametersExample[] = [
   },
 ];
 
-export const conditionMarkerNodePlugin: NodePlugin = {
-  nodeType: 'builtIn.conditionMarker',
-  name: 'Condition Marker',
+export const markerNodePlugin: NodePlugin = {
+  nodeType: 'builtIn.marker',
+  name: 'Marker',
   purpose:
     'Marks data items with a field (default: "_matched") based on a condition evaluation. Does not route data - all items pass through with the specified field indicating whether the condition was met.',
   useCases: [
@@ -136,8 +136,8 @@ export const conditionMarkerNodePlugin: NodePlugin = {
   ],
   outputPorts: ['main'],
   getParameterSchema: () =>
-    serializeParameterSchema(ConditionMarkerNodeParametersSchema),
-  validate: validateConditionMarkerNodeParameters,
-  execute: executeConditionMarkerNode,
+    serializeParameterSchema(MarkerNodeParametersSchema),
+  validate: validateMarkerNodeParameters,
+  execute: executeMarkerNode,
   parametersExamples,
 };

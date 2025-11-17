@@ -7,7 +7,7 @@ import {
 import {
   noopNodePlugin,
   setNodePlugin,
-  conditionMarkerNodePlugin,
+  markerNodePlugin,
 } from '../src/nodes/index.js';
 
 describe('Schema Serializer', () => {
@@ -134,8 +134,8 @@ describe('Schema Serializer', () => {
     expect(() => JSON.stringify(schema)).not.toThrow();
   });
 
-  it('should serialize condition marker node plugin schema', () => {
-    const schema = conditionMarkerNodePlugin.getParameterSchema();
+  it('should serialize marker node plugin schema', () => {
+    const schema = markerNodePlugin.getParameterSchema();
 
     expect(schema.type).toBe('object');
     expect(schema.fields['condition']).toBeDefined();
@@ -205,7 +205,7 @@ describe('Schema Serializer', () => {
     const schemas = [
       noopNodePlugin.getParameterSchema(),
       setNodePlugin.getParameterSchema(),
-      conditionMarkerNodePlugin.getParameterSchema(),
+      markerNodePlugin.getParameterSchema(),
     ];
 
     for (const schema of schemas) {

@@ -8,7 +8,7 @@ The engine currently supports:
 
 - **Noop** (`builtIn.noop`) - Entry point/pass-through node for workflows
 - **Set** (`builtIn.set`) - Add/overwrite fields with static values
-- **Condition Marker** (`builtIn.conditionMarker`) - Marks data items with \_matched field based on condition (does not route)
+- **Marker** (`builtIn.marker`) - Marks data items with \_matched field based on condition (does not route)
 - **Code** (`builtIn.code`) - Execute custom JavaScript code
 - **Filter** (`builtIn.filter`) - Filter items based on conditions
 
@@ -53,7 +53,7 @@ The engine currently supports:
 **Parameters:**
 
 - `rules`: Array of rules, each with:
-  - `condition`: Similar to Condition Marker node conditions
+  - `condition`: Similar to Marker node conditions
   - `output`: Output index for this rule
 - `fallbackOutput`: Output index for items that don't match any rule
 
@@ -65,7 +65,7 @@ The engine currently supports:
 
 **Implementation Complexity:** Low-Medium
 
-- Similar to Condition Marker node but with multiple outputs and actual routing
+- Similar to Marker node but with multiple outputs and actual routing
 - Need to handle routing to different output connections
 
 ---
@@ -105,7 +105,7 @@ The engine currently supports:
 
 **Parameters:**
 
-- `conditions`: Similar to Condition Marker node (leftValue, rightValue, operator)
+- `conditions`: Similar to Marker node (leftValue, rightValue, operator)
 - `mode`: Filter mode
   - `pass`: Pass items that match
   - `drop`: Drop items that match
@@ -118,7 +118,7 @@ The engine currently supports:
 
 **Implementation Complexity:** Low
 
-- Very similar to Condition Marker node (but actually filters/routes data)
+- Very similar to Marker node (but actually filters/routes data)
 - Just need to filter the output array
 
 ---
