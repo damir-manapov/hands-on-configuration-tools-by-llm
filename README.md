@@ -109,5 +109,11 @@ The server uses the stdio transport, so it is meant to be launched as a child pr
 ├── src/           # Source code
 ├── tests/         # Test files
 ├── scripts/       # Utility scripts
+├── docs/          # Additional conceptual and strategy docs
 └── dist/          # Build output (generated)
 ```
+
+## Additional Documentation
+
+- [`docs/executionConcept.md`](docs/executionConcept.md) — explains workflow definitions vs instances, runtime data flow, pause handling, and distributed execution concepts.
+- [`docs/llmTestingStrategy.md`](docs/llmTestingStrategy.md) — details the fully automated evaluation pipeline for LLM-generated workflow configurations, including scenario corpus, golden configs, metrics, and reporting.
