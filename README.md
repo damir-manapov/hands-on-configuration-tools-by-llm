@@ -28,7 +28,46 @@
 
 ## Project Overview
 
-This project aims to make LLMs configure tools using sophisticated logic and strict configuration formats. The first iteration implements a simple n8n-like engine as an example tool that will be configured by LLM.
+This project aims to make LLMs configure tools using sophisticated logic and strict configuration formats. The first iteration implements a simple n8n-like engine as an example tool that supports both LLM-driven generation (via MCP) and UI-based configuration.
+
+## Workflow Engine Comparison
+
+For future analysis and comparison, this project can be evaluated alongside existing workflow automation platforms:
+
+### n8n
+
+[n8n](https://n8n.io/) is a self-hosted workflow automation platform with a visual editor.
+
+**Architecture Comparison:**
+- **Node-based design**: Both use nodes connected via edges
+- **Plugin system**: Both support extensible node plugins
+- **Execution model**: n8n executes workflows synchronously; this project supports distributed execution
+- **Configuration**: n8n uses JSON workflow definitions with visual editor; this project uses Zod schemas for validation and supports both LLM generation and UI-based configuration
+- **LLM integration**: n8n requires manual configuration; this project is designed for LLM-driven generation via MCP
+
+**Use Cases:**
+- n8n: Visual workflow design, manual automation setup
+- This project: LLM-generated workflows, UI-based configuration, automated testing and validation
+
+### Upstash Workflow
+
+[Upstash Workflow](https://upstash.com/docs/workflow) is a serverless workflow orchestration service.
+
+**Architecture Comparison:**
+- **Execution model**: Upstash is fully serverless with automatic scaling; this project can be deployed serverless or self-hosted
+- **Persistence**: Upstash provides built-in state management; this project requires external persistence layer
+- **API**: Upstash uses HTTP/REST; this project exposes MCP for LLM integration
+- **Configuration**: Upstash uses code-based workflows; this project uses declarative JSON with schema validation
+- **Latency**: Upstash offers global edge deployment; this project's latency depends on deployment
+
+**Use Cases:**
+- Upstash: Production serverless workflows, high-scale automation
+- This project: LLM-generated workflows, UI-based configuration, configuration validation, development/testing workflows
+
+**Analysis Points:**
+- How do execution models differ for LLM-generated workflows?
+- What persistence strategies work best for workflow state?
+- How do validation approaches compare for ensuring correctness?
 
 ## Tech Stack
 
@@ -121,3 +160,5 @@ The server uses the stdio transport, so it is meant to be launched as a child pr
 ### Devin DeepWiki
 
 This repository is configured for [Devin's DeepWiki](https://docs.devin.ai/work-with-devin/deepwiki) automatic documentation generation. The `.devin/wiki.json` file guides wiki generation to ensure comprehensive coverage of the workflow engine architecture, node plugins, and MCP integration.
+
+**📚 [View DeepWiki Documentation →](https://deepwiki.com/damir-manapov/hands-on-configuration-tools-by-llm)**
