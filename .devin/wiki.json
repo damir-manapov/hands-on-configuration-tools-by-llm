@@ -1,0 +1,69 @@
+{
+  "repo_notes": [
+    {
+      "content": "This is an n8n-like workflow engine designed to be configured by LLMs. The core architecture is plugin-based where nodes act as modular components. The main components are: WorkflowEngine (src/engine.ts) which orchestrates workflow execution, NodePlugin interface (src/plugin.ts) that defines the contract for all nodes, and individual node implementations in src/nodes/. The project includes an MCP server (mcp/server.ts) that exposes workflow capabilities to LLMs via Model Context Protocol. Each node plugin has validation tests and execution tests. The engine uses TypedField data structures for type-safe data flow between nodes.",
+      "author": "Project Maintainer"
+    },
+    {
+      "content": "The src/nodes/ directory contains all built-in node plugins: start, set, if, code, filter, noop, marker, and switch. Each node has its own directory with index.ts (plugin definition), validation.test.ts, and execution.test.ts. The src/nodes/utils/ directory contains shared utilities used across nodes like set-nested-field, evaluate-condition, and type conversion helpers.",
+      "author": "Project Maintainer"
+    },
+    {
+      "content": "The MCP server (mcp/server.ts) is crucial for LLM integration. It exposes tools to list available nodes and resources to get detailed node information. The server uses stdio transport and queries the WorkflowEngine directly for registered plugins.",
+      "author": "Project Maintainer"
+    }
+  ],
+  "pages": [
+    {
+      "title": "Architecture Overview",
+      "purpose": "High-level overview of the workflow engine architecture, plugin system, and how components interact",
+      "parent": null
+    },
+    {
+      "title": "WorkflowEngine",
+      "purpose": "Document the WorkflowEngine class (src/engine.ts) - its responsibilities, methods for registering nodes, validating workflows, and executing workflows",
+      "parent": "Architecture Overview"
+    },
+    {
+      "title": "Node Plugin System",
+      "purpose": "Document the NodePlugin interface (src/plugin.ts), how plugins are structured, and the plugin registration system",
+      "parent": "Architecture Overview"
+    },
+    {
+      "title": "Built-in Node Plugins",
+      "purpose": "Document all built-in node plugins in src/nodes/ including start, set, if, code, filter, noop, marker, and switch nodes - their purposes, parameters, and execution logic",
+      "parent": "Node Plugin System"
+    },
+    {
+      "title": "Node Utilities",
+      "purpose": "Document shared utilities in src/nodes/utils/ including set-nested-field, evaluate-condition, type conversion helpers, and field validation utilities",
+      "parent": "Node Plugin System"
+    },
+    {
+      "title": "Data Types and Flow",
+      "purpose": "Document TypedField structure (src/types.ts), how data flows between nodes, and the data transformation patterns",
+      "parent": "Architecture Overview"
+    },
+    {
+      "title": "MCP Server Integration",
+      "purpose": "Document the MCP server (mcp/server.ts) - how it exposes workflow capabilities to LLMs, available tools and resources, and integration patterns",
+      "parent": "Architecture Overview"
+    },
+    {
+      "title": "Error Handling",
+      "purpose": "Document the error system (src/errors/) including field errors, node errors, and workflow errors - how errors are structured and handled",
+      "parent": "Architecture Overview"
+    },
+    {
+      "title": "Testing Strategy",
+      "purpose": "Document the testing approach - validation tests, execution tests, test utilities, and how to test node plugins",
+      "parent": null
+    },
+    {
+      "title": "Schema Serialization",
+      "purpose": "Document the schema serialization system (src/schema-serializer.ts) - how Zod schemas are serialized for MCP exposure",
+      "parent": "Architecture Overview"
+    }
+  ]
+}
+

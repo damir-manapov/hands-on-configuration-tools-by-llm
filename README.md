@@ -117,3 +117,7 @@ The server uses the stdio transport, so it is meant to be launched as a child pr
 
 - [`docs/executionConcept.md`](docs/executionConcept.md) — explains workflow definitions vs instances, runtime data flow, pause handling, and distributed execution concepts.
 - [`docs/llmTestingStrategy.md`](docs/llmTestingStrategy.md) — details the fully automated evaluation pipeline for LLM-generated workflow configurations, including scenario corpus, golden configs, metrics, and reporting.
+
+### Devin DeepWiki
+
+This repository is configured for [Devin's DeepWiki](https://docs.devin.ai/work-with-devin/deepwiki) automatic documentation generation. The `.devin/wiki.json` file guides wiki generation to ensure comprehensive coverage of the workflow engine architecture, node plugins, and MCP integration.
